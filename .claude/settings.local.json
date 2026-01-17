@@ -12,7 +12,13 @@
       "Bash(npx playwright:*)",
       "Bash(lsof:*)",
       "Bash(npx lhci autorun:*)",
-      "Bash(npx lighthouse:*)"
+      "Bash(npx lighthouse:*)",
+      "mcp__playwright__browser_navigate",
+      "mcp__lighthouse__run_audit",
+      "mcp__playwright__browser_snapshot",
+      "mcp__playwright__browser_click",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }

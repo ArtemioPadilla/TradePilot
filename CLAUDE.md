@@ -92,6 +92,96 @@ Located in `/strategies/` (separate from main package):
 - Log output goes to `pmt.log`
 - Package exports all public APIs via `__init__.py`
 
+## Web Application
+
+TradePilot also includes a web application built with Astro + React for portfolio management.
+
+### Web Commands
+
+```bash
+cd web
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Run E2E tests (Playwright)
+npx playwright test --project=chromium
+
+# Run unit tests (Vitest)
+npm run test
+
+# Build for production
+npm run build
+```
+
+### Web Architecture
+
+- **Framework**: Astro with React islands
+- **Auth**: Firebase Authentication
+- **Database**: Firestore
+- **Styling**: CSS with theme variables
+- **Testing**: Playwright (E2E), Vitest (unit)
+
+## Testing Requirements (CRITICAL)
+
+**E2E tests are mandatory for every feature and phase.** Follow these guidelines:
+
+### When to Write E2E Tests
+
+1. **Every new page** - Test that it loads and displays correctly
+2. **Every form** - Test validation, submission, error states
+3. **Every user flow** - Test complete journeys (login → action → result)
+4. **Every navigation** - Test links work and redirect appropriately
+5. **Every protected route** - Test auth guards work correctly
+
+### E2E Test Structure
+
+```
+web/tests/e2e/
+├── auth.spec.ts       # Authentication flows
+├── dashboard.spec.ts  # Dashboard and widgets
+├── landing.spec.ts    # Public pages
+├── accounts.spec.ts   # Account management (Phase 2)
+├── holdings.spec.ts   # Holdings/positions (Phase 2)
+├── trading.spec.ts    # Trading features (Phase 3)
+└── ...
+```
+
+### Test Writing Guidelines
+
+1. **Use accessible selectors** - Prefer `getByRole`, `getByLabel`, `getByText` over CSS selectors
+2. **Handle auth states** - Tests should work whether user is authenticated or not
+3. **Be resilient** - Use `.catch(() => false)` for optional elements
+4. **Test real behavior** - Don't just check elements exist, test interactions
+5. **Run after every feature** - Never commit without running `npx playwright test`
+
+### Running Tests
+
+```bash
+# Run all E2E tests (Chromium only for speed)
+npx playwright test --project=chromium
+
+# Run specific test file
+npx playwright test tests/e2e/auth.spec.ts
+
+# Run with UI mode for debugging
+npx playwright test --ui
+
+# Run Lighthouse audit
+npx lighthouse http://localhost:4321 --only-categories=performance,accessibility,best-practices,seo
+```
+
+### Quality Gates
+
+Before completing any phase:
+- [ ] All E2E tests pass
+- [ ] Lighthouse accessibility score ≥ 85%
+- [ ] Lighthouse best practices score = 100%
+- [ ] No console errors in browser
+
 ## Security
 
 Run Snyk security scans for new code. Fix any issues found before completing changes.
