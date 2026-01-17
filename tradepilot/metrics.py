@@ -29,6 +29,21 @@ def annualize_returns(returns, periods_per_year=252):
     n_periods = len(returns)
     return compounded_growth**(periods_per_year/n_periods) - 1
 
+def annualize_vol(returns, periods_in_year:int = 252):
+    volatility = returns.std()
+    return volatility*np.sqrt(periods_in_year)
+
+
+
+def semideviation(returns):
+    negative_returns = returns[returns < 0 ]
+    return negative_returns.std()
+
+
+def annualize_semideviation(returns, periods_in_year:int = 252):
+    volatility = semideviation(returns)
+    return volatility*np.sqrt(periods_in_year)
+
 def sharpe_ratio(returns, risk_free_rate, periods_per_year=252):
     """
     Calculates the annualized Sharpe ratio.

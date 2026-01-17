@@ -2,7 +2,7 @@
 import numpy as np
 from scipy.optimize import minimize
 
-def msr(riskfree_rate, er, cov):
+def msr(riskfree_rate, er, cov, min_w = 0.01, max_w = 0.95):
     """
     Computes the optimal asset weights that maximize the Sharpe ratio.
 
@@ -21,7 +21,7 @@ def msr(riskfree_rate, er, cov):
 
     n = len(er)
     init_guess = np.repeat(1/n, n)
-    bounds = [(0.01, 0.95)] * n
+    bounds = [(min_w, max_w)] * n
     constraints = ({'type': 'eq', 'fun': lambda w: np.sum(w) - 1})
     result = minimize(neg_sharpe, init_guess, method='SLSQP', bounds=bounds, constraints=constraints)
     return result.x
