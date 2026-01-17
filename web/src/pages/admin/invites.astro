@@ -1,0 +1,472 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+---
+
+<AdminLayout title="Invite Management">
+  <div class="invites-page">
+    <!-- Header -->
+    <div class="page-header">
+      <div class="header-info">
+        <p class="header-description">Create and manage invite codes for new users.</p>
+      </div>
+      <button id="create-invite-btn" class="btn btn-primary">+ Create Invite</button>
+    </div>
+
+    <!-- Invites Table -->
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th>Expires</th>
+            <th>Uses</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="invites-table">
+          <tr>
+            <td colspan="7" class="loading">Loading invites...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Create Invite Modal -->
+  <div class="modal" id="invite-modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Create Invite</h3>
+        <button class="modal-close" id="close-modal">✕</button>
+      </div>
+      <form id="invite-form">
+        <div class="form-group">
+          <label class="label" for="invite-email">Email (Optional)</label>
+          <input type="email" id="invite-email" class="input" placeholder="Restrict to specific email" />
+          <p class="input-hint">Leave empty to allow any email</p>
+        </div>
+        <div class="form-group">
+          <label class="label" for="invite-expires">Expires In</label>
+          <select id="invite-expires" class="input">
+            <option value="7">7 days</option>
+            <option value="14">14 days</option>
+            <option value="30" selected>30 days</option>
+            <option value="90">90 days</option>
+            <option value="0">Never</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="label" for="invite-uses">Max Uses</label>
+          <select id="invite-uses" class="input">
+            <option value="1" selected>1 use</option>
+            <option value="5">5 uses</option>
+            <option value="10">10 uses</option>
+            <option value="0">Unlimited</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancel-invite">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Invite</button>
+        </div>
+      </form>
+      <div id="invite-result" class="invite-result" style="display: none;">
+        <div class="success-icon">✓</div>
+        <p>Invite created successfully!</p>
+        <div class="invite-link-box">
+          <input type="text" id="invite-link" class="input" readonly />
+          <button type="button" class="btn btn-primary" id="copy-link">Copy</button>
+        </div>
+        <button type="button" class="btn btn-secondary btn-full" id="create-another">Create Another</button>
+      </div>
+    </div>
+  </div>
+</AdminLayout>
+
+<script>
+  import { getAllInvites, createInvite, revokeInvite, getInviteUrl, getInviteStatus } from '../../lib/invites';
+  import { auth } from '../../lib/firebase';
+  import type { Invite } from '../../lib/types';
+
+  let allInvites: Invite[] = [];
+
+  // Format date
+  function formatDate(date: Date | null): string {
+    if (!date) return 'Never';
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    }).format(date);
+  }
+
+  // Get status badge
+  function getStatusBadge(status: string): string {
+    const classes: Record<string, string> = {
+      pending: 'badge-success',
+      used: 'badge-neutral',
+      expired: 'badge-danger',
+    };
+    return `<span class="badge ${classes[status] || ''}">${status}</span>`;
+  }
+
+  // Render invites table
+  function renderInvites(invites: Invite[]) {
+    const tbody = document.getElementById('invites-table')!;
+
+    if (invites.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="7" class="empty-state">No invites yet</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = invites.map(invite => {
+      const status = getInviteStatus(invite);
+      return `
+        <tr data-code="${invite.code}">
+          <td>
+            <code class="invite-code">${invite.code}</code>
+          </td>
+          <td>${invite.email || '<span class="text-muted">Any</span>'}</td>
+          <td>${getStatusBadge(status)}</td>
+          <td>${formatDate(invite.createdAt)}</td>
+          <td>${formatDate(invite.expiresAt)}</td>
+          <td>${invite.useCount} / ${invite.maxUses || '∞'}</td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn btn-sm btn-ghost copy-btn" data-code="${invite.code}" title="Copy link">📋</button>
+              ${status === 'pending' ? `<button class="btn btn-sm btn-danger revoke-btn" data-code="${invite.code}">Revoke</button>` : ''}
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    // Add event listeners
+    tbody.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const code = (e.currentTarget as HTMLElement).dataset.code!;
+        const url = getInviteUrl(code);
+        navigator.clipboard.writeText(url);
+        (e.currentTarget as HTMLElement).textContent = '✓';
+        setTimeout(() => {
+          (e.currentTarget as HTMLElement).textContent = '📋';
+        }, 2000);
+      });
+    });
+
+    tbody.querySelectorAll('.revoke-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const code = (e.currentTarget as HTMLElement).dataset.code!;
+        if (!confirm('Revoke this invite? This cannot be undone.')) return;
+        await revokeInvite(code);
+        loadInvites();
+      });
+    });
+  }
+
+  // Load invites
+  async function loadInvites() {
+    try {
+      allInvites = await getAllInvites();
+      renderInvites(allInvites);
+    } catch (error) {
+      console.error('Failed to load invites:', error);
+      document.getElementById('invites-table')!.innerHTML =
+        '<tr><td colspan="7" class="error-state">Failed to load invites</td></tr>';
+    }
+  }
+
+  // Modal handling
+  const modal = document.getElementById('invite-modal')!;
+  const inviteForm = document.getElementById('invite-form') as HTMLFormElement;
+  const inviteResult = document.getElementById('invite-result')!;
+
+  function openModal() {
+    modal.classList.add('open');
+    inviteForm.style.display = 'block';
+    inviteResult.style.display = 'none';
+    inviteForm.reset();
+  }
+
+  function closeModal() {
+    modal.classList.remove('open');
+  }
+
+  document.getElementById('create-invite-btn')!.addEventListener('click', openModal);
+  document.getElementById('close-modal')!.addEventListener('click', closeModal);
+  document.getElementById('cancel-invite')!.addEventListener('click', closeModal);
+  modal.querySelector('.modal-backdrop')!.addEventListener('click', closeModal);
+
+  // Create invite
+  inviteForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const email = (document.getElementById('invite-email') as HTMLInputElement).value;
+    const expiresInDays = parseInt((document.getElementById('invite-expires') as HTMLSelectElement).value);
+    const maxUses = parseInt((document.getElementById('invite-uses') as HTMLSelectElement).value);
+
+    try {
+      const currentUser = auth.currentUser;
+      if (!currentUser) return;
+
+      const invite = await createInvite(currentUser.uid, {
+        email: email || undefined,
+        expiresInDays: expiresInDays || undefined,
+        maxUses: maxUses || undefined,
+      });
+
+      const inviteUrl = getInviteUrl(invite.code);
+      (document.getElementById('invite-link') as HTMLInputElement).value = inviteUrl;
+
+      inviteForm.style.display = 'none';
+      inviteResult.style.display = 'block';
+
+      loadInvites();
+    } catch (error) {
+      console.error('Failed to create invite:', error);
+      alert('Failed to create invite. Please try again.');
+    }
+  });
+
+  // Copy link
+  document.getElementById('copy-link')!.addEventListener('click', () => {
+    const input = document.getElementById('invite-link') as HTMLInputElement;
+    input.select();
+    navigator.clipboard.writeText(input.value);
+    document.getElementById('copy-link')!.textContent = 'Copied!';
+    setTimeout(() => {
+      document.getElementById('copy-link')!.textContent = 'Copy';
+    }, 2000);
+  });
+
+  // Create another
+  document.getElementById('create-another')!.addEventListener('click', () => {
+    inviteForm.style.display = 'block';
+    inviteResult.style.display = 'none';
+    inviteForm.reset();
+  });
+
+  // Initialize
+  loadInvites();
+</script>
+
+<style>
+  .invites-page {
+    max-width: 1000px;
+  }
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+  }
+
+  .header-description {
+    color: var(--text-muted);
+  }
+
+  .table-container {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .data-table th {
+    text-align: left;
+    padding: 0.875rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    background-color: var(--bg-tertiary);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .data-table td {
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+
+  .data-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .invite-code {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    background-color: var(--bg-tertiary);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius);
+  }
+
+  .text-muted {
+    color: var(--text-muted);
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: capitalize;
+  }
+
+  .badge-success {
+    background-color: rgba(0, 200, 150, 0.15);
+    color: #00c896;
+  }
+
+  .badge-neutral {
+    background-color: var(--bg-tertiary);
+    color: var(--text-muted);
+  }
+
+  .badge-danger {
+    background-color: rgba(255, 80, 80, 0.15);
+    color: #ff5050;
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .btn-sm {
+    padding: 0.375rem 0.625rem;
+    font-size: 0.75rem;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--text-muted);
+    color: var(--text-primary);
+  }
+
+  .btn-danger {
+    background-color: var(--negative);
+    color: white;
+  }
+
+  .loading,
+  .empty-state,
+  .error-state {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-muted);
+  }
+
+  /* Modal */
+  .modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal.open {
+    display: flex;
+  }
+
+  .modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .modal-content {
+    position: relative;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 400px;
+    margin: 1rem;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1.25rem;
+  }
+
+  .input-hint {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.375rem;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+  }
+
+  .invite-result {
+    text-align: center;
+  }
+
+  .success-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-full);
+    background-color: rgba(0, 200, 150, 0.15);
+    color: #00c896;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin: 0 auto 1rem;
+  }
+
+  .invite-result p {
+    margin-bottom: 1rem;
+    color: var(--text-secondary);
+  }
+
+  .invite-link-box {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .invite-link-box input {
+    flex: 1;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+
+  .btn-full {
+    width: 100%;
+  }
+</style>

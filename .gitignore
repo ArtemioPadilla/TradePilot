@@ -172,3 +172,49 @@ cython_debug/
 
 # Snyk Security Extension - AI Rules (auto-generated)
 .github/instructions/snyk_rules.instructions.md
+
+# =============================================================================
+# Web Application (Astro)
+# =============================================================================
+web/node_modules/
+web/dist/
+web/.astro/
+web/test-results/
+web/playwright-report/
+web/.lhci/
+
+# =============================================================================
+# Environment Files
+# =============================================================================
+# Only track .env.example - all others contain real credentials
+web/.env
+web/.env.local
+web/.env.development
+web/.env.production
+web/.env.*.local
+!web/.env.example
+
+# =============================================================================
+# Firebase
+# =============================================================================
+# Emulator data (can be large, optionally track)
+.firebase-data/
+
+# Firebase debug logs
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Service account keys (NEVER commit these!)
+*-firebase-adminsdk-*.json
+service-account*.json
+
+# =============================================================================
+# IDE / Editor
+# =============================================================================
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store

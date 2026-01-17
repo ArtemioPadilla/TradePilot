@@ -1,0 +1,144 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+---
+
+<MainLayout title="Account Suspended">
+  <div class="auth-page">
+    <div class="auth-container">
+      <div class="suspended-card">
+        <div class="suspended-icon">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--negative)" stroke-width="1.5">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="15" y1="9" x2="9" y2="15"/>
+            <line x1="9" y1="9" x2="15" y2="15"/>
+          </svg>
+        </div>
+
+        <h1>Account Suspended</h1>
+
+        <p class="description">
+          Your account has been suspended. If you believe this is an error,
+          please contact support for assistance.
+        </p>
+
+        <div class="info-box">
+          <h3>Possible reasons for suspension:</h3>
+          <ul>
+            <li>Violation of terms of service</li>
+            <li>Suspicious activity detected</li>
+            <li>Account security concern</li>
+            <li>Requested by account holder</li>
+          </ul>
+        </div>
+
+        <div class="actions">
+          <a href="mailto:support@tradepilot.com" class="btn btn-primary">Contact Support</a>
+          <button id="logout-btn" class="btn btn-ghost">Sign Out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</MainLayout>
+
+<script>
+  import { signOut } from '../../lib/firebase';
+
+  const logoutBtn = document.getElementById('logout-btn');
+  logoutBtn?.addEventListener('click', async () => {
+    await signOut();
+    window.location.href = '/';
+  });
+</script>
+
+<style>
+  .auth-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .auth-container {
+    width: 100%;
+    max-width: 480px;
+  }
+
+  .suspended-card {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--negative);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem;
+    text-align: center;
+  }
+
+  .suspended-icon {
+    margin-bottom: 1.5rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--negative);
+  }
+
+  .description {
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .info-box {
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    text-align: left;
+    margin-bottom: 2rem;
+  }
+
+  .info-box h3 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  .info-box ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .info-box li {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    padding: 0.375rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+
+  .info-box li::before {
+    content: "•";
+    position: absolute;
+    left: 0.5rem;
+    color: var(--text-muted);
+  }
+
+  .actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--text-muted);
+    color: var(--text-primary);
+  }
+</style>

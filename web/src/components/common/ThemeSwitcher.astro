@@ -1,0 +1,148 @@
+---
+---
+
+<div class="theme-switcher">
+  <button class="theme-btn" id="theme-toggle" aria-label="Switch theme">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="4"/>
+      <path d="M12 2v2"/>
+      <path d="M12 20v2"/>
+      <path d="m4.93 4.93 1.41 1.41"/>
+      <path d="m17.66 17.66 1.41 1.41"/>
+      <path d="M2 12h2"/>
+      <path d="M20 12h2"/>
+      <path d="m6.34 17.66-1.41 1.41"/>
+      <path d="m19.07 4.93-1.41 1.41"/>
+    </svg>
+  </button>
+
+  <div class="theme-dropdown" id="theme-dropdown">
+    <button class="theme-option" data-theme="dashboard">
+      <span class="theme-preview dashboard"></span>
+      <span>Dashboard Dark</span>
+    </button>
+    <button class="theme-option" data-theme="modern">
+      <span class="theme-preview modern"></span>
+      <span>Modern Fintech</span>
+    </button>
+    <button class="theme-option" data-theme="bloomberg">
+      <span class="theme-preview bloomberg"></span>
+      <span>Bloomberg</span>
+    </button>
+  </div>
+</div>
+
+<script>
+  const themeToggle = document.getElementById('theme-toggle');
+  const themeDropdown = document.getElementById('theme-dropdown');
+  const themeOptions = document.querySelectorAll('.theme-option');
+
+  themeToggle?.addEventListener('click', () => {
+    themeDropdown?.classList.toggle('open');
+  });
+
+  themeOptions.forEach((option) => {
+    option.addEventListener('click', () => {
+      const theme = option.getAttribute('data-theme');
+      if (theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        themeDropdown?.classList.remove('open');
+      }
+    });
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!themeToggle?.contains(e.target as Node) && !themeDropdown?.contains(e.target as Node)) {
+      themeDropdown?.classList.remove('open');
+    }
+  });
+</script>
+
+<style>
+  .theme-switcher {
+    position: relative;
+  }
+
+  .theme-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
+  }
+
+  .theme-btn:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+  }
+
+  .theme-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 180px;
+    background-color: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.2s;
+    z-index: 100;
+    padding: 0.5rem;
+  }
+
+  .theme-dropdown.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .theme-option {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    cursor: pointer;
+    border-radius: var(--radius-md);
+    transition: all 0.2s;
+  }
+
+  .theme-option:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+  }
+
+  .theme-preview {
+    width: 24px;
+    height: 24px;
+    border-radius: var(--radius-sm);
+    border: 2px solid var(--border);
+  }
+
+  .theme-preview.dashboard {
+    background: linear-gradient(135deg, #0f172a 50%, #3b82f6 50%);
+  }
+
+  .theme-preview.modern {
+    background: linear-gradient(135deg, #ffffff 50%, #6366f1 50%);
+  }
+
+  .theme-preview.bloomberg {
+    background: linear-gradient(135deg, #0a0a0a 50%, #ff8c00 50%);
+  }
+</style>

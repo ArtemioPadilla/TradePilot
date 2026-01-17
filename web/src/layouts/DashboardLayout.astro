@@ -1,0 +1,86 @@
+---
+import '../styles/global.css';
+import Sidebar from '../components/common/Sidebar.astro';
+import Header from '../components/common/Header.astro';
+import MobileNav from '../components/common/MobileNav.astro';
+import AuthGuard from '../components/auth/AuthGuard';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'TradePilot Dashboard' } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0a0a1a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title} | TradePilot</title>
+    <style>
+      /* Hide content until auth is verified */
+      .app-container { visibility: hidden; }
+      .app-container.authenticated { visibility: visible; }
+    </style>
+  </head>
+  <body>
+    <!-- Auth guard overlay - blocks page until authenticated -->
+    <AuthGuard client:load />
+
+    <div class="app-container" id="app-container">
+      <Sidebar />
+      <div class="main-content">
+        <Header title={title} />
+        <main class="page-content">
+          <slot />
+        </main>
+      </div>
+      <MobileNav />
+    </div>
+    <script>
+      // Initialize theme from localStorage with system preference support
+      import { initTheme } from '../stores/theme';
+      initTheme();
+    </script>
+  </body>
+</html>
+
+<style>
+  .app-container {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  .main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-left: 240px;
+    min-height: 100vh;
+  }
+
+  .page-content {
+    flex: 1;
+    padding: 1.5rem;
+    overflow-y: auto;
+  }
+
+  @media (max-width: 1024px) {
+    .main-content {
+      margin-left: 0;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .page-content {
+      padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0));
+    }
+  }
+</style>

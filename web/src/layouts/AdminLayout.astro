@@ -1,0 +1,237 @@
+---
+import '../styles/global.css';
+import AuthGuard from '../components/auth/AuthGuard';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+
+const navItems = [
+  { href: '/admin', label: 'Dashboard', icon: 'layout-dashboard' },
+  { href: '/admin/users', label: 'Users', icon: 'users' },
+  { href: '/admin/invites', label: 'Invites', icon: 'mail' },
+  { href: '/admin/settings', label: 'Settings', icon: 'settings' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="TradePilot Admin Console" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title} | TradePilot Admin</title>
+  </head>
+  <body>
+    <!-- Auth guard overlay - blocks page until authenticated as admin -->
+    <AuthGuard client:load requireAdmin={true} />
+
+    <div class="admin-layout" id="app-container">
+      <!-- Sidebar -->
+      <aside class="admin-sidebar">
+        <div class="sidebar-header">
+          <a href="/admin" class="logo">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="32" height="32" rx="8" fill="var(--accent)"/>
+              <path d="M8 20L12 12L18 16L24 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="24" cy="8" r="2" fill="white"/>
+            </svg>
+            <span>Admin</span>
+          </a>
+        </div>
+
+        <nav class="sidebar-nav">
+          {navItems.map((item) => (
+            <a
+              href={item.href}
+              class:list={['nav-item', { active: currentPath === item.href || (item.href !== '/admin' && currentPath.startsWith(item.href)) }]}
+            >
+              <span class="nav-icon">{item.icon === 'layout-dashboard' ? '📊' : item.icon === 'users' ? '👥' : item.icon === 'mail' ? '✉️' : '⚙️'}</span>
+              <span class="nav-label">{item.label}</span>
+            </a>
+          ))}
+        </nav>
+
+        <div class="sidebar-footer">
+          <a href="/dashboard" class="back-link">
+            ← Back to Dashboard
+          </a>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="admin-main">
+        <header class="admin-header">
+          <h1>{title}</h1>
+          <div class="header-actions">
+            <span class="admin-badge">Admin</span>
+          </div>
+        </header>
+
+        <div class="admin-content">
+          <slot />
+        </div>
+      </main>
+    </div>
+
+    <!-- Theme initialization -->
+    <script>
+      const savedTheme = localStorage.getItem('theme') || 'dashboard';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
+  </body>
+</html>
+
+<style>
+  .admin-layout {
+    display: flex;
+    min-height: 100vh;
+    visibility: hidden;
+  }
+
+  .admin-layout.authenticated {
+    visibility: visible;
+  }
+
+  .admin-sidebar {
+    width: 240px;
+    background-color: var(--bg-secondary);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 100;
+  }
+
+  .sidebar-header {
+    padding: 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 600;
+    font-size: 1.125rem;
+    color: var(--text-primary);
+  }
+
+  .sidebar-nav {
+    flex: 1;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    transition: all 0.15s ease;
+  }
+
+  .nav-item:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+  }
+
+  .nav-item.active {
+    background-color: var(--accent);
+    color: white;
+  }
+
+  .nav-icon {
+    font-size: 1.125rem;
+  }
+
+  .sidebar-footer {
+    padding: 1rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .back-link {
+    display: block;
+    padding: 0.75rem 1rem;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    border-radius: var(--radius);
+    transition: all 0.15s ease;
+  }
+
+  .back-link:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+  }
+
+  .admin-main {
+    flex: 1;
+    margin-left: 240px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .admin-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 2rem;
+    background-color: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .admin-header h1 {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  .admin-badge {
+    background-color: var(--accent);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .admin-content {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+  }
+
+  @media (max-width: 768px) {
+    .admin-sidebar {
+      width: 100%;
+      position: relative;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .admin-main {
+      margin-left: 0;
+    }
+
+    .sidebar-nav {
+      flex-direction: row;
+      overflow-x: auto;
+      padding: 0.5rem;
+    }
+
+    .nav-label {
+      display: none;
+    }
+  }
+</style>

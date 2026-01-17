@@ -3,17 +3,17 @@
 > These decisions must be finalized before implementation. Each requires your input.
 
 ## Architecture & Infrastructure
-- [ ] **Island Framework** - React vs Svelte vs Solid for interactive components
-- [ ] **State Management** - Nanostores vs Zustand vs custom stores
-- [ ] **Hosting Split** - GitHub Pages + Firebase hybrid vs Firebase-only
+- [x] **Island Framework** - ~~React vs Svelte vs Solid~~ → **React** (Astro + React islands)
+- [x] **State Management** - ~~Nanostores vs Zustand~~ → **Nanostores** (lightweight, framework-agnostic)
+- [x] **Hosting Split** - ~~hybrid vs Firebase-only~~ → **GitHub Pages + Firebase hybrid** (static on GH Pages, Firebase for auth/data)
 - [ ] **Domain & SSL** - Custom domain setup and certificate management
 
 ## Authentication & Users
-- [ ] **Invite Code Format** - UUID vs short alphanumeric vs custom prefix
-- [ ] **Invite Expiration** - 24h / 7d / 30d / never
-- [ ] **Admin Approval Flow** - Email notification vs dashboard-only vs auto-approve rules
-- [ ] **Session Duration** - Expiry time for auth tokens
-- [ ] **Password Requirements** - Minimum length, complexity rules
+- [x] **Invite Code Format** - ~~UUID vs short alphanumeric~~ → **8-char alphanumeric** (A-Z, 2-9, no ambiguous chars)
+- [x] **Invite Expiration** - ~~24h / 7d / 30d~~ → **7 days default** (configurable per invite)
+- [x] **Admin Approval Flow** - ~~Email vs dashboard~~ → **Dashboard-only** (admin console at /admin)
+- [ ] **Session Duration** - Expiry time for auth tokens (using Firebase defaults)
+- [ ] **Password Requirements** - Minimum length, complexity rules (using Firebase defaults)
 
 ## Data & Storage
 - [ ] **Credential Encryption** - Firebase KMS vs custom encryption layer
@@ -28,9 +28,9 @@
 - [ ] **Supported Order Types** - All vs subset for MVP
 
 ## UI/UX
-- [ ] **Default Theme** - Bloomberg / Modern / Dashboard for new users
+- [x] **Default Theme** - ~~Bloomberg / Modern / Dashboard~~ → **System preference** (light→Modern, dark→Dashboard)
 - [ ] **Widget Grid System** - Fixed grid vs freeform drag-drop
-- [ ] **Mobile Navigation** - Bottom tabs vs hamburger menu vs hybrid
+- [x] **Mobile Navigation** - ~~Bottom tabs vs hamburger~~ → **Bottom tabs** (5 items: Home, Accounts, Trade, Strategies, Settings)
 - [ ] **Chart Library** - Lightweight Charts vs Chart.js vs Recharts
 
 ## Social & Sharing
@@ -45,8 +45,8 @@
 - [ ] **Default Notification Preferences** - What's on/off by default
 
 ## Documentation
-- [ ] **Docs Framework** - MkDocs Material vs Docusaurus vs Starlight
-- [ ] **API Docs Style** - Sphinx autodoc vs hand-written vs hybrid
+- [x] **Docs Framework** - ~~MkDocs vs Docusaurus vs Starlight~~ → **Sphinx** (Python-native, autodoc support)
+- [x] **API Docs Style** - ~~autodoc vs hand-written~~ → **Sphinx autodoc** (auto-generated from docstrings)
 - [ ] **Versioning** - Version docs with releases or single latest
 
 ---

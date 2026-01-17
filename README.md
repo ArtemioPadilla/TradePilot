@@ -1,7 +1,8 @@
 # TradePilot
 
-[![Build Status](https://img.shields.io/travis/yourusername/tradepilot.svg?style=flat)](https://travis-ci.org/yourusername/tradepilot)
-[![Coverage Status](https://img.shields.io/coveralls/yourusername/tradepilot.svg?style=flat)](https://coveralls.io/r/yourusername/tradepilot)
+[![Tests](https://github.com/aspadillar/TradePilot/actions/workflows/test.yml/badge.svg)](https://github.com/aspadillar/TradePilot/actions/workflows/test.yml)
+[![Deploy Web](https://github.com/aspadillar/TradePilot/actions/workflows/deploy-web.yml/badge.svg)](https://github.com/aspadillar/TradePilot/actions/workflows/deploy-web.yml)
+[![Lighthouse CI](https://github.com/aspadillar/TradePilot/actions/workflows/lighthouse.yml/badge.svg)](https://github.com/aspadillar/TradePilot/actions/workflows/lighthouse.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 > **Integrated Backtesting and Live Trading Framework**

@@ -1,0 +1,141 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import { LoginForm } from '../../components/auth/LoginForm';
+---
+
+<MainLayout title="Log In">
+  <div class="auth-page">
+    <div class="auth-container">
+      <div class="auth-header">
+        <a href="/" class="logo">
+          <svg width="40" height="40" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="32" height="32" rx="8" fill="var(--accent)"/>
+            <path d="M8 20L12 12L18 16L24 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="24" cy="8" r="2" fill="white"/>
+          </svg>
+        </a>
+        <h1>Welcome back</h1>
+        <p>Log in to your TradePilot account</p>
+      </div>
+
+      <LoginForm client:load />
+
+      <div class="auth-footer">
+        <p>Don't have an account? <a href="/auth/register">Sign up</a></p>
+      </div>
+    </div>
+  </div>
+</MainLayout>
+
+<style>
+  .auth-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  .auth-container {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .logo {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+  }
+
+  .auth-header h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .auth-header p {
+    color: var(--text-muted);
+  }
+
+  .auth-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+
+  .auth-footer p {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+  }
+
+  .auth-footer a {
+    color: var(--accent);
+    font-weight: 500;
+  }
+</style>
+
+<style is:global>
+  .auth-form {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+  }
+
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
+
+  .label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .forgot-link {
+    font-size: 0.875rem;
+    color: var(--accent);
+  }
+
+  .error-message {
+    color: var(--negative);
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+    min-height: 1.25rem;
+  }
+
+  .btn-full {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .terms-text {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  .terms-text a {
+    color: var(--accent);
+  }
+
+  .invite-badge {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    color: var(--accent);
+    text-align: center;
+  }
+</style>

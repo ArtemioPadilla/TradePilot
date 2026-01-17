@@ -1,0 +1,57 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    // ==========================================================================
+    // Helper Functions
+    // ==========================================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Validate file size (max 5MB)
+    function isValidSize() {
+      return request.resource.size < 5 * 1024 * 1024;
+    }
+
+    // Validate image content type
+    function isImage() {
+      return request.resource.contentType.matches('image/.*');
+    }
+
+    // ==========================================================================
+    // User Profile Photos
+    // ==========================================================================
+    match /users/{userId}/profile/{fileName} {
+      allow read: if isAuthenticated();
+      allow write: if isOwner(userId) && isImage() && isValidSize();
+    }
+
+    // ==========================================================================
+    // User Documents (Account statements, etc.)
+    // ==========================================================================
+    match /users/{userId}/documents/{fileName} {
+      allow read, write: if isOwner(userId) && isValidSize();
+    }
+
+    // ==========================================================================
+    // Backtest Reports
+    // ==========================================================================
+    match /users/{userId}/backtests/{backtestId}/{fileName} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // ==========================================================================
+    // Public Assets (Strategy thumbnails, etc.)
+    // ==========================================================================
+    match /public/{allPaths=**} {
+      allow read: if true;
+      allow write: if false; // Only admin/functions can write
+    }
+  }
+}

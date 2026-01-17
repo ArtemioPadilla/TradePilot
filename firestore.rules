@@ -1,0 +1,178 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ==========================================================================
+    // Helper Functions
+    // ==========================================================================
+
+    // Check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Check if user is accessing their own data
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Get user document
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    // Check if user has a specific role
+    function hasRole(role) {
+      return isAuthenticated() && getUserData().role == role;
+    }
+
+    // Check if user is admin
+    function isAdmin() {
+      return hasRole('admin');
+    }
+
+    // Check if user is active (not pending or suspended)
+    function isActiveUser() {
+      return isAuthenticated() && getUserData().status == 'active';
+    }
+
+    // ==========================================================================
+    // Users Collection
+    // ==========================================================================
+    match /users/{userId} {
+      // Users can read their own profile
+      allow read: if isOwner(userId);
+
+      // Users can create their own profile on registration
+      allow create: if isOwner(userId) &&
+        request.resource.data.role == 'user' &&
+        request.resource.data.status == 'pending';
+
+      // Users can update their own profile (except role and status)
+      allow update: if isOwner(userId) &&
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'status']);
+
+      // Admins can read and update any user
+      allow read, update: if isAdmin();
+
+      // No one can delete users
+      allow delete: if false;
+    }
+
+    // ==========================================================================
+    // Invites Collection
+    // ==========================================================================
+    match /invites/{inviteId} {
+      // Anyone can read an invite (to validate it)
+      allow read: if true;
+
+      // Only admins can create invites
+      allow create: if isAdmin();
+
+      // Invites can be updated when used (mark as used)
+      allow update: if isAuthenticated() &&
+        resource.data.usedAt == null &&
+        request.resource.data.usedBy == request.auth.uid;
+
+      // Only admins can delete invites
+      allow delete: if isAdmin();
+    }
+
+    // ==========================================================================
+    // Accounts Collection (User's brokerage accounts)
+    // ==========================================================================
+    match /users/{userId}/accounts/{accountId} {
+      allow read, write: if isOwner(userId) && isActiveUser();
+    }
+
+    // ==========================================================================
+    // Holdings Collection (Per account)
+    // ==========================================================================
+    match /users/{userId}/accounts/{accountId}/holdings/{holdingId} {
+      allow read, write: if isOwner(userId) && isActiveUser();
+    }
+
+    // ==========================================================================
+    // Transactions Collection (Per account)
+    // ==========================================================================
+    match /users/{userId}/accounts/{accountId}/transactions/{transactionId} {
+      allow read: if isOwner(userId) && isActiveUser();
+      allow create: if isOwner(userId) && isActiveUser();
+      // Transactions are immutable once created
+      allow update, delete: if false;
+    }
+
+    // ==========================================================================
+    // Strategies Collection
+    // ==========================================================================
+    match /users/{userId}/strategies/{strategyId} {
+      // Owner can read, create, update, delete their strategies
+      allow read, write: if isOwner(userId) && isActiveUser();
+    }
+
+    // Public strategies (shared by users)
+    match /publicStrategies/{strategyId} {
+      // Anyone can read public strategies
+      allow read: if isActiveUser();
+
+      // Only the author can create/update/delete
+      allow create: if isActiveUser() &&
+        request.resource.data.authorId == request.auth.uid;
+      allow update, delete: if isActiveUser() &&
+        resource.data.authorId == request.auth.uid;
+    }
+
+    // ==========================================================================
+    // Backtests Collection
+    // ==========================================================================
+    match /users/{userId}/backtests/{backtestId} {
+      allow read, write: if isOwner(userId) && isActiveUser();
+    }
+
+    // ==========================================================================
+    // Alerts Collection
+    // ==========================================================================
+    match /users/{userId}/alerts/{alertId} {
+      allow read, write: if isOwner(userId) && isActiveUser();
+    }
+
+    // ==========================================================================
+    // Notifications Collection
+    // ==========================================================================
+    match /users/{userId}/notifications/{notificationId} {
+      allow read: if isOwner(userId);
+      allow update: if isOwner(userId) &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
+      allow delete: if isOwner(userId);
+    }
+
+    // ==========================================================================
+    // Watchlists Collection
+    // ==========================================================================
+    match /users/{userId}/watchlists/{watchlistId} {
+      allow read, write: if isOwner(userId) && isActiveUser();
+    }
+
+    // ==========================================================================
+    // User Preferences
+    // ==========================================================================
+    match /users/{userId}/preferences/{prefId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // ==========================================================================
+    // Leaderboards (Read-only, populated by Cloud Functions)
+    // ==========================================================================
+    match /leaderboards/{leaderboardId} {
+      allow read: if isActiveUser();
+      allow write: if false; // Only Cloud Functions can write
+    }
+
+    // ==========================================================================
+    // Admin-only Collections
+    // ==========================================================================
+    match /admin/{document=**} {
+      allow read, write: if isAdmin();
+    }
+  }
+}

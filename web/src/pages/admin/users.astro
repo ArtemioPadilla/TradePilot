@@ -1,0 +1,506 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+---
+
+<AdminLayout title="User Management">
+  <div class="users-page">
+    <!-- Filters -->
+    <div class="filters">
+      <div class="filter-group">
+        <label class="label">Status</label>
+        <select id="status-filter" class="input">
+          <option value="">All</option>
+          <option value="pending">Pending</option>
+          <option value="active">Active</option>
+          <option value="suspended">Suspended</option>
+        </select>
+      </div>
+      <div class="filter-group search">
+        <label class="label">Search</label>
+        <input type="text" id="search-input" class="input" placeholder="Search by email or name..." />
+      </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Status</th>
+            <th>Role</th>
+            <th>Joined</th>
+            <th>Last Login</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="users-table">
+          <tr>
+            <td colspan="6" class="loading">Loading users...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- User Detail Modal -->
+  <div class="modal" id="user-modal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>User Details</h3>
+        <button class="modal-close" id="close-modal">✕</button>
+      </div>
+      <div id="user-details">
+        <!-- Filled dynamically -->
+      </div>
+    </div>
+  </div>
+</AdminLayout>
+
+<script>
+  import { getAllUsers, approveUser, suspendUser, reactivateUser, updateUserRole } from '../../lib/admin';
+  import type { User } from '../../lib/types';
+
+  let allUsers: User[] = [];
+
+  // Format date
+  function formatDate(date: Date | null): string {
+    if (!date) return 'Never';
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    }).format(date);
+  }
+
+  // Get status badge HTML
+  function getStatusBadge(status: string): string {
+    const classes: Record<string, string> = {
+      pending: 'badge-warning',
+      active: 'badge-success',
+      suspended: 'badge-danger',
+    };
+    return `<span class="badge ${classes[status] || ''}">${status}</span>`;
+  }
+
+  // Render users table
+  function renderUsers(users: User[]) {
+    const tbody = document.getElementById('users-table')!;
+
+    if (users.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No users found</td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = users.map(user => `
+      <tr data-uid="${user.uid}">
+        <td>
+          <div class="user-cell">
+            <div class="user-avatar">${(user.displayName || user.email || '?')[0].toUpperCase()}</div>
+            <div class="user-info">
+              <span class="user-name">${user.displayName || 'No name'}</span>
+              <span class="user-email">${user.email}</span>
+            </div>
+          </div>
+        </td>
+        <td>${getStatusBadge(user.status)}</td>
+        <td><span class="badge badge-neutral">${user.role}</span></td>
+        <td>${formatDate(user.createdAt)}</td>
+        <td>${formatDate(user.lastLoginAt)}</td>
+        <td>
+          <div class="action-buttons">
+            ${user.status === 'pending' ? `<button class="btn btn-sm btn-primary approve-btn" data-uid="${user.uid}">Approve</button>` : ''}
+            ${user.status === 'active' ? `<button class="btn btn-sm btn-danger suspend-btn" data-uid="${user.uid}">Suspend</button>` : ''}
+            ${user.status === 'suspended' ? `<button class="btn btn-sm btn-secondary reactivate-btn" data-uid="${user.uid}">Reactivate</button>` : ''}
+            <button class="btn btn-sm btn-ghost view-btn" data-uid="${user.uid}">View</button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+
+    // Add event listeners
+    tbody.querySelectorAll('.approve-btn').forEach(btn => {
+      btn.addEventListener('click', handleApprove);
+    });
+    tbody.querySelectorAll('.suspend-btn').forEach(btn => {
+      btn.addEventListener('click', handleSuspend);
+    });
+    tbody.querySelectorAll('.reactivate-btn').forEach(btn => {
+      btn.addEventListener('click', handleReactivate);
+    });
+    tbody.querySelectorAll('.view-btn').forEach(btn => {
+      btn.addEventListener('click', handleView);
+    });
+  }
+
+  // Load users
+  async function loadUsers() {
+    try {
+      allUsers = await getAllUsers();
+      applyFilters();
+    } catch (error) {
+      console.error('Failed to load users:', error);
+      document.getElementById('users-table')!.innerHTML =
+        '<tr><td colspan="6" class="error-state">Failed to load users</td></tr>';
+    }
+  }
+
+  // Apply filters
+  function applyFilters() {
+    const status = (document.getElementById('status-filter') as HTMLSelectElement).value;
+    const search = (document.getElementById('search-input') as HTMLInputElement).value.toLowerCase();
+
+    let filtered = allUsers;
+
+    if (status) {
+      filtered = filtered.filter(u => u.status === status);
+    }
+
+    if (search) {
+      filtered = filtered.filter(u =>
+        u.email?.toLowerCase().includes(search) ||
+        u.displayName?.toLowerCase().includes(search)
+      );
+    }
+
+    renderUsers(filtered);
+  }
+
+  // Event handlers
+  async function handleApprove(e: Event) {
+    const uid = (e.target as HTMLElement).dataset.uid!;
+    if (!confirm('Approve this user?')) return;
+    await approveUser(uid);
+    loadUsers();
+  }
+
+  async function handleSuspend(e: Event) {
+    const uid = (e.target as HTMLElement).dataset.uid!;
+    if (!confirm('Suspend this user?')) return;
+    await suspendUser(uid);
+    loadUsers();
+  }
+
+  async function handleReactivate(e: Event) {
+    const uid = (e.target as HTMLElement).dataset.uid!;
+    if (!confirm('Reactivate this user?')) return;
+    await reactivateUser(uid);
+    loadUsers();
+  }
+
+  function handleView(e: Event) {
+    const uid = (e.target as HTMLElement).dataset.uid!;
+    const user = allUsers.find(u => u.uid === uid);
+    if (!user) return;
+
+    const modal = document.getElementById('user-modal')!;
+    const details = document.getElementById('user-details')!;
+
+    details.innerHTML = `
+      <div class="user-detail-card">
+        <div class="detail-row">
+          <span class="detail-label">UID</span>
+          <span class="detail-value">${user.uid}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Email</span>
+          <span class="detail-value">${user.email}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Name</span>
+          <span class="detail-value">${user.displayName || 'Not set'}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Status</span>
+          <span class="detail-value">${getStatusBadge(user.status)}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Role</span>
+          <select id="role-select" class="input" data-uid="${user.uid}">
+            <option value="user" ${user.role === 'user' ? 'selected' : ''}>User</option>
+            <option value="premium" ${user.role === 'premium' ? 'selected' : ''}>Premium</option>
+            <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Admin</option>
+          </select>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Joined</span>
+          <span class="detail-value">${formatDate(user.createdAt)}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Last Login</span>
+          <span class="detail-value">${formatDate(user.lastLoginAt)}</span>
+        </div>
+        ${user.inviteCode ? `
+        <div class="detail-row">
+          <span class="detail-label">Invite Code</span>
+          <span class="detail-value">${user.inviteCode}</span>
+        </div>
+        ` : ''}
+      </div>
+    `;
+
+    // Role change handler
+    const roleSelect = document.getElementById('role-select') as HTMLSelectElement;
+    roleSelect.addEventListener('change', async () => {
+      await updateUserRole(user.uid, roleSelect.value as any);
+      loadUsers();
+    });
+
+    modal.classList.add('open');
+  }
+
+  // Modal close
+  document.getElementById('close-modal')!.addEventListener('click', () => {
+    document.getElementById('user-modal')!.classList.remove('open');
+  });
+  document.querySelector('#user-modal .modal-backdrop')!.addEventListener('click', () => {
+    document.getElementById('user-modal')!.classList.remove('open');
+  });
+
+  // Filter listeners
+  document.getElementById('status-filter')!.addEventListener('change', applyFilters);
+  document.getElementById('search-input')!.addEventListener('input', applyFilters);
+
+  // Check URL params for initial filter
+  const urlParams = new URLSearchParams(window.location.search);
+  const statusParam = urlParams.get('status');
+  if (statusParam) {
+    (document.getElementById('status-filter') as HTMLSelectElement).value = statusParam;
+  }
+
+  // Initialize
+  loadUsers();
+</script>
+
+<style>
+  .users-page {
+    max-width: 1200px;
+  }
+
+  .filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .filter-group.search {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .table-container {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .data-table th {
+    text-align: left;
+    padding: 0.875rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    background-color: var(--bg-tertiary);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .data-table td {
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+
+  .data-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .user-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-full);
+    background-color: var(--accent);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.875rem;
+  }
+
+  .user-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .user-name {
+    font-weight: 500;
+  }
+
+  .user-email {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .badge-warning {
+    background-color: rgba(255, 170, 0, 0.15);
+    color: #ffaa00;
+  }
+
+  .badge-success {
+    background-color: rgba(0, 200, 150, 0.15);
+    color: #00c896;
+  }
+
+  .badge-danger {
+    background-color: rgba(255, 80, 80, 0.15);
+    color: #ff5050;
+  }
+
+  .badge-neutral {
+    background-color: var(--bg-tertiary);
+    color: var(--text-muted);
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .btn-sm {
+    padding: 0.375rem 0.625rem;
+    font-size: 0.75rem;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+  }
+
+  .btn-ghost:hover {
+    border-color: var(--text-muted);
+    color: var(--text-primary);
+  }
+
+  .btn-danger {
+    background-color: var(--negative);
+    color: white;
+  }
+
+  .loading,
+  .empty-state,
+  .error-state {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-muted);
+  }
+
+  /* Modal */
+  .modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal.open {
+    display: flex;
+  }
+
+  .modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .modal-content {
+    position: relative;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 480px;
+    margin: 1rem;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1.25rem;
+  }
+
+  .user-detail-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .detail-row:last-child {
+    border-bottom: none;
+  }
+
+  .detail-label {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+  }
+
+  .detail-value {
+    font-weight: 500;
+  }
+
+  .detail-row select {
+    width: 150px;
+  }
+</style>
