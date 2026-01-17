@@ -1,7 +1,7 @@
 # Phase 2: Portfolio Core
 
 ## 2.0 E2E Tests (Required)
-- [ ] Write E2E tests for accounts page
+- [x] Write E2E tests for accounts page
 - [ ] Write E2E tests for holdings/positions
 - [ ] Write E2E tests for CSV import flow
 - [ ] Write E2E tests for portfolio calculations display
@@ -17,14 +17,17 @@
 - [x] Create holdings service (CRUD operations)
 
 ## 2.2 Manual Account Management
-- [ ] Build accounts list page (`/accounts`)
-- [ ] Create "Add Account" modal/form
-  - [ ] Account name input
-  - [ ] Account type selector (brokerage/401k/IRA/crypto/other)
-  - [ ] Currency selector
-  - [ ] Notes field
-- [ ] Implement account CRUD operations
-- [ ] Build account detail page (`/accounts/[id]`)
+- [x] Build accounts list page (`/dashboard/accounts`)
+- [x] Create "Add Account" modal/form
+  - [x] Account name input
+  - [x] Account type selector (brokerage/401k/IRA/crypto/other)
+  - [x] Currency selector
+  - [x] Notes field
+  - [x] Institution field
+  - [x] Starting cash balance
+  - [x] Set as default option
+- [x] Implement account CRUD operations
+- [ ] Build account detail page (`/dashboard/accounts/[id]`)
 - [ ] Add account deletion with confirmation
 
 ## 2.3 Manual Position Entry
