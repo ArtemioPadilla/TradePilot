@@ -28,9 +28,7 @@ class Backtest:
         Returns:
             pd.Series: Portfolio values from the simulation.
         """
-        print(f"Running backtest from {start} to {end}...")
         self.results = self.simulator.run(start, end)
-        print(f"Backtest results:\n{self.results}")
         return self.results
 
     def evaluate(self):
