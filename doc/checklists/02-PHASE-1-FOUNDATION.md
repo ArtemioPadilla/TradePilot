@@ -87,11 +87,15 @@
 - [x] Write E2E tests for landing page
 - [x] Write E2E tests for authentication pages
 - [x] Write E2E tests for dashboard
+- [x] Write E2E tests for admin pages
+- [x] Write E2E tests for auth flows (forgot password, pending, suspended)
+- [x] Write E2E tests for placeholder pages
 - [x] Install Lighthouse CI for performance audits
 - [x] Create Lighthouse CI configuration
 - [x] Install Vitest for unit testing
 - [x] Create unit test setup
 - [x] Write sample unit tests
+- [x] Add testing requirements to CLAUDE.md
 - [ ] Set up test coverage reporting
 - [ ] Add accessibility testing (axe-core)
 

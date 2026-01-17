@@ -1,11 +1,20 @@
 # Phase 2: Portfolio Core
 
+## 2.0 E2E Tests (Required)
+- [ ] Write E2E tests for accounts page
+- [ ] Write E2E tests for holdings/positions
+- [ ] Write E2E tests for CSV import flow
+- [ ] Write E2E tests for portfolio calculations display
+- [ ] Ensure all tests pass before completing phase
+
 ## 2.1 Data Models
-- [ ] Define TypeScript interfaces for Account
-- [ ] Define TypeScript interfaces for Holding
-- [ ] Define TypeScript interfaces for Transaction
-- [ ] Create Firestore converters for type safety
-- [ ] Document data model in code comments
+- [x] Define TypeScript interfaces for Account
+- [x] Define TypeScript interfaces for Holding
+- [x] Define TypeScript interfaces for Transaction
+- [x] Create Firestore converters for type safety
+- [x] Document data model in code comments
+- [x] Create accounts service (CRUD operations)
+- [x] Create holdings service (CRUD operations)
 
 ## 2.2 Manual Account Management
 - [ ] Build accounts list page (`/accounts`)
