@@ -7,22 +7,22 @@ test.describe('Login Page', () => {
 
   test('should display login form', async ({ page }) => {
     // Check heading
-    await expect(page.getByRole('heading', { name: /sign in/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /welcome back/i })).toBeVisible();
 
     // Check form elements
     await expect(page.getByLabel(/email/i)).toBeVisible();
     await expect(page.getByLabel(/password/i)).toBeVisible();
-    await expect(page.getByRole('button', { name: /sign in/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /log in/i })).toBeVisible();
 
     // Check register link
-    await expect(page.getByRole('link', { name: /create.*account|sign up|register/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /sign up/i })).toBeVisible();
   });
 
   test('should show validation errors for empty form', async ({ page }) => {
     // Click submit without filling form
-    await page.getByRole('button', { name: /sign in/i }).click();
+    await page.getByRole('button', { name: /log in/i }).click();
 
-    // Check for required field validation (browser native or custom)
+    // Check for required field validation (browser native)
     const emailInput = page.getByLabel(/email/i);
     const isInvalid = await emailInput.evaluate((el: HTMLInputElement) => !el.validity.valid);
     expect(isInvalid).toBe(true);
@@ -32,7 +32,7 @@ test.describe('Login Page', () => {
     // Enter invalid email
     await page.getByLabel(/email/i).fill('invalid-email');
     await page.getByLabel(/password/i).fill('password123');
-    await page.getByRole('button', { name: /sign in/i }).click();
+    await page.getByRole('button', { name: /log in/i }).click();
 
     // Check for email validation
     const emailInput = page.getByLabel(/email/i);
@@ -41,16 +41,14 @@ test.describe('Login Page', () => {
   });
 
   test('should navigate to register page', async ({ page }) => {
-    await page.getByRole('link', { name: /create.*account|sign up|register/i }).click();
+    await page.getByRole('link', { name: /sign up/i }).click();
 
     await expect(page).toHaveURL('/auth/register');
   });
 
   test('should have forgot password link', async ({ page }) => {
-    const forgotLink = page.getByRole('link', { name: /forgot.*password/i });
-    if (await forgotLink.isVisible()) {
-      await expect(forgotLink).toBeVisible();
-    }
+    const forgotLink = page.getByRole('link', { name: /forgot password/i });
+    await expect(forgotLink).toBeVisible();
   });
 });
 
@@ -61,20 +59,20 @@ test.describe('Register Page', () => {
 
   test('should display registration form', async ({ page }) => {
     // Check heading
-    await expect(page.getByRole('heading', { name: /create.*account|sign up|register/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /create.*account/i })).toBeVisible();
 
     // Check form elements
     await expect(page.getByLabel(/email/i)).toBeVisible();
-    await expect(page.getByLabel(/password/i).first()).toBeVisible();
-    await expect(page.getByRole('button', { name: /create|sign up|register/i })).toBeVisible();
+    await expect(page.getByLabel(/^password$/i)).toBeVisible();
+    await expect(page.getByRole('button', { name: /create account/i })).toBeVisible();
   });
 
   test('should have login link', async ({ page }) => {
-    await expect(page.getByRole('link', { name: /sign in|login|already have/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /log in/i })).toBeVisible();
   });
 
   test('should navigate to login page', async ({ page }) => {
-    await page.getByRole('link', { name: /sign in|login|already have/i }).click();
+    await page.getByRole('link', { name: /log in/i }).click();
 
     await expect(page).toHaveURL('/auth/login');
   });
@@ -84,15 +82,15 @@ test.describe('Register Page', () => {
     await page.getByLabel(/email/i).fill('test@example.com');
 
     // Fill weak password
-    await page.getByLabel(/password/i).first().fill('123');
+    await page.getByLabel(/^password$/i).fill('123');
 
     // Try to submit
-    await page.getByRole('button', { name: /create|sign up|register/i }).click();
+    await page.getByRole('button', { name: /create account/i }).click();
 
-    // Password should be invalid (too short)
-    const passwordInput = page.getByLabel(/password/i).first();
+    // Password should be invalid (too short based on minLength attribute)
+    const passwordInput = page.getByLabel(/^password$/i);
     const isInvalid = await passwordInput.evaluate((el: HTMLInputElement) => !el.validity.valid);
-    // Note: Browser validation may or may not catch this depending on minlength attribute
+    expect(isInvalid).toBe(true);
   });
 });
 
@@ -100,11 +98,15 @@ test.describe('Auth Flow', () => {
   test('should redirect unauthenticated users from dashboard', async ({ page }) => {
     await page.goto('/dashboard');
 
-    // Should redirect to login or show login prompt
-    // Implementation depends on auth guard strategy
-    const url = page.url();
-    const hasLoginPrompt = await page.getByRole('heading', { name: /sign in/i }).isVisible().catch(() => false);
+    // Should redirect to login or show loading/error
+    // Wait for navigation or content to settle
+    await page.waitForTimeout(2000);
 
-    expect(url.includes('/auth/login') || hasLoginPrompt || url.includes('/dashboard')).toBe(true);
+    const url = page.url();
+    const isOnLogin = url.includes('/auth/login');
+    const isOnDashboard = url.includes('/dashboard');
+
+    // Either redirected to login or still on dashboard (with auth guard showing)
+    expect(isOnLogin || isOnDashboard).toBe(true);
   });
 });

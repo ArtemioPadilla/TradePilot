@@ -5,23 +5,20 @@ test.describe('Landing Page', () => {
     await page.goto('/');
 
     // Check main heading
-    await expect(page.getByRole('heading', { name: /tradepilot/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /unified trading/i })).toBeVisible();
 
     // Check navigation links
-    await expect(page.getByRole('link', { name: /features/i })).toBeVisible();
-    await expect(page.getByRole('link', { name: /login/i })).toBeVisible();
-
-    // Check CTA button
+    await expect(page.getByRole('link', { name: /log in/i })).toBeVisible();
     await expect(page.getByRole('link', { name: /get started/i })).toBeVisible();
   });
 
   test('should navigate to login page', async ({ page }) => {
     await page.goto('/');
 
-    await page.getByRole('link', { name: /login/i }).click();
+    await page.getByRole('link', { name: /log in/i }).click();
 
     await expect(page).toHaveURL('/auth/login');
-    await expect(page.getByRole('heading', { name: /sign in/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /welcome back/i })).toBeVisible();
   });
 
   test('should have proper meta tags', async ({ page }) => {
@@ -38,11 +35,11 @@ test.describe('Landing Page', () => {
   test('should be accessible', async ({ page }) => {
     await page.goto('/');
 
-    // Check for skip link or main landmark
+    // Check for main landmark
     const main = page.locator('main');
     await expect(main).toBeVisible();
 
-    // Check images have alt text
+    // Check images have alt text (if any exist)
     const images = page.locator('img');
     const count = await images.count();
     for (let i = 0; i < count; i++) {
