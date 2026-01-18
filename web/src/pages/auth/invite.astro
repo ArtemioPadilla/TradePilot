@@ -37,7 +37,7 @@ import { RegisterForm } from '../../components/auth/RegisterForm';
         </div>
       </div>
 
-      <div id="invite-invalid" class="invite-error" style="display: none;">
+      <div id="invite-invalid" class="invite-error" style="display: none;" data-testid="invite-error">
         <div class="error-icon">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--negative)" stroke-width="2">
             <circle cx="12" cy="12" r="10"/>
@@ -46,14 +46,14 @@ import { RegisterForm } from '../../components/auth/RegisterForm';
           </svg>
         </div>
         <h2>Invalid Invite</h2>
-        <p id="error-message">This invite code is not valid.</p>
+        <p id="error-message">This invite code is invalid or has expired.</p>
         <div class="error-actions">
           <a href="/" class="btn btn-secondary">Go to Homepage</a>
           <a href="/auth/login" class="btn btn-primary">Log In</a>
         </div>
       </div>
 
-      <div id="no-code" class="invite-error" style="display: none;">
+      <div id="no-code" class="invite-error" style="display: none;" data-testid="invite-error">
         <div class="error-icon">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2">
             <circle cx="12" cy="12" r="10"/>
@@ -62,7 +62,7 @@ import { RegisterForm } from '../../components/auth/RegisterForm';
           </svg>
         </div>
         <h2>No Invite Code</h2>
-        <p>You need an invite code to create an account.</p>
+        <p>No invite code provided. You need an invite code to create an account.</p>
         <div class="error-actions">
           <a href="/" class="btn btn-secondary">Go to Homepage</a>
           <a href="/auth/login" class="btn btn-primary">Log In</a>

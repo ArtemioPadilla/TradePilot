@@ -489,6 +489,13 @@ export function OrderForm({
               {currency}{estimatedValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
           </div>
+          <div className="flex justify-between text-sm">
+            <span className="text-gray-600">Estimated Fees</span>
+            <span className="text-green-600 font-medium">
+              {currency}0.00
+              <span className="text-xs text-gray-500 ml-1">(Commission-free)</span>
+            </span>
+          </div>
           {side === 'buy' && buyingPower > 0 && (
             <div className="flex justify-between text-sm">
               <span className="text-gray-600">Buying Power</span>

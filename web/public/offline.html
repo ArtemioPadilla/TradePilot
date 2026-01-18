@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#6366f1" />
+    <title>Offline | TradePilot</title>
+    <style>
+      :root {
+        --bg-primary: #0a0a1a;
+        --bg-secondary: #12122a;
+        --text-primary: #ffffff;
+        --text-secondary: #a0a0c0;
+        --accent: #6366f1;
+        --accent-hover: #818cf8;
+        --radius: 12px;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        text-align: center;
+      }
+
+      .offline-container {
+        max-width: 400px;
+        width: 100%;
+      }
+
+      .logo {
+        margin-bottom: 2rem;
+      }
+
+      .logo svg {
+        width: 64px;
+        height: 64px;
+      }
+
+      .offline-icon {
+        margin-bottom: 1.5rem;
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.7;
+          transform: scale(0.95);
+        }
+      }
+
+      h1 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 0.75rem;
+      }
+
+      p {
+        color: var(--text-secondary);
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+      }
+
+      .tips {
+        background: var(--bg-secondary);
+        border-radius: var(--radius);
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        text-align: left;
+      }
+
+      .tips h3 {
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        color: var(--text-primary);
+      }
+
+      .tips ul {
+        list-style: none;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+      }
+
+      .tips li {
+        padding: 0.375rem 0;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+
+      .tips li::before {
+        content: '\2022';
+        color: var(--accent);
+      }
+
+      .actions {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 0.9375rem;
+        cursor: pointer;
+        border: none;
+        text-decoration: none;
+        transition: all 0.2s;
+      }
+
+      .btn-primary {
+        background: var(--accent);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: var(--accent-hover);
+      }
+
+      .btn-secondary {
+        background: transparent;
+        color: var(--text-secondary);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text-primary);
+      }
+
+      .status {
+        margin-top: 2rem;
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+      }
+
+      .status-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #ef4444;
+      }
+
+      .status-dot.online {
+        background: #22c55e;
+      }
+
+      /* Online state */
+      .online-message {
+        display: none;
+      }
+
+      body.online .offline-message {
+        display: none;
+      }
+
+      body.online .online-message {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="offline-container">
+      <!-- Logo -->
+      <div class="logo">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="8" fill="#6366f1"/>
+          <path d="M8 20L12 12L18 16L24 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="24" cy="8" r="2" fill="white"/>
+        </svg>
+      </div>
+
+      <!-- Offline Icon -->
+      <div class="offline-icon">
+        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="1.5">
+          <line x1="1" y1="1" x2="23" y2="23" />
+          <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55" />
+          <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39" />
+          <path d="M10.71 5.05A16 16 0 0 1 22.58 9" />
+          <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88" />
+          <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
+          <line x1="12" y1="20" x2="12.01" y2="20" />
+        </svg>
+      </div>
+
+      <!-- Offline Message -->
+      <div class="offline-message">
+        <h1>You're Offline</h1>
+        <p>
+          It looks like you've lost your internet connection.
+          Some features may be unavailable until you're back online.
+        </p>
+
+        <div class="tips">
+          <h3>While you're offline:</h3>
+          <ul>
+            <li>Cached portfolio data may still be viewable</li>
+            <li>Any pending changes will sync when you reconnect</li>
+            <li>Real-time prices won't update until you're online</li>
+          </ul>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary" onclick="window.location.reload()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M23 4v6h-6"></path>
+              <path d="M1 20v-6h6"></path>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
+            Try Again
+          </button>
+          <a href="/" class="btn btn-secondary">
+            Go to Homepage
+          </a>
+        </div>
+      </div>
+
+      <!-- Online Message (shown when back online) -->
+      <div class="online-message">
+        <h1>You're Back Online!</h1>
+        <p>
+          Great news! Your connection has been restored.
+          Click below to continue where you left off.
+        </p>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="window.location.reload()">
+            Continue to TradePilot
+          </button>
+        </div>
+      </div>
+
+      <!-- Status -->
+      <div class="status">
+        <span class="status-indicator">
+          <span class="status-dot" id="status-dot"></span>
+          <span id="status-text">Currently offline</span>
+        </span>
+      </div>
+    </div>
+
+    <script>
+      // Check online status and update UI
+      function updateOnlineStatus() {
+        const isOnline = navigator.onLine;
+        const body = document.body;
+        const statusDot = document.getElementById('status-dot');
+        const statusText = document.getElementById('status-text');
+
+        if (isOnline) {
+          body.classList.add('online');
+          statusDot.classList.add('online');
+          statusText.textContent = 'Connection restored';
+        } else {
+          body.classList.remove('online');
+          statusDot.classList.remove('online');
+          statusText.textContent = 'Currently offline';
+        }
+      }
+
+      // Listen for online/offline events
+      window.addEventListener('online', updateOnlineStatus);
+      window.addEventListener('offline', updateOnlineStatus);
+
+      // Initial check
+      updateOnlineStatus();
+    </script>
+  </body>
+</html>

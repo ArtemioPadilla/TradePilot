@@ -30,7 +30,7 @@ import { AccountDetail } from '../../components/accounts';
   } else if (container) {
     // No account ID provided
     container.innerHTML = `
-      <div class="error-state">
+      <div class="error-state" data-testid="no-account-error">
         <h2>No Account Selected</h2>
         <p>Please select an account from the accounts list.</p>
         <a href="/dashboard/accounts" class="btn btn-primary">View Accounts</a>

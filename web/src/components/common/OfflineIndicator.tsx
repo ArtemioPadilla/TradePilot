@@ -1,18 +1,23 @@
 /**
  * Offline Indicator Component
  *
- * Shows a banner when the user is offline.
+ * Shows a banner when the user is offline with pending sync count.
  */
 
 import { useState, useEffect } from 'react';
+import { offlineSync, type SyncStatus } from '../../lib/services/offline-sync';
 
 export function OfflineIndicator() {
   const [isOnline, setIsOnline] = useState(true);
   const [showBanner, setShowBanner] = useState(false);
+  const [syncStatus, setSyncStatus] = useState<SyncStatus | null>(null);
 
   useEffect(() => {
     // Check initial state
     setIsOnline(navigator.onLine);
+
+    // Get initial sync status
+    offlineSync.getStatus().then(setSyncStatus).catch(console.error);
 
     const handleOnline = () => {
       setIsOnline(true);
@@ -29,6 +34,15 @@ export function OfflineIndicator() {
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
 
+    // Subscribe to sync status changes
+    const unsubscribe = offlineSync.onStatusChange((status) => {
+      setSyncStatus(status);
+      // Show banner if there are pending operations
+      if (status.pendingCount > 0 || !status.isOnline) {
+        setShowBanner(true);
+      }
+    });
+
     // Show banner if offline on mount
     if (!navigator.onLine) {
       setShowBanner(true);
@@ -37,6 +51,7 @@ export function OfflineIndicator() {
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
+      unsubscribe();
     };
   }, []);
 
@@ -44,21 +59,41 @@ export function OfflineIndicator() {
     return null;
   }
 
+  const pendingCount = syncStatus?.pendingCount || 0;
+  const isSyncing = syncStatus?.isSyncing || false;
+
   return (
     <div
-      className={`offline-indicator ${isOnline ? 'online' : 'offline'}`}
+      className={`offline-indicator ${isOnline ? 'online' : 'offline'} ${isSyncing ? 'syncing' : ''}`}
       role="alert"
       aria-live="polite"
       data-testid="offline-indicator"
     >
       {isOnline ? (
-        <>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-            <polyline points="22 4 12 14.01 9 11.01" />
-          </svg>
-          <span>You're back online</span>
-        </>
+        isSyncing ? (
+          <>
+            <svg className="spin" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+            </svg>
+            <span>Syncing {pendingCount} pending change{pendingCount !== 1 ? 's' : ''}...</span>
+          </>
+        ) : pendingCount > 0 ? (
+          <>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+              <polyline points="22 4 12 14.01 9 11.01" />
+            </svg>
+            <span>Synced! {pendingCount} change{pendingCount !== 1 ? 's' : ''} saved</span>
+          </>
+        ) : (
+          <>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+              <polyline points="22 4 12 14.01 9 11.01" />
+            </svg>
+            <span>You're back online</span>
+          </>
+        )
       ) : (
         <>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -70,7 +105,10 @@ export function OfflineIndicator() {
             <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
             <line x1="12" y1="20" x2="12.01" y2="20" />
           </svg>
-          <span>You're offline. Some features may be unavailable.</span>
+          <span>
+            You're offline.
+            {pendingCount > 0 && ` ${pendingCount} change${pendingCount !== 1 ? 's' : ''} pending.`}
+          </span>
         </>
       )}
       <button
@@ -117,6 +155,16 @@ const styles = `
     }
   }
 
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .spin {
+    animation: spin 1s linear infinite;
+  }
+
   .offline-indicator.offline {
     background-color: #fef2f2;
     border: 1px solid #fecaca;
@@ -127,6 +175,12 @@ const styles = `
     background-color: #f0fdf4;
     border: 1px solid #bbf7d0;
     color: #16a34a;
+  }
+
+  .offline-indicator.syncing {
+    background-color: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #2563eb;
   }
 
   .dismiss-button {

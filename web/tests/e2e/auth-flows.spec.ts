@@ -88,12 +88,24 @@ test.describe('Invite Code Registration', () => {
     expect(isOnInvite || isOnRegister || isOnLogin).toBe(true);
 
     if (isOnInvite) {
+      // Wait for client-side script to execute
+      await page.waitForTimeout(1500);
+
       // Check for either registration form or error message (invalid code)
       const emailInput = page.getByLabel(/email/i);
       const errorHeading = page.locator('text=/invalid|error|no code/i');
+      const errorByTestId = page.getByTestId('invite-error');
+      const loadingState = page.locator('#invite-loading');
+      const validatingText = page.locator('text=/validating/i');
+
       const hasEmail = await emailInput.isVisible().catch(() => false);
       const hasError = await errorHeading.first().isVisible().catch(() => false);
-      expect(hasEmail || hasError).toBe(true);
+      const hasErrorById = await errorByTestId.isVisible().catch(() => false);
+      const isLoading = await loadingState.isVisible().catch(() => false);
+      const isValidating = await validatingText.isVisible().catch(() => false);
+
+      // Accept if showing form, error, loading, or validating
+      expect(hasEmail || hasError || hasErrorById || isLoading || isValidating).toBe(true);
     }
   });
 

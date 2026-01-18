@@ -1,0 +1,344 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+---
+
+<MainLayout title="Unsubscribe" description="Manage your email notification preferences">
+  <main class="unsubscribe-page">
+    <div class="container">
+      <div class="card" data-testid="unsubscribe-card">
+        <!-- Loading State -->
+        <div id="loading-state" class="state-container">
+          <div class="spinner"></div>
+          <p>Processing your request...</p>
+        </div>
+
+        <!-- Success State -->
+        <div id="success-state" class="state-container" style="display: none;">
+          <div class="icon success">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+              <polyline points="22 4 12 14.01 9 11.01" />
+            </svg>
+          </div>
+          <h1>You've Been Unsubscribed</h1>
+          <p id="success-message">You will no longer receive email notifications.</p>
+          <div class="actions">
+            <a href="/dashboard/settings" class="btn btn-primary">Manage Preferences</a>
+            <a href="/" class="btn btn-secondary">Go to Homepage</a>
+          </div>
+        </div>
+
+        <!-- Error State -->
+        <div id="error-state" class="state-container" style="display: none;">
+          <div class="icon error">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="15" y1="9" x2="9" y2="15" />
+              <line x1="9" y1="9" x2="15" y2="15" />
+            </svg>
+          </div>
+          <h1>Unsubscribe Failed</h1>
+          <p id="error-message">We couldn't process your unsubscribe request.</p>
+          <div class="actions">
+            <button id="retry-button" class="btn btn-primary">Try Again</button>
+            <a href="/dashboard/settings" class="btn btn-secondary">Manage Manually</a>
+          </div>
+        </div>
+
+        <!-- No Token State -->
+        <div id="no-token-state" class="state-container" style="display: none;">
+          <div class="icon warning">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+          </div>
+          <h1>Missing Unsubscribe Link</h1>
+          <p>This page requires a valid unsubscribe link from your email.</p>
+          <div class="actions">
+            <a href="/dashboard/settings" class="btn btn-primary">Manage Preferences</a>
+            <a href="/" class="btn btn-secondary">Go to Homepage</a>
+          </div>
+        </div>
+
+        <!-- Resubscribe Option (shown after successful unsubscribe) -->
+        <div id="resubscribe-section" class="resubscribe-section" style="display: none;">
+          <p>Changed your mind?</p>
+          <button id="resubscribe-button" class="btn btn-link">Re-enable email notifications</button>
+        </div>
+      </div>
+    </div>
+  </main>
+</MainLayout>
+
+<script>
+  const loadingState = document.getElementById('loading-state');
+  const successState = document.getElementById('success-state');
+  const errorState = document.getElementById('error-state');
+  const noTokenState = document.getElementById('no-token-state');
+  const resubscribeSection = document.getElementById('resubscribe-section');
+  const retryButton = document.getElementById('retry-button');
+  const resubscribeButton = document.getElementById('resubscribe-button');
+  const successMessage = document.getElementById('success-message');
+  const errorMessage = document.getElementById('error-message');
+
+  // Get token from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get('token');
+  const type = urlParams.get('type') || 'all'; // 'all', 'alerts', 'digest', etc.
+
+  function showState(stateId: string) {
+    [loadingState, successState, errorState, noTokenState].forEach((el) => {
+      if (el) el.style.display = 'none';
+    });
+    const state = document.getElementById(stateId);
+    if (state) state.style.display = 'flex';
+  }
+
+  async function processUnsubscribe() {
+    if (!token) {
+      showState('no-token-state');
+      return;
+    }
+
+    showState('loading-state');
+
+    try {
+      // Call Cloud Function to process unsubscribe
+      const response = await fetch('/api/unsubscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token, type }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.message || 'Unsubscribe failed');
+      }
+
+      const data = await response.json();
+
+      // Update success message based on type
+      if (type === 'alerts') {
+        successMessage!.textContent = 'You will no longer receive alert email notifications.';
+      } else if (type === 'digest') {
+        successMessage!.textContent = 'You will no longer receive the daily email digest.';
+      } else {
+        successMessage!.textContent = 'You will no longer receive any email notifications from TradePilot.';
+      }
+
+      showState('success-state');
+      resubscribeSection!.style.display = 'block';
+    } catch (error) {
+      console.error('Unsubscribe error:', error);
+      errorMessage!.textContent =
+        error instanceof Error ? error.message : 'We couldn\'t process your unsubscribe request.';
+      showState('error-state');
+    }
+  }
+
+  async function handleResubscribe() {
+    if (!token) return;
+
+    resubscribeButton!.textContent = 'Processing...';
+    resubscribeButton!.setAttribute('disabled', 'true');
+
+    try {
+      const response = await fetch('/api/resubscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token, type }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Resubscribe failed');
+      }
+
+      // Update UI
+      resubscribeSection!.innerHTML = `
+        <p class="resubscribe-success">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+            <polyline points="22 4 12 14.01 9 11.01" />
+          </svg>
+          Email notifications have been re-enabled.
+        </p>
+      `;
+    } catch (error) {
+      resubscribeButton!.textContent = 'Failed - Try again';
+      resubscribeButton!.removeAttribute('disabled');
+    }
+  }
+
+  // Event listeners
+  retryButton?.addEventListener('click', processUnsubscribe);
+  resubscribeButton?.addEventListener('click', handleResubscribe);
+
+  // Process on page load
+  processUnsubscribe();
+</script>
+
+<style>
+  .unsubscribe-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: var(--bg-primary, #0a0a1a);
+  }
+
+  .container {
+    max-width: 480px;
+    width: 100%;
+  }
+
+  .card {
+    background: var(--bg-secondary, #12122a);
+    border-radius: var(--radius-xl, 1rem);
+    padding: 3rem 2rem;
+    text-align: center;
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+  }
+
+  .state-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .icon.success {
+    background: rgba(34, 197, 94, 0.1);
+    color: #22c55e;
+  }
+
+  .icon.error {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+  }
+
+  .icon.warning {
+    background: rgba(234, 179, 8, 0.1);
+    color: #eab308;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary, #ffffff);
+    margin: 0;
+  }
+
+  p {
+    color: var(--text-secondary, #a0a0c0);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 280px;
+    margin-top: 0.5rem;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md, 0.5rem);
+    font-weight: 500;
+    font-size: 0.9375rem;
+    text-decoration: none;
+    transition: all 0.2s;
+    cursor: pointer;
+    border: none;
+  }
+
+  .btn-primary {
+    background: var(--accent, #6366f1);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: var(--accent-hover, #818cf8);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-secondary, #a0a0c0);
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary, #ffffff);
+  }
+
+  .btn-link {
+    background: transparent;
+    color: var(--accent, #6366f1);
+    padding: 0.5rem;
+  }
+
+  .btn-link:hover {
+    text-decoration: underline;
+  }
+
+  .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .spinner {
+    width: 48px;
+    height: 48px;
+    border: 3px solid var(--border-color, rgba(255, 255, 255, 0.1));
+    border-top-color: var(--accent, #6366f1);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .resubscribe-section {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+  }
+
+  .resubscribe-section p {
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .resubscribe-success {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: #22c55e !important;
+  }
+</style>
