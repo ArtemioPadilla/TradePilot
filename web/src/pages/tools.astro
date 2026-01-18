@@ -1,0 +1,230 @@
+---
+import DashboardLayout from '../layouts/DashboardLayout.astro';
+import { CompoundGrowthCalculator } from '../components/calculators';
+---
+
+<DashboardLayout title="Financial Tools">
+  <div class="tools-page">
+    <div class="page-header">
+      <h1>Financial Tools</h1>
+      <p>Calculators and planning tools to help you make informed decisions</p>
+    </div>
+
+    <div class="tools-grid">
+      <section class="calculator-section">
+        <CompoundGrowthCalculator client:only="react" />
+      </section>
+
+      <section class="calculator-section">
+        <div class="coming-soon-card">
+          <div class="card-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+          </div>
+          <h3>Retirement Projector</h3>
+          <p>Plan your retirement savings and see if you're on track to meet your goals</p>
+          <span class="badge">Coming Soon</span>
+        </div>
+      </section>
+
+      <section class="calculator-section">
+        <div class="coming-soon-card">
+          <div class="card-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
+          </div>
+          <h3>Risk Assessment</h3>
+          <p>Determine your risk tolerance and get personalized allocation recommendations</p>
+          <span class="badge">Coming Soon</span>
+        </div>
+      </section>
+
+      <section class="calculator-section">
+        <div class="coming-soon-card">
+          <div class="card-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 6v6l4 2"/>
+            </svg>
+          </div>
+          <h3>Savings Calculator</h3>
+          <p>Calculate how long it will take to reach your savings goals</p>
+          <span class="badge">Coming Soon</span>
+        </div>
+      </section>
+    </div>
+
+    <section class="educational-section">
+      <h2>Learn More</h2>
+      <div class="articles-grid">
+        <article class="article-card">
+          <h3>Understanding Compound Interest</h3>
+          <p>Learn how compound interest can help grow your investments over time.</p>
+          <span class="badge">Coming Soon</span>
+        </article>
+        <article class="article-card">
+          <h3>Asset Allocation Basics</h3>
+          <p>Discover how to diversify your portfolio across different asset classes.</p>
+          <span class="badge">Coming Soon</span>
+        </article>
+        <article class="article-card">
+          <h3>Risk vs. Return</h3>
+          <p>Understand the relationship between risk and potential returns.</p>
+          <span class="badge">Coming Soon</span>
+        </article>
+      </div>
+    </section>
+  </div>
+</DashboardLayout>
+
+<style>
+  .tools-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1.5rem;
+  }
+
+  .page-header {
+    margin-bottom: 2rem;
+  }
+
+  .page-header h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.25rem 0;
+  }
+
+  .page-header p {
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  @media (max-width: 900px) {
+    .tools-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .calculator-section {
+    min-height: 300px;
+  }
+
+  .coming-soon-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 300px;
+    padding: 2rem;
+    background-color: var(--bg-secondary);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-lg);
+    text-align: center;
+  }
+
+  .card-icon {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-tertiary);
+    border-radius: 50%;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    opacity: 0.6;
+  }
+
+  .coming-soon-card h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+  }
+
+  .coming-soon-card p {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin: 0 0 1rem 0;
+    max-width: 250px;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full, 9999px);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .educational-section {
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .educational-section h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 1rem 0;
+  }
+
+  .articles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .articles-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .article-card {
+    padding: 1.25rem;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+  }
+
+  .article-card h3 {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+  }
+
+  .article-card p {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    margin: 0 0 0.75rem 0;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 640px) {
+    .tools-page {
+      padding: 1rem;
+    }
+  }
+</style>

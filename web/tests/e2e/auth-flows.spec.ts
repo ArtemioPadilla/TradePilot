@@ -73,10 +73,13 @@ test.describe('Suspended Account Page', () => {
 
 test.describe('Invite Code Registration', () => {
   test('should handle invite code in URL', async ({ page }) => {
-    // Navigate to invite registration with a test code
-    await page.goto('/auth/invite/TEST123');
+    // Navigate to invite registration with a test code via query parameter
+    await page.goto('/auth/invite?code=TEST123');
 
-    // Should either show registration form or redirect
+    // Wait for page to process
+    await page.waitForTimeout(1500);
+
+    // Should either show registration form, error message, or redirect
     const url = page.url();
     const isOnInvite = url.includes('/auth/invite');
     const isOnRegister = url.includes('/auth/register');
@@ -84,13 +87,30 @@ test.describe('Invite Code Registration', () => {
 
     expect(isOnInvite || isOnRegister || isOnLogin).toBe(true);
 
-    if (isOnInvite || isOnRegister) {
-      // Check for registration form elements
+    if (isOnInvite) {
+      // Check for either registration form or error message (invalid code)
       const emailInput = page.getByLabel(/email/i);
-      if (await emailInput.isVisible().catch(() => false)) {
-        await expect(emailInput).toBeVisible();
-      }
+      const errorHeading = page.locator('text=/invalid|error|no code/i');
+      const hasEmail = await emailInput.isVisible().catch(() => false);
+      const hasError = await errorHeading.first().isVisible().catch(() => false);
+      expect(hasEmail || hasError).toBe(true);
     }
+  });
+
+  test('should show error when no invite code provided', async ({ page }) => {
+    await page.goto('/auth/invite');
+    // Wait for client-side JS to execute
+    await page.waitForTimeout(2000);
+
+    // Should show no code message - check heading or paragraph
+    const noCodeHeading = page.locator('h2:has-text("No Invite Code")');
+    const noCodeText = page.locator('text=/need.*invite.*code|no invite/i');
+
+    const hasHeading = await noCodeHeading.isVisible().catch(() => false);
+    const hasText = await noCodeText.first().isVisible().catch(() => false);
+
+    // Either heading or text should be visible indicating no code error
+    expect(hasHeading || hasText).toBe(true);
   });
 });
 

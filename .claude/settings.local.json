@@ -18,7 +18,15 @@
       "mcp__playwright__browser_snapshot",
       "mcp__playwright__browser_click",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run test:e2e:*)",
+      "Bash(npm test:*)",
+      "Bash(grep:*)",
+      "Bash(npm run test:*)",
+      "Bash(npx:*)",
+      "Bash(du -sh:*)",
+      "Bash(wc:*)"
     ]
   }
 }

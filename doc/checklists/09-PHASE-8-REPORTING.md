@@ -13,22 +13,23 @@
 - [ ] Return download URL
 
 ## 8.2 Report UI
-- [ ] Build reports page (`/reports`)
-- [ ] Create report request form
-  - [ ] Report type selector
-  - [ ] Date range picker
-  - [ ] Account filter
+- [x] Build reports page (`/dashboard/reports`)
+- [x] Create report request form (UI placeholders)
+  - [x] Report type selector
+  - [ ] Date range picker (pending backend)
+  - [ ] Account filter (pending backend)
 - [ ] Show generation progress
 - [ ] Display download link
 - [ ] List past reports
 
 ## 8.3 CSV/JSON Export
-- [ ] Build export options menu
-- [ ] Export holdings to CSV
-- [ ] Export transactions to CSV
-- [ ] Export portfolio snapshot to JSON
-- [ ] Export performance data to CSV
-- [ ] Handle large exports (streaming)
+- [x] Build export utilities (`lib/utils/export.ts`)
+- [x] Build export options menu component
+- [x] Export holdings to CSV
+- [x] Export transactions to CSV
+- [x] Export portfolio snapshot to JSON
+- [x] Export performance data to CSV
+- [ ] Handle large exports (streaming) - pending backend
 
 ## 8.4 Tax Report
 - [ ] Calculate realized gains/losses
@@ -38,32 +39,29 @@
 - [ ] Add tax year filter
 
 ## 8.5 Financial Calculators
-- [ ] Build calculators page (`/tools`)
-- [ ] Compound growth calculator
-  - [ ] Initial investment input
-  - [ ] Monthly contribution
-  - [ ] Annual return rate
-  - [ ] Time period
-  - [ ] Result chart
-- [ ] Retirement projector
-  - [ ] Current age/retirement age
-  - [ ] Current savings
-  - [ ] Monthly savings
-  - [ ] Expected return
-  - [ ] Inflation adjustment
-- [ ] Risk tolerance questionnaire
+- [x] Build calculators page (`/tools`)
+- [x] Compound growth calculator
+  - [x] Initial investment input
+  - [x] Monthly contribution
+  - [x] Annual return rate
+  - [x] Time period
+  - [x] Result display with chart
+- [ ] Retirement projector (UI placeholder)
+- [ ] Risk tolerance questionnaire (UI placeholder)
 - [ ] Asset allocation recommender
 
 ## 8.6 Goal Setting
-- [ ] Create goals data model
-- [ ] Build goal creation form
-  - [ ] Goal name
-  - [ ] Target amount
-  - [ ] Target date
-  - [ ] Linked accounts
-- [ ] Track progress toward goals
-- [ ] Display goal progress widget
-- [ ] Send milestone notifications
+- [x] Create goals data model (`types/reports.ts`)
+- [x] Create goals service (`lib/services/goals.ts`)
+- [x] Build goal creation form
+  - [x] Goal name
+  - [x] Target amount
+  - [x] Target date
+  - [x] Category selection
+  - [x] Monthly contribution (optional)
+- [x] Track progress toward goals
+- [x] Display goal progress widget
+- [ ] Send milestone notifications (pending backend)
 
 ## 8.7 Educational Content
 - [ ] Create content management structure

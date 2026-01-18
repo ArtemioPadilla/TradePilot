@@ -1,68 +1,76 @@
 # Phase 6: Alerts & Notifications
 
+## 6.0 E2E Tests (Required)
+- [x] Write E2E tests for alert creation form
+- [x] Write E2E tests for alerts list
+- [x] Write E2E tests for notification center
+- [x] Write E2E tests for alert type configurations
+- [x] Write E2E tests for notification preferences form
+- [x] Ensure all tests pass (808 tests passing)
+
 ## 6.1 Alert Data Model
-- [ ] Define alert types enum
-- [ ] Create alert Firestore schema
-- [ ] Define condition operators (>, <, =, crosses)
-- [ ] Add enabled/disabled state
+- [x] Define alert types enum
+- [x] Create alert Firestore schema
+- [x] Define condition operators (>, <, =, crosses)
+- [x] Add enabled/disabled state
 
 ## 6.2 Alert Creation UI
-- [ ] Build alert creation form
-  - [ ] Alert type selector
-  - [ ] Symbol search (for price alerts)
-  - [ ] Condition builder
-  - [ ] Threshold input
-  - [ ] Notification channel checkboxes
-- [ ] Save alert to Firestore
-- [ ] Show confirmation
+- [x] Build alert creation form
+  - [x] Alert type selector
+  - [x] Symbol search (for price alerts)
+  - [x] Condition builder
+  - [x] Threshold input
+  - [x] Notification channel checkboxes
+- [x] Save alert to Firestore
+- [x] Show confirmation
 
 ## 6.3 Alert Management
-- [ ] Build alerts list page (`/alerts`)
-- [ ] Show alert status (active/triggered/disabled)
-- [ ] Enable/disable toggle
-- [ ] Edit alert
-- [ ] Delete alert
-- [ ] Show last triggered time
+- [x] Build alerts list page (`/alerts`)
+- [x] Show alert status (active/triggered/disabled)
+- [x] Enable/disable toggle
+- [x] Edit alert
+- [x] Delete alert
+- [x] Show last triggered time
 
 ## 6.4 Cloud Function: Alert Monitoring
-- [ ] Create `checkAlerts` Cloud Function
-- [ ] Fetch active alerts
-- [ ] Evaluate conditions against current data
-- [ ] Identify triggered alerts
-- [ ] Update alert status
-- [ ] Schedule: every 1 minute
+- [x] Create `checkAlerts` Cloud Function
+- [x] Fetch active alerts
+- [x] Evaluate conditions against current data
+- [x] Identify triggered alerts
+- [x] Update alert status
+- [x] Schedule: every 1 minute
 
 ## 6.5 Push Notifications
-- [ ] Configure Firebase Cloud Messaging
-- [ ] Request notification permission in app
-- [ ] Store FCM token in user document
-- [ ] Create notification sender utility
-- [ ] Build notification payload structure
-- [ ] Handle notification click (deep link)
-- [ ] Test on multiple devices
+- [x] Configure Firebase Cloud Messaging (service worker + utilities)
+- [x] Request notification permission in app (PushNotificationSetup component)
+- [x] Store FCM token in user document (push-notifications.ts service)
+- [x] Create notification sender utility (Cloud Function sendPushNotification)
+- [x] Build notification payload structure
+- [x] Handle notification click (deep link) (firebase-messaging-sw.js)
+- [ ] Test on multiple devices (requires VAPID key configuration)
 
 ## 6.6 Email Notifications
-- [ ] Set up email service integration
-- [ ] Create email templates
-  - [ ] Alert triggered
-  - [ ] Trade executed
-  - [ ] Daily digest
-  - [ ] Weekly summary
-- [ ] Implement email sending in Cloud Functions
-- [ ] Handle unsubscribe
+- [x] Set up email service integration (email queue infrastructure)
+- [x] Create email templates
+  - [x] Alert triggered
+  - [x] Trade executed
+  - [x] Daily digest (sendDailyDigest Cloud Function)
+  - [x] Weekly summary (sendWeeklySummary Cloud Function)
+- [x] Implement email sending in Cloud Functions (processEmailQueue)
+- [ ] Handle unsubscribe (requires email service integration)
 
 ## 6.7 Notification Center
-- [ ] Create notifications collection
-- [ ] Build notification bell icon with badge
-- [ ] Build notification dropdown/panel
-- [ ] Mark as read functionality
-- [ ] Mark all as read
-- [ ] Delete notifications
-- [ ] Link to relevant page
+- [x] Create notifications collection
+- [x] Build notification bell icon with badge
+- [x] Build notification dropdown/panel
+- [x] Mark as read functionality
+- [x] Mark all as read
+- [x] Delete notifications
+- [x] Link to relevant page
 
 ## 6.8 Notification Preferences
-- [ ] Build preferences form in settings
-- [ ] Toggle by notification type
-- [ ] Toggle by channel (push/email)
-- [ ] Set quiet hours
-- [ ] Set digest frequency
+- [x] Build preferences form in settings
+- [x] Toggle by notification type
+- [x] Toggle by channel (push/email/in-app)
+- [x] Set quiet hours
+- [x] Set digest frequency

@@ -1,0 +1,222 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+---
+
+<MainLayout title="Page Not Found">
+  <div class="error-page">
+    <div class="error-content">
+      <div class="error-code">404</div>
+      <h1>Page Not Found</h1>
+      <p>The page you're looking for doesn't exist or has been moved.</p>
+
+      <div class="error-actions">
+        <a href="/dashboard" class="primary-button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+          Go to Dashboard
+        </a>
+        <button onclick="history.back()" class="secondary-button">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="19" y1="12" x2="5" y2="12"/>
+            <polyline points="12 19 5 12 12 5"/>
+          </svg>
+          Go Back
+        </button>
+      </div>
+
+      <div class="helpful-links">
+        <h2>Helpful Links</h2>
+        <ul>
+          <li><a href="/dashboard">Dashboard</a></li>
+          <li><a href="/dashboard/accounts">Accounts</a></li>
+          <li><a href="/dashboard/strategies">Strategies</a></li>
+          <li><a href="/tools">Financial Tools</a></li>
+          <li><a href="/leaderboard">Leaderboard</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="error-illustration">
+      <svg width="200" height="200" viewBox="0 0 200 200" fill="none">
+        <circle cx="100" cy="100" r="80" stroke="currentColor" stroke-width="2" opacity="0.2"/>
+        <circle cx="100" cy="100" r="60" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+        <circle cx="100" cy="100" r="40" stroke="currentColor" stroke-width="2" opacity="0.4"/>
+        <path d="M70 80 L90 100 L70 120" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M130 80 L110 100 L130 120" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M80 140 Q100 130 120 140" stroke="currentColor" stroke-width="3" stroke-linecap="round" fill="none"/>
+      </svg>
+    </div>
+  </div>
+</MainLayout>
+
+<style>
+  .error-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  }
+
+  .error-content {
+    text-align: center;
+    max-width: 500px;
+  }
+
+  .error-code {
+    font-size: 8rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--accent) 0%, #818cf8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.75rem 0;
+  }
+
+  p {
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0 0 2rem 0;
+  }
+
+  .error-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 3rem;
+  }
+
+  .primary-button,
+  .secondary-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radius-md, 0.375rem);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .primary-button {
+    background-color: var(--accent, #6366f1);
+    border: none;
+    color: white;
+  }
+
+  .primary-button:hover {
+    background-color: var(--accent-hover, #4f46e5);
+    transform: translateY(-1px);
+  }
+
+  .secondary-button {
+    background-color: var(--bg-secondary, #f8f9fa);
+    border: 1px solid var(--border, #e5e7eb);
+    color: var(--text-primary, #111827);
+  }
+
+  .secondary-button:hover {
+    background-color: var(--bg-tertiary, #f3f4f6);
+    transform: translateY(-1px);
+  }
+
+  .helpful-links {
+    padding-top: 2rem;
+    border-top: 1px solid var(--border, #e5e7eb);
+  }
+
+  .helpful-links h2 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-muted, #6b7280);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 1rem 0;
+  }
+
+  .helpful-links ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    justify-content: center;
+  }
+
+  .helpful-links a {
+    color: var(--accent, #6366f1);
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: color 0.2s;
+  }
+
+  .helpful-links a:hover {
+    color: var(--accent-hover, #4f46e5);
+    text-decoration: underline;
+  }
+
+  .error-illustration {
+    display: none;
+    color: var(--accent, #6366f1);
+    opacity: 0.5;
+    margin-left: 4rem;
+  }
+
+  @media (min-width: 900px) {
+    .error-page {
+      justify-content: center;
+      gap: 4rem;
+    }
+
+    .error-illustration {
+      display: block;
+    }
+
+    .error-content {
+      text-align: left;
+    }
+
+    .error-actions {
+      justify-content: flex-start;
+    }
+
+    .helpful-links ul {
+      justify-content: flex-start;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .error-code {
+      font-size: 5rem;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+    }
+
+    .error-actions {
+      flex-direction: column;
+    }
+
+    .primary-button,
+    .secondary-button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>

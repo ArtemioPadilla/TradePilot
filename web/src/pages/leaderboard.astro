@@ -1,0 +1,16 @@
+---
+import DashboardLayout from '../layouts/DashboardLayout.astro';
+import { Leaderboard } from '../components/leaderboard';
+---
+
+<DashboardLayout title="Leaderboard">
+  <div class="leaderboard-page">
+    <Leaderboard client:only="react" />
+  </div>
+</DashboardLayout>
+
+<style>
+  .leaderboard-page {
+    min-height: calc(100vh - 120px);
+  }
+</style>

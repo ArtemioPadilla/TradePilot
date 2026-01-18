@@ -1,59 +1,245 @@
 ---
 import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import { NotificationPreferencesForm } from '../../components/alerts';
+import { PrivacySettingsForm } from '../../components/settings';
 ---
 
 <DashboardLayout title="Settings">
-  <div class="placeholder-page">
-    <div class="placeholder-icon">
-      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
-        <circle cx="12" cy="12" r="3"/>
-      </svg>
+  <div class="settings-page">
+    <header class="settings-header">
+      <h1>Settings</h1>
+      <p>Manage your account preferences and notification settings</p>
+    </header>
+
+    <div class="settings-tabs" role="tablist">
+      <button class="tab active" role="tab" aria-selected="true" data-tab="notifications">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+        </svg>
+        Notifications
+      </button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="account">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+        Account
+      </button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="security">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        Security
+      </button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="connections">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+        </svg>
+        Connections
+      </button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="privacy">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+          <circle cx="12" cy="12" r="3"/>
+        </svg>
+        Privacy
+      </button>
     </div>
-    <h1>Settings</h1>
-    <p>Configure your account preferences, notification settings, connected brokerages, and security options.</p>
-    <span class="badge">Coming in Phase 2</span>
+
+    <div class="settings-content">
+      <div class="tab-panel active" id="notifications-panel" role="tabpanel">
+        <NotificationPreferencesForm client:only="react" />
+      </div>
+
+      <div class="tab-panel" id="account-panel" role="tabpanel">
+        <div class="placeholder-section">
+          <div class="placeholder-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <h3>Account Settings</h3>
+          <p>Profile, display name, and account management options coming soon.</p>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="security-panel" role="tabpanel">
+        <div class="placeholder-section">
+          <div class="placeholder-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </div>
+          <h3>Security Settings</h3>
+          <p>Password, two-factor authentication, and session management coming soon.</p>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="connections-panel" role="tabpanel">
+        <div class="placeholder-section">
+          <div class="placeholder-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+            </svg>
+          </div>
+          <h3>Connected Services</h3>
+          <p>Brokerage integrations and API connections coming soon.</p>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="privacy-panel" role="tabpanel">
+        <PrivacySettingsForm client:only="react" />
+      </div>
+    </div>
   </div>
 </DashboardLayout>
 
+<script>
+  // Tab switching functionality
+  document.querySelectorAll('.settings-tabs .tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      // Update tab states
+      document.querySelectorAll('.settings-tabs .tab').forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+
+      // Update panel visibility
+      const targetPanel = tab.dataset.tab + '-panel';
+      document.querySelectorAll('.tab-panel').forEach(panel => {
+        panel.classList.remove('active');
+      });
+      document.getElementById(targetPanel)?.classList.add('active');
+    });
+  });
+</script>
+
 <style>
-  .placeholder-page {
+  .settings-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1.5rem;
+  }
+
+  .settings-header {
+    margin-bottom: 2rem;
+  }
+
+  .settings-header h1 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+  }
+
+  .settings-header p {
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .settings-tabs {
+    display: flex;
+    gap: 0.25rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .settings-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .tab:hover {
+    color: var(--text-primary);
+    background-color: var(--bg-tertiary);
+  }
+
+  .tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .tab svg {
+    flex-shrink: 0;
+  }
+
+  .tab-panel {
+    display: none;
+  }
+
+  .tab-panel.active {
+    display: block;
+  }
+
+  .placeholder-section {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 60vh;
+    padding: 4rem 2rem;
     text-align: center;
-    padding: 2rem;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
   }
 
   .placeholder-icon {
-    color: var(--accent);
-    margin-bottom: 1.5rem;
-    opacity: 0.8;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    opacity: 0.5;
   }
 
-  h1 {
-    font-size: 1.75rem;
+  .placeholder-section h3 {
+    font-size: 1.125rem;
     font-weight: 600;
     color: var(--text-primary);
-    margin: 0 0 0.75rem 0;
+    margin: 0 0 0.5rem 0;
   }
 
-  p {
+  .placeholder-section p {
     color: var(--text-muted);
-    max-width: 400px;
-    line-height: 1.6;
-    margin: 0 0 1.5rem 0;
+    margin: 0;
+    max-width: 300px;
   }
 
-  .badge {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    background-color: var(--bg-tertiary);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    font-size: 0.875rem;
-    color: var(--text-secondary);
+  @media (max-width: 640px) {
+    .settings-page {
+      padding: 1rem;
+    }
+
+    .settings-header h1 {
+      font-size: 1.5rem;
+    }
+
+    .tab {
+      padding: 0.625rem 0.75rem;
+      font-size: 0.8125rem;
+    }
   }
 </style>

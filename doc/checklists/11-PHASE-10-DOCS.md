@@ -44,11 +44,12 @@
 - [ ] Add troubleshooting guide
 
 ## 10.6 In-App Help
-- [ ] Create contextual tooltip system
-- [ ] Add "?" icons to complex features
-- [ ] Link tooltips to documentation
-- [ ] Build onboarding tour
+- [x] Create contextual tooltip system (HelpTooltip component)
+- [x] Add "?" icons to complex features
+- [x] Link tooltips to documentation
+- [x] Build onboarding tour (OnboardingTour component)
 - [ ] Add feature discovery hints
+- [x] E2E tests for common components
 
 ## 10.7 Deployment
 - [ ] Configure docs build in CI

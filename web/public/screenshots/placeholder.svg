@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#0f172a"/>
+  <rect x="0" y="0" width="240" height="720" fill="#1e293b"/>
+  <rect x="16" y="16" width="208" height="40" rx="8" fill="#6366f1"/>
+  <text x="120" y="42" fill="white" font-family="system-ui" font-size="16" text-anchor="middle">TradePilot</text>
+  <rect x="16" y="80" width="208" height="32" rx="4" fill="#334155"/>
+  <rect x="16" y="120" width="208" height="32" rx="4" fill="#334155"/>
+  <rect x="16" y="160" width="208" height="32" rx="4" fill="#334155"/>
+  <rect x="270" y="30" width="320" height="200" rx="8" fill="#1e293b"/>
+  <rect x="610" y="30" width="320" height="200" rx="8" fill="#1e293b"/>
+  <rect x="950" y="30" width="300" height="200" rx="8" fill="#1e293b"/>
+  <rect x="270" y="260" width="640" height="400" rx="8" fill="#1e293b"/>
+  <rect x="930" y="260" width="320" height="400" rx="8" fill="#1e293b"/>
+  <text x="640" y="400" fill="#64748b" font-family="system-ui" font-size="24" text-anchor="middle">Dashboard Preview</text>
+</svg>

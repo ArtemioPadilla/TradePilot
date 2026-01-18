@@ -1,0 +1,16 @@
+---
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import { PublicStrategyBrowser } from '../../components/strategies';
+---
+
+<DashboardLayout title="Browse Strategies">
+  <div class="browse-page">
+    <PublicStrategyBrowser client:only="react" />
+  </div>
+</DashboardLayout>
+
+<style>
+  .browse-page {
+    min-height: calc(100vh - 120px);
+  }
+</style>

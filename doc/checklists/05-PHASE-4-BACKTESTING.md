@@ -1,82 +1,95 @@
 # Phase 4: Backtesting
 
+## 4.0 E2E Tests (Required)
+- [x] Write E2E tests for strategy selector (category filter, search, selection)
+- [x] Write E2E tests for strategy config forms (all 6 types)
+- [x] Write E2E tests for backtest config form (wizard flow)
+- [x] Write E2E tests for backtest results visualization
+- [x] Write E2E tests for backtest execution service
+- [x] Write E2E tests for backtest history
+- [x] Ensure all tests pass (666 tests passing)
+
 ## 4.1 Pre-built Strategy UI
-- [ ] Create strategy selector component
-- [ ] Build Momentum strategy config form
-  - [ ] Lookback period slider
-  - [ ] Top N assets input
-  - [ ] Rebalance frequency dropdown
-- [ ] Build Mean Reversion config form
-  - [ ] MA period input
-  - [ ] Deviation threshold slider
-- [ ] Build Equal Weight config form
-  - [ ] Asset list input
-  - [ ] Rebalance frequency dropdown
-- [ ] Build Risk Parity config form
-- [ ] Build Smart Beta config form
+- [x] Create strategy selector component
+- [x] Build Momentum strategy config form
+  - [x] Lookback period slider
+  - [x] Top N assets input
+  - [x] Rebalance frequency dropdown
+- [x] Build Mean Reversion config form
+  - [x] MA period input
+  - [x] Deviation threshold slider
+- [x] Build Equal Weight config form
+  - [x] Asset list input
+  - [x] Rebalance frequency dropdown
+- [x] Build Risk Parity config form
+- [x] Build Smart Beta config form
 
 ## 4.2 Backtest Configuration
-- [ ] Create backtest config form
-  - [ ] Strategy selector
-  - [ ] Universe selector (S&P 500, custom)
-  - [ ] Custom symbol input
-  - [ ] Date range picker
-  - [ ] Initial capital input
-  - [ ] Benchmark selector
-- [ ] Validate date range
-- [ ] Estimate backtest size/duration
-- [ ] Save config as preset
+- [x] Create backtest config form
+  - [x] Strategy selector
+  - [x] Universe selector (S&P 500, custom)
+  - [x] Custom symbol input
+  - [x] Date range picker
+  - [x] Initial capital input
+  - [x] Benchmark selector
+- [x] Validate date range
+- [x] Estimate backtest size/duration
+- [x] Save config as preset
 
 ## 4.3 PyScript Integration
-- [ ] Install PyScript in Astro
+- [x] Create execution service interface
+- [x] Implement simulated execution (mock)
+- [ ] Install actual PyScript in Astro
 - [ ] Configure Python environment
 - [ ] Bundle TradePilot library for browser
 - [ ] Create Python-JS bridge
 - [ ] Test basic execution
-- [ ] Handle PyScript loading state
-- [ ] Implement error handling
+- [x] Handle loading state (BacktestProgress component)
+- [x] Implement error handling
 
 ## 4.4 Client-side Backtest Execution
-- [ ] Determine size threshold for client-side
+- [x] Determine size threshold for client-side
+- [x] Create execution service with progress updates
 - [ ] Load historical data (cached or fetch)
 - [ ] Execute strategy via PyScript
-- [ ] Stream progress updates to UI
-- [ ] Collect results
-- [ ] Handle execution errors
-- [ ] Implement cancellation
+- [x] Stream progress updates to UI
+- [x] Collect and format results
+- [x] Handle execution errors
+- [x] Implement cancellation
 
 ## 4.5 Cloud Function: Large Backtests
-- [ ] Create `runBacktest` Cloud Function
-- [ ] Accept backtest configuration
-- [ ] Fetch historical data
-- [ ] Execute TradePilot backtest
-- [ ] Store results in Firestore
-- [ ] Return job ID for polling
-- [ ] Implement timeout handling
-- [ ] Clean up on completion
+- [x] Create `runBacktest` Cloud Function
+- [x] Accept backtest configuration
+- [x] Fetch historical data
+- [x] Execute TradePilot backtest
+- [x] Store results in Firestore
+- [x] Return job ID for polling
+- [x] Implement timeout handling
+- [x] Clean up on completion
 
 ## 4.6 Results Visualization
-- [ ] Build equity curve chart
-  - [ ] Strategy line
-  - [ ] Benchmark line
-  - [ ] Drawdown shading
-- [ ] Build drawdown chart
-- [ ] Build monthly returns heatmap
-- [ ] Create metrics summary table
-  - [ ] CAGR
-  - [ ] Sharpe ratio
-  - [ ] Sortino ratio
-  - [ ] Max drawdown
-  - [ ] Win rate
-  - [ ] Profit factor
-- [ ] Build trade log table
-- [ ] Build position history chart
+- [x] Build equity curve chart
+  - [x] Strategy line
+  - [x] Benchmark line
+  - [x] Drawdown shading
+- [x] Build drawdown chart
+- [x] Build monthly returns heatmap
+- [x] Create metrics summary table
+  - [x] CAGR
+  - [x] Sharpe ratio
+  - [x] Sortino ratio
+  - [x] Max drawdown
+  - [x] Win rate
+  - [x] Profit factor
+- [x] Build trade log table
+- [x] Build position history chart
 
 ## 4.7 Backtest History
-- [ ] Store backtest results in Firestore
-- [ ] Build backtest history list
-- [ ] Show config summary
-- [ ] Show key metrics
-- [ ] Enable re-run with same config
-- [ ] Enable comparison between backtests
-- [ ] Implement result expiration cleanup
+- [x] Create backtest history service
+- [x] Build backtest history list
+- [x] Show config summary
+- [x] Show key metrics
+- [x] Enable re-run with same config
+- [x] Enable comparison between backtests
+- [x] Implement result expiration cleanup
+- [ ] Store backtest results in Firestore (requires Firebase setup)

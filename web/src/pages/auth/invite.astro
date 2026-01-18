@@ -1,8 +1,6 @@
 ---
-import MainLayout from '../../../layouts/MainLayout.astro';
-import { RegisterForm } from '../../../components/auth/RegisterForm';
-
-const { code } = Astro.params;
+import MainLayout from '../../layouts/MainLayout.astro';
+import { RegisterForm } from '../../components/auth/RegisterForm';
 ---
 
 <MainLayout title="Join TradePilot">
@@ -32,7 +30,7 @@ const { code } = Astro.params;
       </div>
 
       <div id="invite-valid" class="invite-content" style="display: none;">
-        <RegisterForm client:load inviteCode={code} />
+        <div id="register-form-container"></div>
 
         <div class="auth-footer">
           <p>Already have an account? <a href="/auth/login">Log in</a></p>
@@ -54,43 +52,102 @@ const { code } = Astro.params;
           <a href="/auth/login" class="btn btn-primary">Log In</a>
         </div>
       </div>
+
+      <div id="no-code" class="invite-error" style="display: none;">
+        <div class="error-icon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <h2>No Invite Code</h2>
+        <p>You need an invite code to create an account.</p>
+        <div class="error-actions">
+          <a href="/" class="btn btn-secondary">Go to Homepage</a>
+          <a href="/auth/login" class="btn btn-primary">Log In</a>
+        </div>
+      </div>
     </div>
   </div>
 </MainLayout>
 
-<script define:vars={{ code }}>
-  import { validateInvite } from '../../../lib/invites';
+<!-- Initial check for code parameter (runs immediately, no imports needed) -->
+<script is:inline>
+  (function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+
+    if (!code) {
+      // No code provided - show the no-code message immediately
+      const statusEl = document.getElementById('invite-status');
+      const noCodeEl = document.getElementById('no-code');
+      if (statusEl) statusEl.style.display = 'none';
+      if (noCodeEl) noCodeEl.style.display = 'block';
+      // Set a flag so the module script knows not to run
+      window.__inviteCodeMissing = true;
+    }
+  })();
+</script>
+
+<!-- Module script for validation (only runs if code exists) -->
+<script>
+  import { validateInvite } from '../../lib/invites';
+  import { RegisterForm } from '../../components/auth/RegisterForm';
+  import { createElement } from 'react';
+  import { createRoot } from 'react-dom/client';
+
+  // Skip if no code was provided (handled by inline script above)
+  if (!window.__inviteCodeMissing) {
+    checkInvite();
+  }
 
   async function checkInvite() {
     const statusEl = document.getElementById('invite-status');
     const validEl = document.getElementById('invite-valid');
     const invalidEl = document.getElementById('invite-invalid');
     const errorMsgEl = document.getElementById('error-message');
+    const formContainer = document.getElementById('register-form-container');
+
+    // Get code from query parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+
+    if (!code) {
+      // Should not reach here due to inline script, but handle just in case
+      const noCodeEl = document.getElementById('no-code');
+      if (statusEl) statusEl.style.display = 'none';
+      if (noCodeEl) noCodeEl.style.display = 'block';
+      return;
+    }
 
     try {
       const result = await validateInvite(code);
 
       if (result.valid) {
-        statusEl.style.display = 'none';
-        validEl.style.display = 'block';
+        if (statusEl) statusEl.style.display = 'none';
+        if (validEl) validEl.style.display = 'block';
+
+        // Render the RegisterForm with the invite code
+        if (formContainer) {
+          const root = createRoot(formContainer);
+          root.render(createElement(RegisterForm, { inviteCode: code }));
+        }
       } else {
-        statusEl.style.display = 'none';
-        invalidEl.style.display = 'block';
+        if (statusEl) statusEl.style.display = 'none';
+        if (invalidEl) invalidEl.style.display = 'block';
         if (errorMsgEl && result.error) {
           errorMsgEl.textContent = result.error;
         }
       }
     } catch (error) {
-      statusEl.style.display = 'none';
-      invalidEl.style.display = 'block';
+      if (statusEl) statusEl.style.display = 'none';
+      if (invalidEl) invalidEl.style.display = 'block';
       if (errorMsgEl) {
         errorMsgEl.textContent = 'Unable to validate invite code. Please try again.';
       }
     }
   }
-
-  // Check invite on load
-  checkInvite();
 </script>
 
 <style>
@@ -144,7 +201,7 @@ const { code } = Astro.params;
 
   .invite-error {
     background-color: var(--bg-secondary);
-    border: 1px solid var(--negative);
+    border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     padding: 2.5rem;
     text-align: center;
@@ -157,7 +214,7 @@ const { code } = Astro.params;
   .invite-error h2 {
     font-size: 1.25rem;
     margin-bottom: 0.75rem;
-    color: var(--negative);
+    color: var(--text-primary);
   }
 
   .invite-error p {
@@ -184,5 +241,36 @@ const { code } = Astro.params;
   .auth-footer a {
     color: var(--accent);
     font-weight: 500;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem;
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: var(--accent-hover);
+  }
+
+  .btn-secondary {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+  }
+
+  .btn-secondary:hover {
+    background: var(--border);
   }
 </style>

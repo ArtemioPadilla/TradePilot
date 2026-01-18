@@ -15,11 +15,14 @@
 - [ ] Add common patterns snippets
 
 ## 5.3 Strategy Templates
-- [ ] Create blank strategy template
-- [ ] Create momentum strategy template
-- [ ] Create mean reversion template
-- [ ] Create custom indicator template
-- [ ] Build template selector UI
+- [x] Create blank strategy template (start from scratch)
+- [x] Create momentum strategy template
+- [x] Create mean reversion template
+- [x] Create equal weight template
+- [x] Create risk parity template
+- [x] Create multi-factor template
+- [x] Create buy-hold 60/40 template
+- [x] Build template selector UI
 
 ## 5.4 Strategy Validation
 - [ ] Implement syntax checking
@@ -38,21 +41,22 @@
 - [ ] Prevent dangerous operations
 
 ## 5.6 Strategy Management
-- [ ] Create strategies collection in Firestore
-- [ ] Build strategy list page (`/strategies`)
-- [ ] Create new strategy flow
-- [ ] Edit existing strategy
-- [ ] Duplicate strategy
-- [ ] Delete strategy with confirmation
-- [ ] Add strategy metadata (name, description, tags)
+- [x] Create strategies collection in Firestore
+- [x] Build strategy list page (`/strategies`)
+- [x] Create new strategy flow
+- [x] Edit existing strategy (UI ready)
+- [x] Duplicate strategy (UI ready)
+- [x] Delete strategy with confirmation
+- [x] Add strategy metadata (name, description, tags)
 
 ## 5.7 Pre-built Strategy Parameters
-- [ ] Create dynamic form generator
-- [ ] Define parameter schemas for each strategy
-- [ ] Build parameter input components
-  - [ ] Number slider
-  - [ ] Dropdown select
-  - [ ] Multi-select
-  - [ ] Date picker
-- [ ] Validate parameter values
-- [ ] Show parameter descriptions
+- [x] Create dynamic form generator
+- [x] Define parameter schemas for each strategy
+- [x] Build parameter input components
+  - [x] Number slider
+  - [x] Dropdown select
+  - [x] Multi-select
+  - [x] Boolean toggle
+  - [x] Text input
+- [x] Validate parameter values
+- [x] Show parameter descriptions

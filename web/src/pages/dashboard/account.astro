@@ -1,0 +1,98 @@
+---
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import { AccountDetail } from '../../components/accounts';
+---
+
+<DashboardLayout title="Account Details">
+  <div id="account-container">
+    <div class="loading-state">
+      <div class="loading-spinner"></div>
+      <p>Loading account...</p>
+    </div>
+  </div>
+</DashboardLayout>
+
+<script>
+  import { AccountDetail } from '../../components/accounts';
+  import { createElement } from 'react';
+  import { createRoot } from 'react-dom/client';
+
+  // Get account ID from URL query parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const accountId = urlParams.get('id');
+
+  const container = document.getElementById('account-container');
+
+  if (accountId && container) {
+    // Clear loading state and render the AccountDetail component
+    const root = createRoot(container);
+    root.render(createElement(AccountDetail, { accountId }));
+  } else if (container) {
+    // No account ID provided
+    container.innerHTML = `
+      <div class="error-state">
+        <h2>No Account Selected</h2>
+        <p>Please select an account from the accounts list.</p>
+        <a href="/dashboard/accounts" class="btn btn-primary">View Accounts</a>
+      </div>
+    `;
+  }
+</script>
+
+<style>
+  .loading-state,
+  .error-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    text-align: center;
+  }
+
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .error-state h2 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-primary);
+  }
+
+  .error-state p {
+    color: var(--text-muted);
+    margin: 0 0 1.5rem 0;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem;
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: var(--accent-hover);
+  }
+</style>

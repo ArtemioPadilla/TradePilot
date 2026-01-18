@@ -1,62 +1,252 @@
 ---
 import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import { GoalsList } from '../../components/goals';
 ---
 
-<DashboardLayout title="Reports">
-  <div class="placeholder-page">
-    <div class="placeholder-icon">
-      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/>
-        <path d="M14 2v4a2 2 0 0 0 2 2h4"/>
-        <path d="M10 9H8"/>
-        <path d="M16 13H8"/>
-        <path d="M16 17H8"/>
-      </svg>
+<DashboardLayout title="Goals & Reports">
+  <div class="reports-page">
+    <div class="page-header">
+      <h1>Goals & Reports</h1>
+      <p>Track your financial goals and generate performance reports</p>
     </div>
-    <h1>Reports</h1>
-    <p>Generate detailed performance reports, tax documents, and analytics to understand your investment journey.</p>
-    <span class="badge">Coming in Phase 3</span>
+
+    <div class="page-tabs" role="tablist">
+      <button class="tab active" role="tab" aria-selected="true" data-tab="goals">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 6v6l4 2"/>
+        </svg>
+        Goals
+      </button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="reports">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+        </svg>
+        Reports
+      </button>
+    </div>
+
+    <div class="page-content">
+      <div class="tab-panel active" id="goals-panel" role="tabpanel">
+        <GoalsList client:only="react" />
+      </div>
+
+      <div class="tab-panel" id="reports-panel" role="tabpanel">
+        <div class="reports-section">
+          <h2>Generate Reports</h2>
+          <p>Create detailed reports for your portfolio</p>
+
+          <div class="report-options">
+            <div class="report-card">
+              <div class="report-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+              </div>
+              <h3>Portfolio Summary</h3>
+              <p>Overview of all holdings and performance</p>
+              <button class="report-button" disabled>Coming Soon</button>
+            </div>
+
+            <div class="report-card">
+              <div class="report-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="20" x2="12" y2="10"/>
+                  <line x1="18" y1="20" x2="18" y2="4"/>
+                  <line x1="6" y1="20" x2="6" y2="16"/>
+                </svg>
+              </div>
+              <h3>Performance Report</h3>
+              <p>Returns, risk metrics, and benchmarks</p>
+              <button class="report-button" disabled>Coming Soon</button>
+            </div>
+
+            <div class="report-card">
+              <div class="report-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="2" width="20" height="8" rx="2" ry="2"/>
+                  <rect x="2" y="14" width="20" height="8" rx="2" ry="2"/>
+                  <line x1="6" y1="6" x2="6.01" y2="6"/>
+                  <line x1="6" y1="18" x2="6.01" y2="18"/>
+                </svg>
+              </div>
+              <h3>Tax Summary</h3>
+              <p>Realized gains/losses for tax filing</p>
+              <button class="report-button" disabled>Coming Soon</button>
+            </div>
+
+            <div class="report-card">
+              <div class="report-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                </svg>
+              </div>
+              <h3>Transaction History</h3>
+              <p>Complete record of all transactions</p>
+              <button class="report-button" disabled>Coming Soon</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </DashboardLayout>
 
+<script>
+  document.querySelectorAll('.page-tabs .tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.page-tabs .tab').forEach(t => {
+        t.classList.remove('active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+
+      const targetPanel = tab.dataset.tab + '-panel';
+      document.querySelectorAll('.tab-panel').forEach(panel => {
+        panel.classList.remove('active');
+      });
+      document.getElementById(targetPanel)?.classList.add('active');
+    });
+  });
+</script>
+
 <style>
-  .placeholder-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 60vh;
-    text-align: center;
-    padding: 2rem;
+  .reports-page {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 1.5rem;
   }
 
-  .placeholder-icon {
-    color: var(--accent);
+  .page-header {
     margin-bottom: 1.5rem;
-    opacity: 0.8;
   }
 
-  h1 {
-    font-size: 1.75rem;
+  .page-header h1 {
+    font-size: 1.5rem;
     font-weight: 600;
     color: var(--text-primary);
-    margin: 0 0 0.75rem 0;
+    margin: 0 0 0.25rem 0;
   }
 
-  p {
+  .page-header p {
     color: var(--text-muted);
-    max-width: 400px;
-    line-height: 1.6;
+    margin: 0;
+  }
+
+  .page-tabs {
+    display: flex;
+    gap: 0.25rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.5rem;
+  }
+
+  .tab {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .tab:hover {
+    color: var(--text-primary);
+  }
+
+  .tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .tab-panel {
+    display: none;
+  }
+
+  .tab-panel.active {
+    display: block;
+  }
+
+  .reports-section h2 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem 0;
+  }
+
+  .reports-section > p {
+    color: var(--text-muted);
     margin: 0 0 1.5rem 0;
   }
 
-  .badge {
-    display: inline-block;
-    padding: 0.5rem 1rem;
+  .report-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+
+  .report-card {
+    padding: 1.25rem;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+  }
+
+  .report-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+  }
+
+  .report-card h3 {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem 0;
+  }
+
+  .report-card p {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    margin: 0 0 1rem 0;
+  }
+
+  .report-button {
+    width: 100%;
+    padding: 0.5rem;
     background-color: var(--bg-tertiary);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
-    font-size: 0.875rem;
-    color: var(--text-secondary);
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    cursor: not-allowed;
+  }
+
+  .report-button:not(:disabled) {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: white;
+    cursor: pointer;
+  }
+
+  @media (max-width: 640px) {
+    .reports-page {
+      padding: 1rem;
+    }
   }
 </style>
