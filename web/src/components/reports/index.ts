@@ -5,3 +5,4 @@
  */
 
 export { ExportMenu, type ExportMenuProps } from './ExportMenu';
+export { TaxReport } from './TaxReport';

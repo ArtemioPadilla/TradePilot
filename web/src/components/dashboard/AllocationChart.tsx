@@ -112,8 +112,8 @@ export default function AllocationChart() {
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 1.5rem;
-          padding: 1rem 0;
+          gap: calc(1.5rem * var(--spacing-density));
+          padding: calc(1rem * var(--spacing-density)) 0;
         }
 
         .chart-wrapper {
@@ -125,13 +125,13 @@ export default function AllocationChart() {
           width: 100%;
           display: flex;
           flex-direction: column;
-          gap: 0.5rem;
+          gap: calc(0.5rem * var(--spacing-density));
         }
 
         .legend-item {
           display: flex;
           align-items: center;
-          gap: 0.5rem;
+          gap: calc(0.5rem * var(--spacing-density));
           font-size: 0.875rem;
         }
 

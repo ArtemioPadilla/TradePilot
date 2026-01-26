@@ -1,7 +1,7 @@
 ---
 import DashboardLayout from '../../layouts/DashboardLayout.astro';
 import { NotificationPreferencesForm } from '../../components/alerts';
-import { PrivacySettingsForm } from '../../components/settings';
+import { PrivacySettingsForm, AccountSettingsForm, SecuritySettingsForm, ConnectionsSettingsForm, AppearanceSettingsForm } from '../../components/settings';
 ---
 
 <DashboardLayout title="Settings">
@@ -18,6 +18,20 @@ import { PrivacySettingsForm } from '../../components/settings';
           <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
         </svg>
         Notifications
+      </button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="appearance">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2"/>
+          <path d="M12 20v2"/>
+          <path d="m4.93 4.93 1.41 1.41"/>
+          <path d="m17.66 17.66 1.41 1.41"/>
+          <path d="M2 12h2"/>
+          <path d="M20 12h2"/>
+          <path d="m6.34 17.66-1.41 1.41"/>
+          <path d="m19.07 4.93-1.41 1.41"/>
+        </svg>
+        Appearance
       </button>
       <button class="tab" role="tab" aria-selected="false" data-tab="account">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -54,43 +68,20 @@ import { PrivacySettingsForm } from '../../components/settings';
         <NotificationPreferencesForm client:only="react" />
       </div>
 
+      <div class="tab-panel" id="appearance-panel" role="tabpanel">
+        <AppearanceSettingsForm client:only="react" />
+      </div>
+
       <div class="tab-panel" id="account-panel" role="tabpanel">
-        <div class="placeholder-section">
-          <div class="placeholder-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
-              <circle cx="12" cy="7" r="4"/>
-            </svg>
-          </div>
-          <h3>Account Settings</h3>
-          <p>Profile, display name, and account management options coming soon.</p>
-        </div>
+        <AccountSettingsForm client:only="react" />
       </div>
 
       <div class="tab-panel" id="security-panel" role="tabpanel">
-        <div class="placeholder-section">
-          <div class="placeholder-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-            </svg>
-          </div>
-          <h3>Security Settings</h3>
-          <p>Password, two-factor authentication, and session management coming soon.</p>
-        </div>
+        <SecuritySettingsForm client:only="react" />
       </div>
 
       <div class="tab-panel" id="connections-panel" role="tabpanel">
-        <div class="placeholder-section">
-          <div class="placeholder-icon">
-            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-            </svg>
-          </div>
-          <h3>Connected Services</h3>
-          <p>Brokerage integrations and API connections coming soon.</p>
-        </div>
+        <ConnectionsSettingsForm client:only="react" />
       </div>
 
       <div class="tab-panel" id="privacy-panel" role="tabpanel">
@@ -126,11 +117,11 @@ import { PrivacySettingsForm } from '../../components/settings';
   .settings-page {
     max-width: 900px;
     margin: 0 auto;
-    padding: 1.5rem;
+    padding: calc(1.5rem * var(--spacing-density));
   }
 
   .settings-header {
-    margin-bottom: 2rem;
+    margin-bottom: calc(2rem * var(--spacing-density));
   }
 
   .settings-header h1 {
@@ -147,9 +138,9 @@ import { PrivacySettingsForm } from '../../components/settings';
 
   .settings-tabs {
     display: flex;
-    gap: 0.25rem;
+    gap: calc(0.25rem * var(--spacing-density));
     border-bottom: 1px solid var(--border);
-    margin-bottom: 1.5rem;
+    margin-bottom: calc(1.5rem * var(--spacing-density));
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;

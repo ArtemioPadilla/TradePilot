@@ -18,5 +18,12 @@ export default defineConfig({
         '**/*.config.*',
       ],
     },
+    exclude: [
+      '**/node_modules/**', 
+      '**/dist/**', 
+      '**/cypress/**', 
+      '**/.{idea,git,cache,output,temp}/**', 
+      './tests/e2e/**' // <--- ESTA LÍNEA ES VITAL
+    ],
   },
 });

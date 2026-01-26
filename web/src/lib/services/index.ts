@@ -30,3 +30,22 @@ export * from './notifications';
 
 // Offline Support
 export * from './offline-sync';
+
+// Profile & Security
+export * from './profile';
+export * from './security';
+
+// Market Data
+export * from './market-data';
+
+// Watchlists
+export * from './watchlists';
+
+// Utilities
+export * from './api-utils';
+export { logger } from './logger';
+export * from './circuit-breaker';
+
+// Analytics
+export * from './risk-analytics';
+export * from './tax-calculations';

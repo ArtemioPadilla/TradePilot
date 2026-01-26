@@ -76,7 +76,7 @@ export default function HoldingsTable() {
 
         .holdings-table th,
         .holdings-table td {
-          padding: 0.75rem 0.5rem;
+          padding: calc(0.75rem * var(--spacing-density)) calc(0.5rem * var(--spacing-density));
           text-align: left;
           border-bottom: 1px solid var(--border);
         }

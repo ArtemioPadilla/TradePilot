@@ -88,14 +88,14 @@ export default function RecentActivity() {
         .activity-list {
           display: flex;
           flex-direction: column;
-          gap: 0.75rem;
+          gap: calc(0.75rem * var(--spacing-density));
         }
 
         .activity-item {
           display: flex;
           align-items: center;
-          gap: 0.75rem;
-          padding: 0.5rem 0;
+          gap: calc(0.75rem * var(--spacing-density));
+          padding: calc(0.5rem * var(--spacing-density)) 0;
         }
 
         .activity-icon {

@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../lib/firebase';
+import { getFirebaseAuth } from '../../lib/firebase';
 import { getPortfolioData } from '../../lib/services/portfolio';
 import {
   getNetWorthByRange,
@@ -8,6 +8,7 @@ import {
   type NetWorthDataPoint,
 } from '../../lib/services/networth';
 import type { PortfolioSummary } from '../../types/portfolio';
+import { Info, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 
 /**
  * Performance metric with calculation and explanation
@@ -156,6 +157,8 @@ export function PerformanceMetrics({
   const [expandedMetric, setExpandedMetric] = useState<string | null>(null);
 
   useEffect(() => {
+    const auth = getFirebaseAuth();
+    if (!auth) return;
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUserId(user?.uid || null);
     });
@@ -313,8 +316,17 @@ export function PerformanceMetrics({
               onClick={() => setExpandedMetric(expandedMetric === metric.id ? null : metric.id)}
               data-testid={`metric-${metric.id}`}
             >
-              <div className="metric-content">
+              <div className="metric-header">
                 <span className="metric-label">{metric.label}</span>
+                <button
+                  className="metric-info"
+                  title={metric.tooltip}
+                  aria-label={`Info about ${metric.label}`}
+                >
+                  <Info size={14} strokeWidth={1.5} />
+                </button>
+              </div>
+              <div className="metric-content">
                 <span
                   className={`metric-value ${
                     metric.isGood === true
@@ -330,9 +342,11 @@ export function PerformanceMetrics({
                   <span className="metric-subvalue">{metric.subValue}</span>
                 )}
               </div>
-              <span className="metric-info" title={metric.tooltip}>
-                ⓘ
-              </span>
+              <div className="metric-indicator">
+                {metric.isGood === true && <TrendingUp size={16} strokeWidth={2} />}
+                {metric.isGood === false && <TrendingDown size={16} strokeWidth={2} />}
+                {metric.isGood === null && <Minus size={16} strokeWidth={2} />}
+              </div>
               {expandedMetric === metric.id && (
                 <div className="metric-tooltip">
                   {metric.tooltip}
@@ -345,46 +359,52 @@ export function PerformanceMetrics({
 
       <style>{`
         .performance-metrics {
-          background: var(--bg-secondary);
-          border: 1px solid var(--border);
-          border-radius: var(--radius-lg, 12px);
-          padding: 1.5rem;
+          background: var(--glass-bg, var(--bg-secondary));
+          backdrop-filter: blur(20px) saturate(180%);
+          -webkit-backdrop-filter: blur(20px) saturate(180%);
+          border: 1px solid var(--glass-border, var(--border));
+          border-radius: var(--radius-xl, 16px);
+          padding: var(--space-6, 1.5rem);
         }
 
         .metrics-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: 1rem;
+          margin-bottom: var(--space-5, 1.25rem);
         }
 
         .metrics-header h3 {
-          font-size: 1rem;
+          font-size: var(--text-base, 1rem);
           font-weight: 600;
           margin: 0;
           color: var(--text-primary);
+          letter-spacing: -0.01em;
         }
 
         .period-label {
-          font-size: 0.75rem;
+          font-size: var(--text-xs, 0.75rem);
+          font-weight: 500;
           color: var(--text-muted);
           background: var(--bg-tertiary);
-          padding: 0.25rem 0.5rem;
-          border-radius: var(--radius-sm, 4px);
+          padding: var(--space-1, 0.25rem) var(--space-3, 0.75rem);
+          border-radius: var(--radius-full, 9999px);
         }
 
         .metrics-loading,
         .metrics-empty {
           display: flex;
+          flex-direction: column;
           align-items: center;
           justify-content: center;
-          min-height: 150px;
+          min-height: 180px;
           color: var(--text-muted);
+          gap: var(--space-3, 0.75rem);
         }
 
         .loading-spinner {
-          width: 24px;
-          height: 24px;
+          width: 28px;
+          height: 28px;
           border: 2px solid var(--border);
           border-top-color: var(--accent);
           border-radius: 50%;
@@ -397,83 +417,173 @@ export function PerformanceMetrics({
 
         .metrics-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-          gap: 1rem;
+          grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+          gap: var(--space-4, 1rem);
         }
 
         .metric-card {
           position: relative;
           background: var(--bg-tertiary);
-          border-radius: var(--radius-md, 8px);
-          padding: 1rem;
+          border: 1px solid transparent;
+          border-radius: var(--radius-lg, 12px);
+          padding: var(--space-4, 1rem);
           cursor: pointer;
-          transition: all 0.2s;
+          transition: var(--transition-base);
+          overflow: hidden;
+        }
+
+        .metric-card::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 3px;
+          background: transparent;
+          transition: var(--transition-fast);
         }
 
         .metric-card:hover {
-          background: var(--border);
+          background: var(--bg-hover);
+          border-color: var(--border);
+          transform: translateY(-2px);
+        }
+
+        .metric-card:hover::before {
+          background: var(--accent);
         }
 
         .metric-card.expanded {
-          background: var(--border);
+          background: var(--bg-hover);
+          border-color: var(--accent);
+        }
+
+        .metric-card.expanded::before {
+          background: var(--accent);
+        }
+
+        .metric-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: var(--space-2, 0.5rem);
         }
 
         .metric-content {
           display: flex;
           flex-direction: column;
-          gap: 0.25rem;
+          gap: var(--space-1, 0.25rem);
         }
 
         .metric-label {
-          font-size: 0.75rem;
+          font-size: var(--text-xs, 0.75rem);
+          font-weight: 500;
           color: var(--text-muted);
           text-transform: uppercase;
-          letter-spacing: 0.05em;
+          letter-spacing: 0.06em;
         }
 
         .metric-value {
-          font-size: 1.25rem;
+          font-size: var(--text-2xl, 1.5rem);
           font-weight: 700;
           color: var(--text-primary);
+          letter-spacing: -0.02em;
+          line-height: 1.2;
         }
 
         .metric-value.positive {
-          color: var(--positive, #10b981);
+          color: var(--positive);
         }
 
         .metric-value.negative {
-          color: var(--negative, #ef4444);
+          color: var(--negative);
         }
 
         .metric-subvalue {
-          font-size: 0.75rem;
+          font-size: var(--text-xs, 0.75rem);
           color: var(--text-muted);
         }
 
         .metric-info {
-          position: absolute;
-          top: 0.5rem;
-          right: 0.5rem;
-          font-size: 0.75rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 24px;
+          height: 24px;
+          background: transparent;
+          border: none;
           color: var(--text-muted);
           cursor: help;
+          border-radius: var(--radius-full, 9999px);
+          transition: var(--transition-fast);
+          flex-shrink: 0;
+        }
+
+        .metric-info:hover {
+          background: var(--bg-hover);
+          color: var(--text-secondary);
+        }
+
+        .metric-indicator {
+          position: absolute;
+          bottom: var(--space-3, 0.75rem);
+          right: var(--space-3, 0.75rem);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 28px;
+          height: 28px;
+          border-radius: var(--radius-full, 9999px);
+          background: var(--bg-secondary);
+          color: var(--text-muted);
+          opacity: 0.6;
+          transition: var(--transition-fast);
+        }
+
+        .metric-card:hover .metric-indicator {
+          opacity: 1;
+        }
+
+        .metric-value.positive ~ .metric-indicator,
+        .metric-card:has(.metric-value.positive) .metric-indicator {
+          color: var(--positive);
+          background: var(--positive-bg);
+        }
+
+        .metric-value.negative ~ .metric-indicator,
+        .metric-card:has(.metric-value.negative) .metric-indicator {
+          color: var(--negative);
+          background: var(--negative-bg);
         }
 
         .metric-tooltip {
           position: absolute;
-          top: 100%;
+          top: calc(100% + var(--space-2, 0.5rem));
           left: 0;
           right: 0;
-          margin-top: 0.5rem;
-          padding: 0.75rem;
-          background: var(--bg-primary);
-          border: 1px solid var(--border);
-          border-radius: var(--radius-md, 8px);
-          font-size: 0.75rem;
+          padding: var(--space-4, 1rem);
+          background: var(--glass-bg, var(--bg-primary));
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border: 1px solid var(--glass-border, var(--border));
+          border-radius: var(--radius-lg, 12px);
+          font-size: var(--text-sm, 0.875rem);
           color: var(--text-secondary);
-          line-height: 1.5;
+          line-height: 1.6;
           z-index: 10;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          box-shadow: var(--shadow-xl);
+          animation: fadeIn 0.15s ease-out;
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(-4px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
 
         @media (max-width: 768px) {
@@ -485,6 +595,10 @@ export function PerformanceMetrics({
         @media (max-width: 480px) {
           .metrics-grid {
             grid-template-columns: 1fr;
+          }
+
+          .metric-value {
+            font-size: var(--text-xl, 1.25rem);
           }
         }
       `}</style>

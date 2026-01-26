@@ -5,6 +5,7 @@
  * configuration, and results visualization.
  */
 
+export { BacktestPage } from './BacktestPage';
 export { StrategySelector } from './StrategySelector';
 export { StrategyConfigForm } from './StrategyConfigForm';
 export { BacktestConfigForm } from './BacktestConfigForm';

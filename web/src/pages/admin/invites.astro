@@ -88,7 +88,7 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
 
 <script>
   import { getAllInvites, createInvite, revokeInvite, getInviteUrl, getInviteStatus } from '../../lib/invites';
-  import { auth } from '../../lib/firebase';
+  import { getFirebaseAuth } from '../../lib/firebase';
   import type { Invite } from '../../lib/types';
 
   let allInvites: Invite[] = [];

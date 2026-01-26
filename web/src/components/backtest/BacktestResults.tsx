@@ -152,11 +152,37 @@ export function BacktestResults({
   );
 }
 
+// Helper functions for safe number formatting
+function formatPercent(value: number | undefined | null, decimals = 2, showPlus = false): string {
+  if (value === undefined || value === null || isNaN(value)) return 'N/A';
+  const prefix = showPlus && value >= 0 ? '+' : '';
+  return `${prefix}${value.toFixed(decimals)}%`;
+}
+
+function formatNumber(value: number | undefined | null, decimals = 2): string {
+  if (value === undefined || value === null || isNaN(value)) return 'N/A';
+  return value.toFixed(decimals);
+}
+
+function formatInt(value: number | undefined | null): string {
+  if (value === undefined || value === null || isNaN(value)) return 'N/A';
+  return value.toString();
+}
+
 /**
  * Overview Tab - Key metrics and summary
  */
 function OverviewTab({ result }: { result: BacktestResult }) {
   const { metrics, benchmarkMetrics } = result;
+
+  // Guard against missing metrics
+  if (!metrics) {
+    return (
+      <div data-testid="overview-tab" className="text-center py-8 text-gray-500">
+        No metrics available for this backtest.
+      </div>
+    );
+  }
 
   return (
     <div data-testid="overview-tab" className="space-y-6">
@@ -164,25 +190,25 @@ function OverviewTab({ result }: { result: BacktestResult }) {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <MetricCard
           label="Total Return"
-          value={`${metrics.totalReturn >= 0 ? '+' : ''}${metrics.totalReturn.toFixed(2)}%`}
+          value={formatPercent(metrics.totalReturn, 2, true)}
           benchmark={benchmarkMetrics?.totalReturn}
-          positive={metrics.totalReturn >= 0}
+          positive={(metrics.totalReturn ?? 0) >= 0}
         />
         <MetricCard
           label="CAGR"
-          value={`${metrics.cagr >= 0 ? '+' : ''}${metrics.cagr.toFixed(2)}%`}
+          value={formatPercent(metrics.cagr, 2, true)}
           benchmark={benchmarkMetrics?.cagr}
-          positive={metrics.cagr >= 0}
+          positive={(metrics.cagr ?? 0) >= 0}
         />
         <MetricCard
           label="Sharpe Ratio"
-          value={metrics.sharpeRatio.toFixed(2)}
+          value={formatNumber(metrics.sharpeRatio)}
           benchmark={benchmarkMetrics?.sharpeRatio}
-          positive={metrics.sharpeRatio >= 1}
+          positive={(metrics.sharpeRatio ?? 0) >= 1}
         />
         <MetricCard
           label="Max Drawdown"
-          value={`${metrics.maxDrawdown.toFixed(2)}%`}
+          value={formatPercent(metrics.maxDrawdown)}
           benchmark={benchmarkMetrics?.maxDrawdown}
           positive={false}
           invert
@@ -195,14 +221,14 @@ function OverviewTab({ result }: { result: BacktestResult }) {
         <div className="bg-white border border-gray-200 rounded-lg p-4">
           <h3 className="font-semibold text-gray-900 mb-4">Return Metrics</h3>
           <dl className="space-y-3">
-            <MetricRow label="Total Return" value={`${metrics.totalReturn.toFixed(2)}%`} />
-            <MetricRow label="CAGR" value={`${metrics.cagr.toFixed(2)}%`} />
-            <MetricRow label="Volatility (Ann.)" value={`${metrics.volatility.toFixed(2)}%`} />
+            <MetricRow label="Total Return" value={formatPercent(metrics.totalReturn)} />
+            <MetricRow label="CAGR" value={formatPercent(metrics.cagr)} />
+            <MetricRow label="Volatility (Ann.)" value={formatPercent(metrics.volatility)} />
             {metrics.alpha !== undefined && (
-              <MetricRow label="Alpha" value={`${metrics.alpha.toFixed(2)}%`} />
+              <MetricRow label="Alpha" value={formatPercent(metrics.alpha)} />
             )}
             {metrics.beta !== undefined && (
-              <MetricRow label="Beta" value={metrics.beta.toFixed(2)} />
+              <MetricRow label="Beta" value={formatNumber(metrics.beta)} />
             )}
           </dl>
         </div>
@@ -211,13 +237,13 @@ function OverviewTab({ result }: { result: BacktestResult }) {
         <div className="bg-white border border-gray-200 rounded-lg p-4">
           <h3 className="font-semibold text-gray-900 mb-4">Risk Metrics</h3>
           <dl className="space-y-3">
-            <MetricRow label="Sharpe Ratio" value={metrics.sharpeRatio.toFixed(2)} />
-            <MetricRow label="Sortino Ratio" value={metrics.sortinoRatio.toFixed(2)} />
-            <MetricRow label="Calmar Ratio" value={metrics.calmarRatio.toFixed(2)} />
-            <MetricRow label="Max Drawdown" value={`${metrics.maxDrawdown.toFixed(2)}%`} />
-            <MetricRow label="Max DD Duration" value={`${metrics.maxDrawdownDuration} days`} />
+            <MetricRow label="Sharpe Ratio" value={formatNumber(metrics.sharpeRatio)} />
+            <MetricRow label="Sortino Ratio" value={formatNumber(metrics.sortinoRatio)} />
+            <MetricRow label="Calmar Ratio" value={formatNumber(metrics.calmarRatio)} />
+            <MetricRow label="Max Drawdown" value={formatPercent(metrics.maxDrawdown)} />
+            <MetricRow label="Max DD Duration" value={`${formatInt(metrics.maxDrawdownDuration)} days`} />
             {metrics.informationRatio !== undefined && (
-              <MetricRow label="Information Ratio" value={metrics.informationRatio.toFixed(2)} />
+              <MetricRow label="Information Ratio" value={formatNumber(metrics.informationRatio)} />
             )}
           </dl>
         </div>
@@ -226,11 +252,11 @@ function OverviewTab({ result }: { result: BacktestResult }) {
         <div className="bg-white border border-gray-200 rounded-lg p-4">
           <h3 className="font-semibold text-gray-900 mb-4">Trade Metrics</h3>
           <dl className="space-y-3">
-            <MetricRow label="Total Trades" value={metrics.totalTrades.toString()} />
-            <MetricRow label="Win Rate" value={`${metrics.winRate.toFixed(1)}%`} />
-            <MetricRow label="Profit Factor" value={metrics.profitFactor.toFixed(2)} />
-            <MetricRow label="Avg Win" value={`${metrics.avgWin.toFixed(2)}%`} />
-            <MetricRow label="Avg Loss" value={`${metrics.avgLoss.toFixed(2)}%`} />
+            <MetricRow label="Total Trades" value={formatInt(metrics.totalTrades)} />
+            <MetricRow label="Win Rate" value={formatPercent(metrics.winRate, 1)} />
+            <MetricRow label="Profit Factor" value={formatNumber(metrics.profitFactor)} />
+            <MetricRow label="Avg Win" value={formatPercent(metrics.avgWin)} />
+            <MetricRow label="Avg Loss" value={formatPercent(metrics.avgLoss)} />
           </dl>
         </div>
 

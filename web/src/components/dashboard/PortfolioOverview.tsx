@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../lib/firebase';
+import { getFirebaseAuth } from '../../lib/firebase';
 import {
   getPortfolioData,
   calculateDiversityScore,
@@ -54,6 +54,8 @@ export function PortfolioOverview({ baseCurrency = 'USD' }: PortfolioOverviewPro
   const [diversityScore, setDiversityScore] = useState(0);
 
   useEffect(() => {
+    const auth = getFirebaseAuth();
+    if (!auth) return;
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUserId(user?.uid || null);
     });
@@ -263,7 +265,7 @@ export function PortfolioOverview({ baseCurrency = 'USD' }: PortfolioOverviewPro
         .portfolio-overview {
           display: flex;
           flex-direction: column;
-          gap: 2rem;
+          gap: var(--space-6, 1.5rem);
         }
 
         .portfolio-overview.loading,
@@ -273,19 +275,22 @@ export function PortfolioOverview({ baseCurrency = 'USD' }: PortfolioOverviewPro
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          padding: 3rem;
+          padding: var(--space-12, 3rem);
           text-align: center;
-          min-height: 200px;
+          min-height: 240px;
+          background: var(--bg-secondary);
+          border: 1px solid var(--border);
+          border-radius: var(--radius-xl, 16px);
         }
 
         .loading-spinner {
           width: 32px;
           height: 32px;
-          border: 3px solid var(--border);
+          border: 2px solid var(--border);
           border-top-color: var(--accent);
           border-radius: 50%;
           animation: spin 1s linear infinite;
-          margin-bottom: 1rem;
+          margin-bottom: var(--space-4, 1rem);
         }
 
         @keyframes spin {
@@ -295,179 +300,219 @@ export function PortfolioOverview({ baseCurrency = 'USD' }: PortfolioOverviewPro
         .metrics-grid {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-          gap: 1rem;
+          gap: var(--space-4, 1rem);
         }
 
         .metric-card {
-          background: var(--bg-secondary);
-          border: 1px solid var(--border);
-          border-radius: var(--radius-lg, 12px);
-          padding: 1.25rem;
+          background: var(--glass-bg, var(--bg-secondary));
+          backdrop-filter: blur(20px) saturate(180%);
+          -webkit-backdrop-filter: blur(20px) saturate(180%);
+          border: 1px solid var(--glass-border, var(--border));
+          border-radius: var(--radius-xl, 16px);
+          padding: var(--space-5, 1.25rem);
           display: flex;
           flex-direction: column;
-          gap: 0.25rem;
+          gap: var(--space-2, 0.5rem);
           cursor: help;
-          transition: border-color 0.15s;
+          transition: var(--transition-base);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .metric-card::after {
+          content: '';
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          background: linear-gradient(135deg, transparent 0%, transparent 40%, rgba(255,255,255,0.03) 100%);
+          pointer-events: none;
         }
 
         .metric-card:hover {
           border-color: var(--accent);
+          transform: translateY(-2px);
+          box-shadow: var(--shadow-lg);
         }
 
         .metric-label {
-          font-size: 0.75rem;
+          font-size: var(--text-xs, 0.75rem);
+          font-weight: 500;
           color: var(--text-muted);
           text-transform: uppercase;
-          letter-spacing: 0.05em;
+          letter-spacing: 0.06em;
         }
 
         .metric-value {
-          font-size: 1.5rem;
-          font-weight: 600;
+          font-size: var(--text-2xl, 1.5rem);
+          font-weight: 700;
           color: var(--text-primary);
+          letter-spacing: -0.02em;
+          line-height: 1.2;
         }
 
         .metric-subvalue {
-          font-size: 0.75rem;
+          font-size: var(--text-xs, 0.75rem);
           color: var(--text-muted);
         }
 
         .metric-change {
-          font-size: 0.875rem;
-          font-weight: 500;
+          font-size: var(--text-sm, 0.875rem);
+          font-weight: 600;
+          display: inline-flex;
+          align-items: center;
+          gap: var(--space-1, 0.25rem);
         }
 
         .metric-change.positive {
-          color: var(--positive, #10b981);
+          color: var(--positive);
         }
 
         .metric-change.negative {
-          color: var(--negative, #ef4444);
+          color: var(--negative);
         }
 
         .diversity-section {
-          background: var(--bg-secondary);
-          border: 1px solid var(--border);
-          border-radius: var(--radius-lg, 12px);
-          padding: 1.5rem;
+          background: var(--glass-bg, var(--bg-secondary));
+          backdrop-filter: blur(20px) saturate(180%);
+          -webkit-backdrop-filter: blur(20px) saturate(180%);
+          border: 1px solid var(--glass-border, var(--border));
+          border-radius: var(--radius-xl, 16px);
+          padding: var(--space-6, 1.5rem);
         }
 
         .section-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: 1rem;
+          margin-bottom: var(--space-4, 1rem);
         }
 
         .section-header h3 {
-          font-size: 1rem;
+          font-size: var(--text-base, 1rem);
           font-weight: 600;
           margin: 0;
           color: var(--text-primary);
+          letter-spacing: -0.01em;
         }
 
         .diversity-score {
-          font-size: 1.25rem;
+          font-size: var(--text-xl, 1.25rem);
           font-weight: 700;
           color: var(--accent);
           cursor: help;
+          padding: var(--space-1, 0.25rem) var(--space-3, 0.75rem);
+          background: var(--accent-muted);
+          border-radius: var(--radius-full, 9999px);
         }
 
         .diversity-bar {
-          height: 8px;
+          height: 10px;
           background: var(--bg-tertiary);
-          border-radius: 4px;
+          border-radius: var(--radius-full, 9999px);
           overflow: hidden;
-          margin-bottom: 0.5rem;
+          margin-bottom: var(--space-3, 0.75rem);
+          box-shadow: var(--shadow-inner);
         }
 
         .diversity-fill {
           height: 100%;
           background: linear-gradient(90deg, var(--negative) 0%, var(--warning, #f59e0b) 50%, var(--positive) 100%);
-          border-radius: 4px;
-          transition: width 0.3s ease;
+          border-radius: var(--radius-full, 9999px);
+          transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .diversity-label {
-          font-size: 0.875rem;
-          color: var(--text-muted);
+          font-size: var(--text-sm, 0.875rem);
+          font-weight: 500;
+          color: var(--text-secondary);
           margin: 0;
           text-align: center;
         }
 
         .allocation-section {
-          background: var(--bg-secondary);
-          border: 1px solid var(--border);
-          border-radius: var(--radius-lg, 12px);
-          padding: 1.5rem;
+          background: var(--glass-bg, var(--bg-secondary));
+          backdrop-filter: blur(20px) saturate(180%);
+          -webkit-backdrop-filter: blur(20px) saturate(180%);
+          border: 1px solid var(--glass-border, var(--border));
+          border-radius: var(--radius-xl, 16px);
+          padding: var(--space-6, 1.5rem);
         }
 
         .allocation-section h3 {
-          font-size: 1rem;
+          font-size: var(--text-base, 1rem);
           font-weight: 600;
-          margin: 0 0 1rem 0;
+          margin: 0 0 var(--space-5, 1.25rem) 0;
           color: var(--text-primary);
+          letter-spacing: -0.01em;
         }
 
         .allocation-list {
           display: flex;
           flex-direction: column;
-          gap: 0.75rem;
+          gap: var(--space-4, 1rem);
         }
 
         .allocation-item {
           display: grid;
           grid-template-columns: 1fr 2fr 1fr;
-          gap: 1rem;
+          gap: var(--space-4, 1rem);
           align-items: center;
+          padding: var(--space-3, 0.75rem);
+          background: var(--bg-tertiary);
+          border-radius: var(--radius-lg, 12px);
+          transition: var(--transition-fast);
+        }
+
+        .allocation-item:hover {
+          background: var(--bg-hover);
         }
 
         .allocation-info {
           display: flex;
           flex-direction: column;
-          gap: 0.125rem;
+          gap: var(--space-1, 0.25rem);
         }
 
         .allocation-name {
-          font-weight: 500;
+          font-weight: 600;
           color: var(--text-primary);
-          font-size: 0.875rem;
+          font-size: var(--text-sm, 0.875rem);
         }
 
         .allocation-count {
-          font-size: 0.75rem;
+          font-size: var(--text-xs, 0.75rem);
           color: var(--text-muted);
         }
 
         .allocation-bar-container {
           height: 8px;
-          background: var(--bg-tertiary);
-          border-radius: 4px;
+          background: var(--bg-secondary);
+          border-radius: var(--radius-full, 9999px);
           overflow: hidden;
         }
 
         .allocation-bar {
           height: 100%;
-          background: var(--accent);
-          border-radius: 4px;
-          transition: width 0.3s ease;
+          background: linear-gradient(90deg, var(--accent), var(--accent-hover, var(--accent)));
+          border-radius: var(--radius-full, 9999px);
+          transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .allocation-values {
           display: flex;
           flex-direction: column;
           align-items: flex-end;
-          gap: 0.125rem;
+          gap: var(--space-1, 0.25rem);
         }
 
         .allocation-percent {
-          font-weight: 600;
+          font-weight: 700;
           color: var(--text-primary);
-          font-size: 0.875rem;
+          font-size: var(--text-sm, 0.875rem);
         }
 
         .allocation-value {
-          font-size: 0.75rem;
+          font-size: var(--text-xs, 0.75rem);
           color: var(--text-muted);
         }
 
@@ -478,7 +523,7 @@ export function PortfolioOverview({ baseCurrency = 'USD' }: PortfolioOverviewPro
 
           .allocation-item {
             grid-template-columns: 1fr;
-            gap: 0.5rem;
+            gap: var(--space-3, 0.75rem);
           }
 
           .allocation-values {
@@ -491,6 +536,10 @@ export function PortfolioOverview({ baseCurrency = 'USD' }: PortfolioOverviewPro
         @media (max-width: 480px) {
           .metrics-grid {
             grid-template-columns: 1fr;
+          }
+
+          .metric-value {
+            font-size: var(--text-xl, 1.25rem);
           }
         }
       `}</style>

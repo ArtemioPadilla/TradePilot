@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import AuthInitializer from '../components/auth/AuthInitializer';
 
 interface Props {
   title: string;
@@ -36,11 +37,15 @@ const { title, description = 'TradePilot - Integrated Backtesting and Live Tradi
     <title>{title} | TradePilot</title>
   </head>
   <body>
+    <!-- Initialize Firebase auth listener for auth-aware components -->
+    <AuthInitializer client:only="react" />
     <slot />
     <script>
-      // Initialize theme from localStorage
-      const theme = localStorage.getItem('theme') || 'dashboard';
-      document.documentElement.setAttribute('data-theme', theme);
+      import { initTheme } from '../stores/theme';
+      import { initDensity } from '../stores/density';
+      // Initialize theme from store (handles 'system' preference and media query listener)
+      initTheme();
+      initDensity();
 
       // Register service worker
       if ('serviceWorker' in navigator) {

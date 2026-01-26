@@ -17,6 +17,10 @@
   </button>
 
   <div class="theme-dropdown" id="theme-dropdown">
+    <button class="theme-option" data-theme="system">
+      <span class="theme-preview system"></span>
+      <span>System</span>
+    </button>
     <button class="theme-option" data-theme="dashboard">
       <span class="theme-preview dashboard"></span>
       <span>Dashboard Dark</span>
@@ -33,9 +37,28 @@
 </div>
 
 <script>
+  import { setTheme, $theme, type Theme } from '../../stores/theme';
+
   const themeToggle = document.getElementById('theme-toggle');
   const themeDropdown = document.getElementById('theme-dropdown');
   const themeOptions = document.querySelectorAll('.theme-option');
+
+  // Update active state based on current theme
+  function updateActiveState() {
+    const currentTheme = $theme.get();
+    themeOptions.forEach((option) => {
+      const optionTheme = option.getAttribute('data-theme');
+      option.classList.toggle('active', optionTheme === currentTheme);
+    });
+  }
+
+  // Set initial active state
+  updateActiveState();
+
+  // Subscribe to theme changes
+  $theme.subscribe(() => {
+    updateActiveState();
+  });
 
   themeToggle?.addEventListener('click', () => {
     themeDropdown?.classList.toggle('open');
@@ -43,10 +66,9 @@
 
   themeOptions.forEach((option) => {
     option.addEventListener('click', () => {
-      const theme = option.getAttribute('data-theme');
+      const theme = option.getAttribute('data-theme') as Theme;
       if (theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
+        setTheme(theme);
         themeDropdown?.classList.remove('open');
       }
     });
@@ -144,5 +166,24 @@
 
   .theme-preview.bloomberg {
     background: linear-gradient(135deg, #0a0a0a 50%, #ff8c00 50%);
+  }
+
+  .theme-preview.system {
+    background: linear-gradient(135deg, #f8f9fa 25%, #0f172a 25%, #0f172a 50%, #f8f9fa 50%, #f8f9fa 75%, #0f172a 75%);
+    background-size: 8px 8px;
+  }
+
+  .theme-option.active {
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+  }
+
+  .theme-option.active::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--accent);
+    margin-left: auto;
   }
 </style>

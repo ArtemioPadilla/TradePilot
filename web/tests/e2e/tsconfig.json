@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    
+    // ESTA ES LA CLAVE: 
+    // Sobrescribimos la lista de tipos para quitar "vitest/globals"
+    // y dejamos solo lo básico y lo que Playwright necesita.
+    "types": ["node", "@playwright/test"]
+  },
+  "include": ["**/*.ts"]
+}

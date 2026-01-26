@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../lib/firebase';
+import { getFirebaseAuth } from '../../lib/firebase';
 import { getAccount, deleteAccount, updateAccountStatus } from '../../lib/services/accounts';
 import { getHoldingsByAccount, deleteHolding } from '../../lib/services/holdings';
 import { AddPositionModal } from './AddPositionModal';
@@ -38,6 +38,8 @@ export function AccountDetail({ accountId }: AccountDetailProps) {
   const [bulkActionLoading, setBulkActionLoading] = useState(false);
 
   useEffect(() => {
+    const auth = getFirebaseAuth();
+    if (!auth) return;
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUserId(user?.uid || null);
     });

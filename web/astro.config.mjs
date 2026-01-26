@@ -41,15 +41,14 @@ export default defineConfig({
     build: {
       // Enable source maps for better debugging
       sourcemap: process.env.NODE_ENV === 'development',
-      // Chunk splitting for better caching
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            // Split vendor chunks for better caching
-            'firebase': ['firebase/app', 'firebase/auth', 'firebase/firestore'],
-            'react-vendor': ['react', 'react-dom'],
-          },
-        },
+      // Note: Don't manually split React chunks - Astro handles this automatically
+      // Manual splitting causes duplicate React instances and "jsxDEV is not a function" errors
+    },
+    server: {
+      headers: {
+        // Allow Firebase popup auth to detect when popup closes
+        // Without this, Firebase falls back to slow polling and shows COOP warnings
+        'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
       },
     },
   },

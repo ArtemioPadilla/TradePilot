@@ -13,15 +13,26 @@ import type {
 } from '../../types/alerts';
 
 interface NotificationPreferencesFormProps {
-  /** Current preferences */
-  preferences: NotificationPreferences;
+  /** Current preferences (optional - will use defaults if not provided) */
+  preferences?: NotificationPreferences;
   /** Callback when preferences are saved */
-  onSave: (preferences: NotificationPreferences) => Promise<void>;
+  onSave?: (preferences: NotificationPreferences) => Promise<void>;
   /** Whether form is in loading state */
   isLoading?: boolean;
   /** Whether save is in progress */
   isSaving?: boolean;
 }
+
+// Default notification preferences
+const DEFAULT_PREFERENCES: NotificationPreferences = {
+  pushEnabled: true,
+  emailEnabled: true,
+  inAppEnabled: true,
+  quietHoursStart: undefined,
+  quietHoursEnd: undefined,
+  emailDigestFrequency: 'daily',
+  typePreferences: {},
+};
 
 // Alert type labels for display
 const ALERT_TYPE_LABELS: Record<AlertType, string> = {
@@ -61,11 +72,14 @@ const TIME_OPTIONS = Array.from({ length: 24 }, (_, i) => {
 });
 
 export function NotificationPreferencesForm({
-  preferences,
+  preferences: propPreferences,
   onSave,
   isLoading = false,
   isSaving = false,
 }: NotificationPreferencesFormProps) {
+  // Merge with defaults to ensure all properties exist
+  const preferences = { ...DEFAULT_PREFERENCES, ...propPreferences };
+
   // Form state
   const [pushEnabled, setPushEnabled] = useState(preferences.pushEnabled);
   const [emailEnabled, setEmailEnabled] = useState(preferences.emailEnabled);
@@ -161,7 +175,9 @@ export function NotificationPreferencesForm({
       typePreferences,
     };
 
-    await onSave(newPreferences);
+    if (onSave) {
+      await onSave(newPreferences);
+    }
     setHasChanges(false);
   }, [
     pushEnabled,
@@ -189,135 +205,143 @@ export function NotificationPreferencesForm({
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center py-12" data-testid="preferences-loading">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+      <div className="notification-preferences" data-testid="preferences-loading">
+        <div className="loading-state">
+          <div className="loading-spinner" />
+          <p>Loading notification preferences...</p>
+        </div>
+        <style>{styles}</style>
       </div>
     );
   }
 
   return (
-    <div className="notification-preferences-form" data-testid="notification-preferences-form">
+    <div className="notification-preferences" data-testid="notification-preferences-form">
       {/* Global Channel Settings */}
-      <section className="mb-8">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+      <section className="settings-section">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+          </svg>
           Notification Channels
         </h3>
-        <p className="text-sm text-gray-600 mb-4">
+        <p className="section-description">
           Choose how you want to receive notifications.
         </p>
 
-        <div className="space-y-4">
+        <div className="channel-list">
           {/* Push Notifications */}
-          <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-            <div className="flex items-center gap-3">
-              <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+          <div className="channel-item">
+            <div className="channel-info">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
               </svg>
               <div>
-                <div className="font-medium">Push Notifications</div>
-                <div className="text-sm text-gray-500">
-                  Receive alerts on your device
-                </div>
+                <label htmlFor="push-toggle">Push Notifications</label>
+                <span className="channel-description">Receive alerts on your device</span>
               </div>
             </div>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                checked={pushEnabled}
-                onChange={(e) => setPushEnabled(e.target.checked)}
-                className="sr-only peer"
-                data-testid="push-enabled-toggle"
-              />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-            </label>
+            <button
+              id="push-toggle"
+              type="button"
+              role="switch"
+              aria-checked={pushEnabled}
+              className={`toggle ${pushEnabled ? 'on' : ''}`}
+              onClick={() => setPushEnabled(!pushEnabled)}
+              data-testid="push-enabled-toggle"
+            >
+              <span className="toggle-thumb" />
+            </button>
           </div>
 
           {/* Email Notifications */}
-          <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-            <div className="flex items-center gap-3">
-              <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          <div className="channel-item">
+            <div className="channel-info">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
               <div>
-                <div className="font-medium">Email Notifications</div>
-                <div className="text-sm text-gray-500">
-                  Receive alerts via email
-                </div>
+                <label htmlFor="email-toggle">Email Notifications</label>
+                <span className="channel-description">Receive alerts via email</span>
               </div>
             </div>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                checked={emailEnabled}
-                onChange={(e) => setEmailEnabled(e.target.checked)}
-                className="sr-only peer"
-                data-testid="email-enabled-toggle"
-              />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-            </label>
+            <button
+              id="email-toggle"
+              type="button"
+              role="switch"
+              aria-checked={emailEnabled}
+              className={`toggle ${emailEnabled ? 'on' : ''}`}
+              onClick={() => setEmailEnabled(!emailEnabled)}
+              data-testid="email-enabled-toggle"
+            >
+              <span className="toggle-thumb" />
+            </button>
           </div>
 
           {/* In-App Notifications */}
-          <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-            <div className="flex items-center gap-3">
-              <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+          <div className="channel-item">
+            <div className="channel-info">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
               </svg>
               <div>
-                <div className="font-medium">In-App Notifications</div>
-                <div className="text-sm text-gray-500">
-                  See alerts in the notification center
-                </div>
+                <label htmlFor="inapp-toggle">In-App Notifications</label>
+                <span className="channel-description">See alerts in the notification center</span>
               </div>
             </div>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                checked={inAppEnabled}
-                onChange={(e) => setInAppEnabled(e.target.checked)}
-                className="sr-only peer"
-                data-testid="inapp-enabled-toggle"
-              />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-            </label>
+            <button
+              id="inapp-toggle"
+              type="button"
+              role="switch"
+              aria-checked={inAppEnabled}
+              className={`toggle ${inAppEnabled ? 'on' : ''}`}
+              onClick={() => setInAppEnabled(!inAppEnabled)}
+              data-testid="inapp-enabled-toggle"
+            >
+              <span className="toggle-thumb" />
+            </button>
           </div>
         </div>
       </section>
 
       {/* Quiet Hours */}
-      <section className="mb-8">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+      <section className="settings-section">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
           Quiet Hours
         </h3>
-        <p className="text-sm text-gray-600 mb-4">
+        <p className="section-description">
           Pause push notifications during specified hours.
         </p>
 
-        <div className="p-4 bg-gray-50 rounded-lg">
-          <div className="flex items-center justify-between mb-4">
-            <div className="font-medium">Enable Quiet Hours</div>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                checked={quietHoursEnabled}
-                onChange={(e) => setQuietHoursEnabled(e.target.checked)}
-                className="sr-only peer"
-                data-testid="quiet-hours-toggle"
-              />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-            </label>
+        <div className="quiet-hours-card">
+          <div className="setting-item">
+            <div className="setting-info">
+              <label htmlFor="quiet-hours-toggle">Enable Quiet Hours</label>
+            </div>
+            <button
+              id="quiet-hours-toggle"
+              type="button"
+              role="switch"
+              aria-checked={quietHoursEnabled}
+              className={`toggle ${quietHoursEnabled ? 'on' : ''}`}
+              onClick={() => setQuietHoursEnabled(!quietHoursEnabled)}
+              data-testid="quiet-hours-toggle"
+            >
+              <span className="toggle-thumb" />
+            </button>
           </div>
 
           {quietHoursEnabled && (
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Start Time
-                </label>
+            <div className="time-selectors">
+              <div className="time-field">
+                <label htmlFor="quiet-start">Start Time</label>
                 <select
+                  id="quiet-start"
                   value={quietHoursStart}
                   onChange={(e) => setQuietHoursStart(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                   data-testid="quiet-hours-start"
                 >
                   {TIME_OPTIONS.map((opt) => (
@@ -327,14 +351,12 @@ export function NotificationPreferencesForm({
                   ))}
                 </select>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  End Time
-                </label>
+              <div className="time-field">
+                <label htmlFor="quiet-end">End Time</label>
                 <select
+                  id="quiet-end"
                   value={quietHoursEnd}
                   onChange={(e) => setQuietHoursEnd(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                   data-testid="quiet-hours-end"
                 >
                   {TIME_OPTIONS.map((opt) => (
@@ -350,15 +372,18 @@ export function NotificationPreferencesForm({
       </section>
 
       {/* Email Digest */}
-      <section className="mb-8">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+      <section className="settings-section">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2" />
+          </svg>
           Email Digest
         </h3>
-        <p className="text-sm text-gray-600 mb-4">
+        <p className="section-description">
           Receive a summary of your alerts and activity.
         </p>
 
-        <div className="grid grid-cols-3 gap-3">
+        <div className="digest-options">
           {[
             { value: 'none', label: 'None', description: 'No digest emails' },
             { value: 'daily', label: 'Daily', description: 'Every morning' },
@@ -370,93 +395,76 @@ export function NotificationPreferencesForm({
               onClick={() =>
                 setEmailDigestFrequency(option.value as 'none' | 'daily' | 'weekly')
               }
-              className={`p-4 rounded-lg border-2 text-left transition-colors ${
-                emailDigestFrequency === option.value
-                  ? 'border-blue-500 bg-blue-50'
-                  : 'border-gray-200 hover:border-gray-300'
-              }`}
+              className={`digest-option ${emailDigestFrequency === option.value ? 'selected' : ''}`}
               data-testid={`digest-${option.value}`}
             >
-              <div className="font-medium">{option.label}</div>
-              <div className="text-sm text-gray-500">{option.description}</div>
+              <span className="digest-label">{option.label}</span>
+              <span className="digest-description">{option.description}</span>
             </button>
           ))}
         </div>
       </section>
 
       {/* Per-Type Preferences */}
-      <section className="mb-8">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+      <section className="settings-section">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+          </svg>
           Alert Type Preferences
         </h3>
-        <p className="text-sm text-gray-600 mb-4">
+        <p className="section-description">
           Customize notifications for each alert type.
         </p>
 
-        <div className="space-y-6">
+        <div className="type-groups">
           {ALERT_TYPE_GROUPS.map((group) => (
-            <div key={group.category}>
-              <h4 className="text-sm font-medium text-gray-700 mb-3">
-                {group.category}
-              </h4>
-              <div className="bg-gray-50 rounded-lg overflow-hidden">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-gray-200">
-                      <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase">
-                        Alert Type
-                      </th>
-                      <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">
-                        Push
-                      </th>
-                      <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">
-                        Email
-                      </th>
-                      <th className="px-4 py-2 text-center text-xs font-medium text-gray-500 uppercase">
-                        In-App
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {group.types.map((alertType) => (
-                      <tr key={alertType} className="border-b border-gray-100 last:border-0">
-                        <td className="px-4 py-3 text-sm">
-                          {ALERT_TYPE_LABELS[alertType]}
-                        </td>
-                        <td className="px-4 py-3 text-center">
-                          <input
-                            type="checkbox"
-                            checked={getTypePreference(alertType, 'push')}
-                            onChange={() => toggleTypePreference(alertType, 'push')}
-                            disabled={!pushEnabled}
-                            className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 disabled:opacity-50"
-                            data-testid={`type-${alertType}-push`}
-                          />
-                        </td>
-                        <td className="px-4 py-3 text-center">
-                          <input
-                            type="checkbox"
-                            checked={getTypePreference(alertType, 'email')}
-                            onChange={() => toggleTypePreference(alertType, 'email')}
-                            disabled={!emailEnabled}
-                            className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 disabled:opacity-50"
-                            data-testid={`type-${alertType}-email`}
-                          />
-                        </td>
-                        <td className="px-4 py-3 text-center">
-                          <input
-                            type="checkbox"
-                            checked={getTypePreference(alertType, 'inApp')}
-                            onChange={() => toggleTypePreference(alertType, 'inApp')}
-                            disabled={!inAppEnabled}
-                            className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 disabled:opacity-50"
-                            data-testid={`type-${alertType}-inapp`}
-                          />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            <div key={group.category} className="type-group">
+              <h4>{group.category}</h4>
+              <div className="type-table">
+                <div className="type-table-header">
+                  <span className="type-col">Alert Type</span>
+                  <span className="channel-col">Push</span>
+                  <span className="channel-col">Email</span>
+                  <span className="channel-col">In-App</span>
+                </div>
+                {group.types.map((alertType) => (
+                  <div key={alertType} className="type-row">
+                    <span className="type-col">
+                      {ALERT_TYPE_LABELS[alertType]}
+                    </span>
+                    <span className="channel-col">
+                      <input
+                        type="checkbox"
+                        checked={getTypePreference(alertType, 'push')}
+                        onChange={() => toggleTypePreference(alertType, 'push')}
+                        disabled={!pushEnabled}
+                        aria-label={`${ALERT_TYPE_LABELS[alertType]} push notification`}
+                        data-testid={`type-${alertType}-push`}
+                      />
+                    </span>
+                    <span className="channel-col">
+                      <input
+                        type="checkbox"
+                        checked={getTypePreference(alertType, 'email')}
+                        onChange={() => toggleTypePreference(alertType, 'email')}
+                        disabled={!emailEnabled}
+                        aria-label={`${ALERT_TYPE_LABELS[alertType]} email notification`}
+                        data-testid={`type-${alertType}-email`}
+                      />
+                    </span>
+                    <span className="channel-col">
+                      <input
+                        type="checkbox"
+                        checked={getTypePreference(alertType, 'inApp')}
+                        onChange={() => toggleTypePreference(alertType, 'inApp')}
+                        disabled={!inAppEnabled}
+                        aria-label={`${ALERT_TYPE_LABELS[alertType]} in-app notification`}
+                        data-testid={`type-${alertType}-inapp`}
+                      />
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
           ))}
@@ -464,11 +472,11 @@ export function NotificationPreferencesForm({
       </section>
 
       {/* Actions */}
-      <div className="flex items-center justify-between pt-6 border-t border-gray-200">
+      <div className="form-actions">
         <button
           type="button"
           onClick={handleReset}
-          className="text-sm text-gray-500 hover:text-gray-700"
+          className="reset-btn"
           data-testid="reset-preferences"
         >
           Reset to defaults
@@ -477,26 +485,12 @@ export function NotificationPreferencesForm({
           type="button"
           onClick={handleSave}
           disabled={!hasChanges || isSaving}
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+          className="save-btn"
           data-testid="save-preferences"
         >
           {isSaving ? (
             <>
-              <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                />
-              </svg>
+              <span className="btn-spinner" />
               Saving...
             </>
           ) : (
@@ -504,8 +498,417 @@ export function NotificationPreferencesForm({
           )}
         </button>
       </div>
+
+      <style>{styles}</style>
     </div>
   );
 }
+
+const styles = `
+  .notification-preferences {
+    max-width: 700px;
+  }
+
+  .loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    text-align: center;
+    color: var(--text-muted, #6b7280);
+  }
+
+  .loading-spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border, #e5e7eb);
+    border-top-color: var(--accent, #6366f1);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 0.75rem;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .settings-section {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border, #e5e7eb);
+  }
+
+  .settings-section:last-of-type {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .settings-section h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary, #111827);
+    margin: 0 0 0.375rem 0;
+  }
+
+  .settings-section h3 svg {
+    color: var(--text-muted, #6b7280);
+  }
+
+  .section-description {
+    font-size: 0.875rem;
+    color: var(--text-muted, #6b7280);
+    margin: 0 0 1.25rem 0;
+  }
+
+  /* Channel List */
+  .channel-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .channel-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: var(--bg-secondary, #f9fafb);
+    border-radius: var(--radius-lg, 0.5rem);
+    border: 1px solid var(--border, #e5e7eb);
+  }
+
+  .channel-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .channel-info svg {
+    color: var(--text-muted, #6b7280);
+    flex-shrink: 0;
+  }
+
+  .channel-info label {
+    display: block;
+    font-weight: 500;
+    color: var(--text-primary, #111827);
+    cursor: pointer;
+  }
+
+  .channel-description {
+    display: block;
+    font-size: 0.8125rem;
+    color: var(--text-muted, #6b7280);
+    margin-top: 0.125rem;
+  }
+
+  /* Toggle Switch */
+  .toggle {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    background-color: var(--border, #e5e7eb);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    flex-shrink: 0;
+  }
+
+  .toggle:focus {
+    outline: 2px solid var(--accent, #6366f1);
+    outline-offset: 2px;
+  }
+
+  .toggle:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .toggle.on {
+    background-color: var(--accent, #6366f1);
+  }
+
+  .toggle-thumb {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s;
+  }
+
+  .toggle.on .toggle-thumb {
+    transform: translateX(20px);
+  }
+
+  /* Quiet Hours */
+  .quiet-hours-card {
+    background-color: var(--bg-secondary, #f9fafb);
+    border-radius: var(--radius-lg, 0.5rem);
+    border: 1px solid var(--border, #e5e7eb);
+    padding: 1rem;
+  }
+
+  .setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .setting-info label {
+    font-weight: 500;
+    color: var(--text-primary, #111827);
+  }
+
+  .time-selectors {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border, #e5e7eb);
+  }
+
+  .time-field label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-muted, #6b7280);
+    margin-bottom: 0.5rem;
+  }
+
+  .time-field select {
+    width: 100%;
+    padding: 0.625rem 0.75rem;
+    border: 1px solid var(--border, #e5e7eb);
+    border-radius: var(--radius-md, 0.375rem);
+    background-color: var(--bg-primary, #ffffff);
+    color: var(--text-primary, #111827);
+    font-size: 0.875rem;
+    cursor: pointer;
+  }
+
+  .time-field select:focus {
+    outline: 2px solid var(--accent, #6366f1);
+    outline-offset: -1px;
+  }
+
+  /* Digest Options */
+  .digest-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+  }
+
+  .digest-option {
+    padding: 1rem;
+    background-color: var(--bg-secondary, #f9fafb);
+    border: 2px solid var(--border, #e5e7eb);
+    border-radius: var(--radius-lg, 0.5rem);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.2s, background-color 0.2s;
+  }
+
+  .digest-option:hover {
+    border-color: var(--text-muted, #6b7280);
+  }
+
+  .digest-option:focus {
+    outline: 2px solid var(--accent, #6366f1);
+    outline-offset: 2px;
+  }
+
+  .digest-option.selected {
+    border-color: var(--accent, #6366f1);
+    background-color: rgba(99, 102, 241, 0.1);
+  }
+
+  .digest-label {
+    display: block;
+    font-weight: 500;
+    color: var(--text-primary, #111827);
+  }
+
+  .digest-description {
+    display: block;
+    font-size: 0.8125rem;
+    color: var(--text-muted, #6b7280);
+    margin-top: 0.25rem;
+  }
+
+  /* Type Preferences Table */
+  .type-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .type-group h4 {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-muted, #6b7280);
+    margin: 0 0 0.75rem 0;
+  }
+
+  .type-table {
+    background-color: var(--bg-secondary, #f9fafb);
+    border-radius: var(--radius-lg, 0.5rem);
+    border: 1px solid var(--border, #e5e7eb);
+    overflow: hidden;
+  }
+
+  .type-table-header {
+    display: grid;
+    grid-template-columns: 1fr 60px 60px 60px;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border, #e5e7eb);
+    background-color: var(--bg-tertiary, #f3f4f6);
+  }
+
+  .type-table-header span {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted, #6b7280);
+    text-transform: uppercase;
+  }
+
+  .type-row {
+    display: grid;
+    grid-template-columns: 1fr 60px 60px 60px;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border, #e5e7eb);
+  }
+
+  .type-row:last-child {
+    border-bottom: none;
+  }
+
+  .type-col {
+    font-size: 0.875rem;
+    color: var(--text-primary, #111827);
+    display: flex;
+    align-items: center;
+  }
+
+  .channel-col {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .channel-col input[type="checkbox"] {
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--accent, #6366f1);
+    cursor: pointer;
+  }
+
+  .channel-col input[type="checkbox"]:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Form Actions */
+  .form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border, #e5e7eb);
+    margin-top: 2rem;
+  }
+
+  .reset-btn {
+    background: none;
+    border: none;
+    font-size: 0.875rem;
+    color: var(--text-muted, #6b7280);
+    cursor: pointer;
+    padding: 0.5rem 0;
+  }
+
+  .reset-btn:hover {
+    color: var(--text-primary, #111827);
+  }
+
+  .save-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    background-color: var(--accent, #6366f1);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md, 0.375rem);
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .save-btn:hover:not(:disabled) {
+    opacity: 0.9;
+  }
+
+  .save-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .channel-item {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+
+    .channel-info {
+      width: 100%;
+    }
+
+    .digest-options {
+      grid-template-columns: 1fr;
+    }
+
+    .type-table-header,
+    .type-row {
+      grid-template-columns: 1fr 50px 50px 50px;
+    }
+
+    .form-actions {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .reset-btn {
+      order: 1;
+    }
+
+    .save-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+`;
 
 export default NotificationPreferencesForm;

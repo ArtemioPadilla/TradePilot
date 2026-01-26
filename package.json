@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "test:e2e": "cd web && npx playwright test",
+    "test:e2e:list": "cd web && npx playwright test --list"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

@@ -26,18 +26,20 @@ def msr(riskfree_rate, er, cov, min_w = 0.01, max_w = 0.95):
     result = minimize(neg_sharpe, init_guess, method='SLSQP', bounds=bounds, constraints=constraints)
     return result.x
 
-def gmv(cov):
+def gmv(cov, min_w=0.01, max_w=0.95):
     """
     Computes the weights for the Global Minimum Variance portfolio.
 
     Parameters:
         cov (pd.DataFrame or np.array): Covariance matrix.
+        min_w (float): Minimum weight for any single asset.
+        max_w (float): Maximum weight for any single asset.
 
     Returns:
         np.array: Weights vector for the minimum variance portfolio.
     """
     n = cov.shape[0]
-    return msr(0, np.ones(n), cov)
+    return msr(0, np.ones(n), cov, min_w, max_w)
 
 def eq_weighted(er):
     """

@@ -22,3 +22,12 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Playwright auth state
+tests/e2e/.auth/*.json
+
+# Test environment variables
+.env.test
+
+
+.playwright-mcp/*

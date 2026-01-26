@@ -64,21 +64,21 @@ import WatchlistWidget from '../../components/dashboard/WatchlistWidget';
   .dashboard-grid {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-    gap: 1.5rem;
+    gap: calc(1.5rem * var(--spacing-density));
   }
 
   .widget {
     background-color: var(--bg-secondary);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 1.25rem;
+    padding: calc(1.25rem * var(--spacing-density));
   }
 
   .widget-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 1rem;
+    margin-bottom: calc(1rem * var(--spacing-density));
   }
 
   .widget-header h3 {

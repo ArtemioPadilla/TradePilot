@@ -4,6 +4,7 @@ import Sidebar from '../components/common/Sidebar.astro';
 import Header from '../components/common/Header.astro';
 import MobileNav from '../components/common/MobileNav.astro';
 import AuthGuard from '../components/auth/AuthGuard';
+import AuthInitializer from '../components/auth/AuthInitializer';
 
 interface Props {
   title: string;
@@ -31,8 +32,9 @@ const { title, description = 'TradePilot Dashboard' } = Astro.props;
     </style>
   </head>
   <body>
-    <!-- Auth guard overlay - blocks page until authenticated -->
-    <AuthGuard client:load />
+    <!-- Initialize Firebase auth listener and guard protected content -->
+    <AuthInitializer client:only="react" />
+    <AuthGuard client:only="react" />
 
     <div class="app-container" id="app-container">
       <Sidebar />
@@ -47,7 +49,9 @@ const { title, description = 'TradePilot Dashboard' } = Astro.props;
     <script>
       // Initialize theme from localStorage with system preference support
       import { initTheme } from '../stores/theme';
+      import { initDensity } from '../stores/density';
       initTheme();
+      initDensity();
 
       // Register service worker
       if ('serviceWorker' in navigator) {
@@ -98,7 +102,7 @@ const { title, description = 'TradePilot Dashboard' } = Astro.props;
 
   .page-content {
     flex: 1;
-    padding: 1.5rem;
+    padding: calc(1.5rem * var(--spacing-density));
     overflow-y: auto;
   }
 

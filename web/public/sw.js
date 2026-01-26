@@ -115,6 +115,12 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  // Skip auth pages - they need fresh content for OAuth redirect handling
+  // Caching auth pages can cause issues with OAuth state and redirects
+  if (url.pathname.startsWith('/auth/')) {
+    return;
+  }
+
   // Determine caching strategy based on request type
   if (PATTERNS.static.test(url.pathname)) {
     // Static assets: Cache-first

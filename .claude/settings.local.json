@@ -26,7 +26,28 @@
       "Bash(npm run test:*)",
       "Bash(npx:*)",
       "Bash(du -sh:*)",
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "Bash(npm run analyze:*)",
+      "Bash(ls:*)",
+      "Bash(xargs grep:*)",
+      "Bash(node -e:*)",
+      "Bash(for dir in /Users/artemiopadilla/Documents/repos/GitHub/personal/TradePilot/web/src/components/*/)",
+      "Bash(done)",
+      "Bash(sort:*)",
+      "Bash(npm ls:*)",
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__playwright__browser_fill_form",
+      "mcp__playwright__browser_evaluate",
+      "mcp__playwright__browser_close",
+      "mcp__playwright__browser_wait_for",
+      "mcp__playwright__browser_press_key",
+      "Bash(npm run test:e2e:list:*)",
+      "mcp__playwright__browser_console_messages",
+      "mcp__playwright__browser_tabs",
+      "Bash(xargs:*)",
+      "Bash(python -c:*)",
+      "Bash(source .venv/bin/activate)",
+      "Bash(python3 -m py_compile:*)"
     ]
   }
 }

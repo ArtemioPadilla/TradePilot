@@ -111,7 +111,7 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
 <script>
   import { getAdminStats, getAllUsers, approveUser } from '../../lib/admin';
   import { createInvite, getInviteUrl } from '../../lib/invites';
-  import { auth } from '../../lib/firebase';
+  import { getFirebaseAuth } from '../../lib/firebase';
 
   // Load stats
   async function loadStats() {

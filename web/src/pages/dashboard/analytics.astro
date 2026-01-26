@@ -1,0 +1,8 @@
+---
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import RiskDashboard from '../../components/analytics/RiskDashboard';
+---
+
+<DashboardLayout title="Analytics">
+  <RiskDashboard client:only="react" />
+</DashboardLayout>

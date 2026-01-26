@@ -1,0 +1,36 @@
+import { useEffect, useState } from 'react';
+import { useStore } from '@nanostores/react';
+import { $user, $isAuthenticated } from '../../stores/auth';
+
+export function LandingNav() {
+  const user = useStore($user);
+  const isAuthenticated = useStore($isAuthenticated);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Redirect logged-in users to /home
+  useEffect(() => {
+    if (mounted && isAuthenticated && user) {
+      window.location.href = '/home';
+    }
+  }, [mounted, isAuthenticated, user]);
+
+  // SSR: render nothing until mounted
+  if (!mounted) {
+    return null;
+  }
+
+  // Don't block on auth - show default login/register buttons immediately
+  // If user becomes authenticated, the redirect effect will kick in
+  return (
+    <div className="nav-links">
+      <a href="/auth/login" className="btn btn-ghost">Log in</a>
+      <a href="/auth/register" className="btn btn-primary">Get Started</a>
+    </div>
+  );
+}
+
+export default LandingNav;

@@ -45,14 +45,14 @@ export default function WatchlistWidget() {
         .watchlist-items {
           display: flex;
           flex-direction: column;
-          gap: 0.5rem;
+          gap: calc(0.5rem * var(--spacing-density));
         }
 
         .watchlist-item {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 0.625rem 0;
+          padding: calc(0.625rem * var(--spacing-density)) 0;
           border-bottom: 1px solid var(--border);
         }
 

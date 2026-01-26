@@ -1,7 +1,7 @@
 import { useEffect, type ReactNode } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { auth, db } from '../../lib/firebase';
+import { getFirebaseAuth, getFirebaseDb } from '../../lib/firebase';
 import { setUser, setAuthLoading, clearAuth, type User } from '../../stores/auth';
 
 interface AuthProviderProps {
@@ -12,6 +12,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     // Skip on server
     if (typeof window === 'undefined') return;
+
+    const auth = getFirebaseAuth();
+    const db = getFirebaseDb();
+
+    if (!auth || !db) {
+      console.error('Firebase not initialized');
+      return;
+    }
 
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {

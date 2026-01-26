@@ -86,20 +86,27 @@ service cloud.firestore {
     }
 
     // ==========================================================================
-    // Holdings Collection (Per account)
+    // Holdings Collection (Flat structure under user)
     // ==========================================================================
-    match /users/{userId}/accounts/{accountId}/holdings/{holdingId} {
+    match /users/{userId}/holdings/{holdingId} {
       allow read, write: if isOwner(userId) && isActiveUser();
     }
 
     // ==========================================================================
-    // Transactions Collection (Per account)
+    // Transactions Collection (Flat structure under user)
     // ==========================================================================
-    match /users/{userId}/accounts/{accountId}/transactions/{transactionId} {
+    match /users/{userId}/transactions/{transactionId} {
       allow read: if isOwner(userId) && isActiveUser();
       allow create: if isOwner(userId) && isActiveUser();
       // Transactions are immutable once created
       allow update, delete: if false;
+    }
+
+    // ==========================================================================
+    // Net Worth Snapshots Collection
+    // ==========================================================================
+    match /users/{userId}/netWorth/{snapshotId} {
+      allow read, write: if isOwner(userId) && isActiveUser();
     }
 
     // ==========================================================================
@@ -157,6 +164,20 @@ service cloud.firestore {
     // User Preferences
     // ==========================================================================
     match /users/{userId}/preferences/{prefId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // ==========================================================================
+    // User Settings (privacy, notifications, etc.)
+    // ==========================================================================
+    match /users/{userId}/settings/{settingId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // ==========================================================================
+    // User Integrations (Alpaca, etc.)
+    // ==========================================================================
+    match /users/{userId}/integrations/{integrationId} {
       allow read, write: if isOwner(userId);
     }
 

@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../lib/firebase';
+import { getFirebaseAuth } from '../../lib/firebase';
 import {
   getNetWorthByRange,
   convertToDataPoints,
@@ -83,6 +83,8 @@ export function NetWorthChart({
   const [hoveredPoint, setHoveredPoint] = useState<NetWorthDataPoint | null>(null);
 
   useEffect(() => {
+    const auth = getFirebaseAuth();
+    if (!auth) return;
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUserId(user?.uid || null);
     });
@@ -315,89 +317,113 @@ export function NetWorthChart({
 
       <style>{`
         .net-worth-chart {
-          background: var(--bg-secondary);
-          border: 1px solid var(--border);
-          border-radius: var(--radius-lg, 12px);
-          padding: 1.5rem;
+          background: var(--glass-bg, var(--bg-secondary));
+          backdrop-filter: blur(20px) saturate(180%);
+          -webkit-backdrop-filter: blur(20px) saturate(180%);
+          border: 1px solid var(--glass-border, var(--border));
+          border-radius: var(--radius-xl, 16px);
+          padding: var(--space-6, 1.5rem);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .net-worth-chart::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
         }
 
         .chart-header {
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
-          margin-bottom: 1rem;
+          margin-bottom: var(--space-5, 1.25rem);
           flex-wrap: wrap;
-          gap: 1rem;
+          gap: var(--space-4, 1rem);
         }
 
         .header-left h3 {
-          font-size: 0.875rem;
+          font-size: var(--text-xs, 0.75rem);
           font-weight: 500;
           color: var(--text-muted);
-          margin: 0 0 0.5rem 0;
+          margin: 0 0 var(--space-2, 0.5rem) 0;
           text-transform: uppercase;
-          letter-spacing: 0.05em;
+          letter-spacing: 0.08em;
         }
 
         .current-value {
           display: flex;
           flex-direction: column;
-          gap: 0.25rem;
+          gap: var(--space-1, 0.25rem);
         }
 
         .current-value .value {
-          font-size: 2rem;
+          font-size: var(--text-4xl, 2.25rem);
           font-weight: 700;
           color: var(--text-primary);
+          letter-spacing: -0.03em;
+          line-height: 1.1;
         }
 
         .current-value .change {
-          font-size: 0.875rem;
-          font-weight: 500;
+          font-size: var(--text-sm, 0.875rem);
+          font-weight: 600;
+          display: inline-flex;
+          align-items: center;
+          gap: var(--space-1, 0.25rem);
         }
 
         .change.positive {
-          color: var(--positive, #10b981);
+          color: var(--positive);
         }
 
         .change.negative {
-          color: var(--negative, #ef4444);
+          color: var(--negative);
         }
 
         .date-range-selector {
           display: flex;
-          gap: 0.25rem;
+          gap: var(--space-1, 0.25rem);
           background: var(--bg-tertiary);
-          padding: 0.25rem;
-          border-radius: var(--radius-md, 8px);
+          padding: var(--space-1, 0.25rem);
+          border-radius: var(--radius-lg, 12px);
         }
 
         .range-btn {
-          padding: 0.375rem 0.75rem;
-          font-size: 0.75rem;
-          font-weight: 500;
+          padding: var(--space-2, 0.5rem) var(--space-3, 0.75rem);
+          font-size: var(--text-xs, 0.75rem);
+          font-weight: 600;
           background: transparent;
           border: none;
           color: var(--text-muted);
-          border-radius: var(--radius-sm, 4px);
+          border-radius: var(--radius-md, 8px);
           cursor: pointer;
-          transition: all 0.15s;
+          transition: var(--transition-fast);
         }
 
         .range-btn:hover {
           color: var(--text-primary);
+          background: var(--bg-hover);
+        }
+
+        .range-btn:active {
+          transform: scale(0.95);
         }
 
         .range-btn.active {
           background: var(--bg-secondary);
           color: var(--text-primary);
-          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+          box-shadow: var(--shadow-sm);
         }
 
         .chart-container {
           position: relative;
-          height: 200px;
-          margin-bottom: 1rem;
+          height: 220px;
+          margin-bottom: var(--space-5, 1.25rem);
         }
 
         .chart-loading,
@@ -409,11 +435,12 @@ export function NetWorthChart({
           justify-content: center;
           height: 100%;
           color: var(--text-muted);
+          gap: var(--space-3, 0.75rem);
         }
 
         .loading-spinner {
-          width: 24px;
-          height: 24px;
+          width: 28px;
+          height: 28px;
           border: 2px solid var(--border);
           border-top-color: var(--accent);
           border-radius: 50%;
@@ -431,78 +458,107 @@ export function NetWorthChart({
 
         .hover-point {
           cursor: crosshair;
+          transition: var(--transition-fast);
         }
 
         .hover-point:hover {
           fill: var(--accent);
-          r: 3;
+          r: 4;
         }
 
         .chart-tooltip {
           position: absolute;
-          top: 10px;
-          right: 10px;
-          background: var(--bg-primary);
-          border: 1px solid var(--border);
-          border-radius: var(--radius-md, 8px);
-          padding: 0.75rem;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          top: var(--space-3, 0.75rem);
+          right: var(--space-3, 0.75rem);
+          background: var(--glass-bg, var(--bg-primary));
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border: 1px solid var(--glass-border, var(--border));
+          border-radius: var(--radius-lg, 12px);
+          padding: var(--space-4, 1rem);
+          box-shadow: var(--shadow-xl);
           pointer-events: none;
           z-index: 10;
+          animation: fadeIn 0.15s ease-out;
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(-4px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
 
         .tooltip-date {
-          font-size: 0.75rem;
+          font-size: var(--text-xs, 0.75rem);
           color: var(--text-muted);
-          margin-bottom: 0.25rem;
+          margin-bottom: var(--space-1, 0.25rem);
         }
 
         .tooltip-value {
-          font-size: 1rem;
-          font-weight: 600;
+          font-size: var(--text-lg, 1.125rem);
+          font-weight: 700;
           color: var(--text-primary);
+          letter-spacing: -0.01em;
         }
 
         .tooltip-change {
-          font-size: 0.75rem;
-          font-weight: 500;
+          font-size: var(--text-xs, 0.75rem);
+          font-weight: 600;
+          margin-top: var(--space-1, 0.25rem);
         }
 
         .tooltip-change.positive {
-          color: var(--positive, #10b981);
+          color: var(--positive);
         }
 
         .tooltip-change.negative {
-          color: var(--negative, #ef4444);
+          color: var(--negative);
         }
 
         .period-stats {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
-          gap: 1rem;
-          padding-top: 1rem;
+          gap: var(--space-4, 1rem);
+          padding-top: var(--space-5, 1.25rem);
           border-top: 1px solid var(--border);
         }
 
         .stat {
           display: flex;
           flex-direction: column;
-          gap: 0.125rem;
+          gap: var(--space-1, 0.25rem);
+          padding: var(--space-3, 0.75rem);
+          background: var(--bg-tertiary);
+          border-radius: var(--radius-lg, 12px);
+          transition: var(--transition-fast);
+        }
+
+        .stat:hover {
+          background: var(--bg-hover);
         }
 
         .stat-label {
-          font-size: 0.75rem;
+          font-size: var(--text-xs, 0.75rem);
+          font-weight: 500;
           color: var(--text-muted);
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
         }
 
         .stat-value {
-          font-size: 0.875rem;
-          font-weight: 600;
+          font-size: var(--text-base, 1rem);
+          font-weight: 700;
           color: var(--text-primary);
+          letter-spacing: -0.01em;
         }
 
         .stat-date {
-          font-size: 0.75rem;
+          font-size: var(--text-xs, 0.75rem);
           color: var(--text-muted);
         }
 
@@ -523,11 +579,20 @@ export function NetWorthChart({
 
         @media (max-width: 480px) {
           .current-value .value {
-            font-size: 1.5rem;
+            font-size: var(--text-2xl, 1.5rem);
           }
 
           .range-btn {
-            padding: 0.25rem 0.5rem;
+            padding: var(--space-1, 0.25rem) var(--space-2, 0.5rem);
+            font-size: 0.6875rem;
+          }
+
+          .stat {
+            padding: var(--space-2, 0.5rem);
+          }
+
+          .stat-value {
+            font-size: var(--text-sm, 0.875rem);
           }
         }
       `}</style>

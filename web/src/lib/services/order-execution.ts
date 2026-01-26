@@ -19,7 +19,7 @@ import {
   limit,
   Timestamp,
 } from 'firebase/firestore';
-import { db } from '../firebase';
+import { getFirebaseDb } from '../firebase';
 import {
   getAlpacaCredentials,
   getAlpacaBaseUrl,
@@ -342,7 +342,7 @@ export async function getLocalOrders(
     limit?: number;
   } = {}
 ): Promise<OrderRecord[]> {
-  const ordersRef = collection(db, `users/${userId}/orders`);
+  const ordersRef = collection(getFirebaseDb(), `users/${userId}/orders`);
 
   let q = query(ordersRef, orderBy('createdAt', 'desc'));
 
@@ -502,7 +502,7 @@ async function storeOrder(
   order: AlpacaOrder,
   environment: AlpacaEnvironment
 ): Promise<void> {
-  const orderRef = doc(db, `users/${userId}/orders`, order.id);
+  const orderRef = doc(getFirebaseDb(), `users/${userId}/orders`, order.id);
 
   await setDoc(
     orderRef,
@@ -538,7 +538,7 @@ async function updateOrderStatus(
   orderId: string,
   status: OrderStatus
 ): Promise<void> {
-  const orderRef = doc(db, `users/${userId}/orders`, orderId);
+  const orderRef = doc(getFirebaseDb(), `users/${userId}/orders`, orderId);
   await updateDoc(orderRef, {
     status,
     updatedAt: Timestamp.now(),

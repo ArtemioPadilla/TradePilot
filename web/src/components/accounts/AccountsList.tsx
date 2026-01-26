@@ -1,9 +1,20 @@
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../lib/firebase';
+import { getFirebaseAuth } from '../../lib/firebase';
 import { getAccounts } from '../../lib/services/accounts';
 import type { Account, AccountType } from '../../types/portfolio';
 import { AddAccountModal } from './AddAccountModal';
+import {
+  TrendingUp,
+  Building,
+  Building2,
+  Wallet,
+  Bitcoin,
+  Landmark,
+  FolderOpen,
+  BarChart3,
+  Plus
+} from 'lucide-react';
 
 const accountTypeLabels: Record<AccountType, string> = {
   brokerage: 'Brokerage',
@@ -15,14 +26,17 @@ const accountTypeLabels: Record<AccountType, string> = {
   other: 'Other',
 };
 
-const accountTypeIcons: Record<AccountType, string> = {
-  brokerage: '📈',
-  '401k': '🏢',
-  ira: '🏦',
-  roth_ira: '💰',
-  crypto: '₿',
-  bank: '🏛️',
-  other: '📁',
+const AccountTypeIcon = ({ type }: { type: AccountType }) => {
+  const iconProps = { size: 20, strokeWidth: 1.5 };
+  switch (type) {
+    case 'brokerage': return <TrendingUp {...iconProps} />;
+    case '401k': return <Building {...iconProps} />;
+    case 'ira': return <Building2 {...iconProps} />;
+    case 'roth_ira': return <Wallet {...iconProps} />;
+    case 'crypto': return <Bitcoin {...iconProps} />;
+    case 'bank': return <Landmark {...iconProps} />;
+    default: return <FolderOpen {...iconProps} />;
+  }
 };
 
 export function AccountsList() {
@@ -33,6 +47,8 @@ export function AccountsList() {
   const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
+    const auth = getFirebaseAuth();
+    if (!auth) return;
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUserId(user?.uid || null);
     });
@@ -56,8 +72,17 @@ export function AccountsList() {
       setError(null);
       const data = await getAccounts(userId);
       setAccounts(data);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to load accounts:', err);
+
+      // If permission denied, likely a pending/suspended user
+      // AuthGuard will handle the redirect, so don't show error
+      if (err?.code === 'permission-denied') {
+        // Just show loading state while AuthGuard redirects
+        setLoading(true);
+        return;
+      }
+
       setError('Failed to load accounts. Please try again.');
     } finally {
       setLoading(false);
@@ -112,14 +137,16 @@ export function AccountsList() {
           className="btn btn-primary"
           data-testid="add-account-btn"
         >
-          <span className="btn-icon">+</span>
+          <Plus size={18} strokeWidth={2} />
           Add Account
         </button>
       </div>
 
       {accounts.length === 0 ? (
         <div className="accounts-empty">
-          <div className="empty-icon">📊</div>
+          <div className="empty-icon">
+            <BarChart3 size={48} strokeWidth={1.5} />
+          </div>
           <h3>No accounts yet</h3>
           <p>Add your first account to start tracking your portfolio.</p>
           <button
@@ -140,7 +167,7 @@ export function AccountsList() {
             >
               <div className="account-card-header">
                 <span className="account-icon">
-                  {accountTypeIcons[account.type]}
+                  <AccountTypeIcon type={account.type} />
                 </span>
                 <span className={`account-status status-${account.status}`}>
                   {account.status}
@@ -233,8 +260,15 @@ export function AccountsList() {
         }
 
         .empty-icon {
-          font-size: 3rem;
-          margin-bottom: 1rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 80px;
+          height: 80px;
+          border-radius: 20px;
+          background: var(--accent-muted, rgba(99, 102, 241, 0.1));
+          color: var(--accent, #6366f1);
+          margin-bottom: 1.5rem;
         }
 
         .accounts-empty h3 {
@@ -279,7 +313,14 @@ export function AccountsList() {
         }
 
         .account-icon {
-          font-size: 1.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 36px;
+          height: 36px;
+          border-radius: 8px;
+          background: var(--accent-muted, rgba(99, 102, 241, 0.1));
+          color: var(--accent, #6366f1);
         }
 
         .account-status {
@@ -371,11 +412,6 @@ export function AccountsList() {
 
         .btn-primary:hover {
           background: var(--accent-hover);
-        }
-
-        .btn-icon {
-          font-size: 1.25rem;
-          line-height: 1;
         }
 
         @media (max-width: 640px) {

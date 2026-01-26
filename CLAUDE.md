@@ -160,7 +160,19 @@ web/tests/e2e/
 
 ### Running Tests
 
+**From repository root:**
 ```bash
+# Run all E2E tests
+npm run test:e2e
+
+# List all tests
+npm run test:e2e:list
+```
+
+**From web/ directory:**
+```bash
+cd web
+
 # Run all E2E tests (Chromium only for speed)
 npx playwright test --project=chromium
 
@@ -170,9 +182,14 @@ npx playwright test tests/e2e/auth.spec.ts
 # Run with UI mode for debugging
 npx playwright test --ui
 
+# List all tests
+npx playwright test --list
+
 # Run Lighthouse audit
 npx lighthouse http://localhost:4321 --only-categories=performance,accessibility,best-practices,seo
 ```
+
+**Important:** Always run Playwright tests from `web/` or use the root npm scripts. Running `npx playwright test` directly from the root will fail due to dependency resolution.
 
 ### Quality Gates
 

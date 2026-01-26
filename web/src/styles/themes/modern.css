@@ -1,36 +1,61 @@
-/* Modern Fintech Theme (Light) */
-[data-theme="modern"] {
+/* Modern Fintech Theme (Light) - Refined */
+:root[data-theme="modern"] {
+  /* Background colors - Clean whites */
   --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --bg-tertiary: #f1f3f4;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
   --bg-elevated: #ffffff;
+  --bg-hover: rgba(0, 0, 0, 0.02);
+  --bg-active: rgba(0, 0, 0, 0.04);
 
-  --text-primary: #1a1a2e;
-  --text-secondary: #4a4a5a;
-  --text-muted: #6c757d;
+  /* Text colors - Rich blacks */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
   --text-inverse: #ffffff;
 
+  /* Accent - Indigo */
   --accent: #6366f1;
-  --accent-hover: #5558e3;
+  --accent-hover: #4f46e5;
+  --accent-muted: rgba(99, 102, 241, 0.1);
+  --accent-rgb: 99, 102, 241;
 
+  /* Semantic colors */
   --positive: #10b981;
-  --positive-bg: rgba(16, 185, 129, 0.1);
+  --positive-bg: rgba(16, 185, 129, 0.08);
+  --positive-border: rgba(16, 185, 129, 0.2);
   --negative: #ef4444;
-  --negative-bg: rgba(239, 68, 68, 0.1);
+  --negative-bg: rgba(239, 68, 68, 0.08);
+  --negative-border: rgba(239, 68, 68, 0.2);
+  --warning: #f59e0b;
+  --warning-bg: rgba(245, 158, 11, 0.08);
 
-  --border: #e5e7eb;
-  --border-focus: #6366f1;
+  /* Borders - Soft */
+  --border: #e2e8f0;
+  --border-hover: #cbd5e1;
+  --border-focus: var(--accent);
 
-  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  /* Typography */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
   --font-size-base: 14px;
 
-  --spacing-density: 1;
-
-  --radius-sm: 6px;
+  /* Radius - Rounded */
+  --radius: 8px;
+  --radius-full: 9999px;
+  --radius-sm: 4px;
   --radius-md: 8px;
   --radius-lg: 12px;
+  --radius-xl: 16px;
 
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  /* Shadows - Soft and subtle */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.15);
+  --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.04);
+
+  /* Glass effect */
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(0, 0, 0, 0.05);
 }

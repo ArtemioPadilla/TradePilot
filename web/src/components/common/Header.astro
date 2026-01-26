@@ -1,5 +1,6 @@
 ---
-import ThemeSwitcher from './ThemeSwitcher.astro';
+import UserMenu from './UserMenu';
+import NotificationBell from './NotificationBell';
 
 interface Props {
   title: string;
@@ -21,72 +22,125 @@ const { title } = Astro.props;
   </div>
 
   <div class="header-right">
-    <ThemeSwitcher />
-
-    <button class="icon-btn" aria-label="Notifications">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
-        <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
-      </svg>
-      <span class="notification-badge">3</span>
-    </button>
-
-    <div class="user-menu">
-      <button class="user-btn" id="user-menu-toggle">
-        <div class="user-avatar">
-          <span>U</span>
-        </div>
-        <span class="user-name">User</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m6 9 6 6 6-6"/>
+    <!-- Enhanced Appearance Switcher -->
+    <div class="appearance-switcher">
+      <button class="appearance-btn" id="appearance-toggle" aria-label="Appearance settings">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2"/>
+          <path d="M12 20v2"/>
+          <path d="m4.93 4.93 1.41 1.41"/>
+          <path d="m17.66 17.66 1.41 1.41"/>
+          <path d="M2 12h2"/>
+          <path d="M20 12h2"/>
+          <path d="m6.34 17.66-1.41 1.41"/>
+          <path d="m19.07 4.93-1.41 1.41"/>
         </svg>
       </button>
 
-      <div class="user-dropdown" id="user-dropdown">
-        <a href="/dashboard/settings" class="dropdown-item">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"/>
-            <circle cx="12" cy="10" r="3"/>
-            <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/>
-          </svg>
-          Profile
-        </a>
-        <a href="/dashboard/settings" class="dropdown-item">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
-            <circle cx="12" cy="12" r="3"/>
-          </svg>
-          Settings
-        </a>
-        <div class="dropdown-divider"></div>
-        <a href="/auth/login" class="dropdown-item text-danger">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-            <polyline points="16 17 21 12 16 7"/>
-            <line x1="21" x2="9" y1="12" y2="12"/>
-          </svg>
-          Log out
-        </a>
+      <div class="appearance-dropdown" id="appearance-dropdown">
+        <!-- Theme Section -->
+        <div class="dropdown-section">
+          <div class="section-header">Theme</div>
+          <div class="theme-options">
+            <button class="theme-option" data-theme="system">
+              <span class="theme-preview system"></span>
+              <span>System</span>
+            </button>
+            <button class="theme-option" data-theme="dashboard">
+              <span class="theme-preview dashboard"></span>
+              <span>Dashboard Dark</span>
+            </button>
+            <button class="theme-option" data-theme="modern">
+              <span class="theme-preview modern"></span>
+              <span>Modern Fintech</span>
+            </button>
+            <button class="theme-option" data-theme="bloomberg">
+              <span class="theme-preview bloomberg"></span>
+              <span>Bloomberg</span>
+            </button>
+            <button class="theme-option" data-theme="custom">
+              <span class="theme-preview custom"></span>
+              <span>Custom</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Density Section -->
+        <div class="dropdown-section">
+          <div class="section-header">Interface Density</div>
+          <div class="density-options">
+            <button class="density-option" data-density="compact">
+              <span class="density-preview compact">
+                <span class="preview-line"></span>
+                <span class="preview-line"></span>
+                <span class="preview-line"></span>
+              </span>
+              <span>Compact</span>
+            </button>
+            <button class="density-option" data-density="comfortable">
+              <span class="density-preview comfortable">
+                <span class="preview-line"></span>
+                <span class="preview-line"></span>
+                <span class="preview-line"></span>
+              </span>
+              <span>Comfortable</span>
+            </button>
+            <button class="density-option" data-density="spacious">
+              <span class="density-preview spacious">
+                <span class="preview-line"></span>
+                <span class="preview-line"></span>
+                <span class="preview-line"></span>
+              </span>
+              <span>Spacious</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Custom Colors Section (shown when custom theme selected) -->
+        <div class="dropdown-section custom-colors-section" id="custom-colors-section" style="display: none;">
+          <div class="section-header">
+            <span>Custom Colors</span>
+            <button class="toggle-customizer" id="toggle-customizer">Edit</button>
+          </div>
+          <div class="color-customizer" id="color-customizer" style="display: none;">
+            <div class="color-option">
+              <label>Accent</label>
+              <input type="color" data-color="accent" value="#6366f1" />
+            </div>
+            <div class="color-option">
+              <label>Background</label>
+              <input type="color" data-color="bgPrimary" value="#0f172a" />
+            </div>
+            <div class="color-option">
+              <label>Surface</label>
+              <input type="color" data-color="bgSecondary" value="#1e293b" />
+            </div>
+            <div class="color-option">
+              <label>Text</label>
+              <input type="color" data-color="textPrimary" value="#f8fafc" />
+            </div>
+            <div class="color-option">
+              <label>Positive</label>
+              <input type="color" data-color="positive" value="#22c55e" />
+            </div>
+            <div class="color-option">
+              <label>Negative</label>
+              <input type="color" data-color="negative" value="#ef4444" />
+            </div>
+            <button class="reset-btn" id="reset-colors">Reset to defaults</button>
+          </div>
+        </div>
       </div>
     </div>
+    <NotificationBell client:only="react" />
+    <UserMenu client:only="react" />
   </div>
 </header>
 
 <script>
-  // User menu toggle
-  const userMenuToggle = document.getElementById('user-menu-toggle');
-  const userDropdown = document.getElementById('user-dropdown');
-
-  userMenuToggle?.addEventListener('click', () => {
-    userDropdown?.classList.toggle('open');
-  });
-
-  // Close dropdown when clicking outside
-  document.addEventListener('click', (e) => {
-    if (!userMenuToggle?.contains(e.target as Node) && !userDropdown?.contains(e.target as Node)) {
-      userDropdown?.classList.remove('open');
-    }
-  });
+  import { setTheme, $theme, setCustomColor, resetCustomColors, $customColors, type Theme } from '../../stores/theme';
+  import { setDensity, $density, type Density } from '../../stores/density';
 
   // Mobile menu toggle
   const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
@@ -95,6 +149,113 @@ const { title } = Astro.props;
   mobileMenuToggle?.addEventListener('click', () => {
     sidebar?.classList.toggle('open');
   });
+
+  // Appearance dropdown
+  const appearanceToggle = document.getElementById('appearance-toggle');
+  const appearanceDropdown = document.getElementById('appearance-dropdown');
+  const themeOptions = document.querySelectorAll('.theme-option');
+  const densityOptions = document.querySelectorAll('.density-option');
+  const customColorsSection = document.getElementById('custom-colors-section');
+  const toggleCustomizer = document.getElementById('toggle-customizer');
+  const colorCustomizer = document.getElementById('color-customizer');
+  const colorInputs = document.querySelectorAll('[data-color]');
+  const resetColorsBtn = document.getElementById('reset-colors');
+
+  // Update active states
+  function updateActiveStates() {
+    const currentTheme = $theme.get();
+    const currentDensity = $density.get();
+
+    themeOptions.forEach((option) => {
+      const theme = option.getAttribute('data-theme');
+      option.classList.toggle('active', theme === currentTheme);
+    });
+
+    densityOptions.forEach((option) => {
+      const density = option.getAttribute('data-density');
+      option.classList.toggle('active', density === currentDensity);
+    });
+
+    // Show/hide custom colors section
+    if (customColorsSection) {
+      customColorsSection.style.display = currentTheme === 'custom' ? 'block' : 'none';
+    }
+
+    // Update color inputs
+    const colors = $customColors.get();
+    colorInputs.forEach((input) => {
+      const colorKey = input.getAttribute('data-color') as keyof typeof colors;
+      if (colorKey && colors[colorKey]) {
+        (input as HTMLInputElement).value = colors[colorKey];
+      }
+    });
+  }
+
+  // Initialize
+  updateActiveStates();
+
+  // Subscribe to store changes
+  $theme.subscribe(updateActiveStates);
+  $density.subscribe(updateActiveStates);
+  $customColors.subscribe(updateActiveStates);
+
+  // Toggle dropdown
+  appearanceToggle?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    appearanceDropdown?.classList.toggle('open');
+  });
+
+  // Theme selection
+  themeOptions.forEach((option) => {
+    option.addEventListener('click', () => {
+      const theme = option.getAttribute('data-theme') as Theme;
+      if (theme) {
+        setTheme(theme);
+      }
+    });
+  });
+
+  // Density selection
+  densityOptions.forEach((option) => {
+    option.addEventListener('click', () => {
+      const density = option.getAttribute('data-density') as Density;
+      if (density) {
+        setDensity(density);
+      }
+    });
+  });
+
+  // Toggle customizer
+  toggleCustomizer?.addEventListener('click', () => {
+    if (colorCustomizer) {
+      const isHidden = colorCustomizer.style.display === 'none';
+      colorCustomizer.style.display = isHidden ? 'block' : 'none';
+      toggleCustomizer.textContent = isHidden ? 'Hide' : 'Edit';
+    }
+  });
+
+  // Color inputs
+  colorInputs.forEach((input) => {
+    input.addEventListener('input', (e) => {
+      const colorKey = input.getAttribute('data-color');
+      const value = (e.target as HTMLInputElement).value;
+      if (colorKey) {
+        setCustomColor(colorKey as any, value);
+      }
+    });
+  });
+
+  // Reset colors
+  resetColorsBtn?.addEventListener('click', () => {
+    resetCustomColors();
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!appearanceToggle?.contains(e.target as Node) && !appearanceDropdown?.contains(e.target as Node)) {
+      appearanceDropdown?.classList.remove('open');
+    }
+  });
 </script>
 
 <style>
@@ -102,39 +263,59 @@ const { title } = Astro.props;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1rem 1.5rem;
-    background-color: var(--bg-secondary);
-    border-bottom: 1px solid var(--border);
+    height: 56px;
+    padding: 0 var(--space-6, 1.5rem);
+    background: var(--glass-bg, var(--bg-secondary));
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid var(--glass-border, var(--border));
     position: sticky;
     top: 0;
-    z-index: 50;
+    z-index: var(--z-sticky, 50);
+    transition: var(--transition-base);
   }
 
   .header-left {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: var(--space-4, 1rem);
   }
 
   .mobile-menu-btn {
     display: none;
-    background: none;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: transparent;
     border: none;
-    color: var(--text-primary);
+    color: var(--text-secondary);
     cursor: pointer;
-    padding: 0.5rem;
+    border-radius: var(--radius-md, 8px);
+    transition: var(--transition-fast);
+  }
+
+  .mobile-menu-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+  }
+
+  .mobile-menu-btn:active {
+    transform: scale(0.95);
   }
 
   .page-title {
-    font-size: 1.25rem;
+    font-size: var(--text-lg, 1.125rem);
     font-weight: 600;
     color: var(--text-primary);
+    letter-spacing: -0.01em;
+    margin: 0;
   }
 
   .header-right {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: var(--space-2, 0.5rem);
   }
 
   .icon-btn {
@@ -142,36 +323,41 @@ const { title } = Astro.props;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    background: none;
+    width: 36px;
+    height: 36px;
+    background: transparent;
     border: none;
-    color: var(--text-muted);
+    color: var(--text-secondary);
     cursor: pointer;
-    border-radius: var(--radius-md);
-    transition: all 0.2s;
+    border-radius: var(--radius-md, 8px);
+    transition: var(--transition-fast);
   }
 
   .icon-btn:hover {
-    background-color: var(--bg-tertiary);
+    background: var(--bg-hover);
     color: var(--text-primary);
+  }
+
+  .icon-btn:active {
+    transform: scale(0.95);
   }
 
   .notification-badge {
     position: absolute;
-    top: 4px;
-    right: 4px;
-    min-width: 18px;
-    height: 18px;
+    top: 2px;
+    right: 2px;
+    min-width: 16px;
+    height: 16px;
     padding: 0 4px;
     font-size: 0.625rem;
     font-weight: 600;
     color: white;
     background-color: var(--negative);
-    border-radius: 9px;
+    border-radius: var(--radius-full, 9999px);
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 0 0 2px var(--bg-secondary);
   }
 
   .user-menu {
@@ -181,36 +367,50 @@ const { title } = Astro.props;
   .user-btn {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem;
-    background: none;
+    gap: var(--space-2, 0.5rem);
+    padding: 4px;
+    padding-right: 8px;
+    background: transparent;
     border: none;
     color: var(--text-primary);
     cursor: pointer;
-    border-radius: var(--radius-md);
-    transition: background-color 0.2s;
+    border-radius: var(--radius-full, 9999px);
+    transition: var(--transition-fast);
   }
 
   .user-btn:hover {
-    background-color: var(--bg-tertiary);
+    background: var(--bg-hover);
+  }
+
+  .user-btn:active {
+    transform: scale(0.98);
   }
 
   .user-avatar {
-    width: 32px;
-    height: 32px;
-    background-color: var(--accent);
-    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-hover, var(--accent)));
+    border-radius: var(--radius-full, 9999px);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     font-weight: 600;
     color: white;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .user-name {
-    font-size: 0.875rem;
+    font-size: var(--text-sm, 0.875rem);
     font-weight: 500;
+    color: var(--text-secondary);
   }
 
   .user-dropdown {
@@ -218,36 +418,40 @@ const { title } = Astro.props;
     top: calc(100% + 8px);
     right: 0;
     min-width: 200px;
-    background-color: var(--bg-elevated);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
+    background: var(--glass-bg, var(--bg-elevated));
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--glass-border, var(--border));
+    border-radius: var(--radius-lg, 12px);
+    box-shadow: var(--shadow-xl);
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-10px);
-    transition: all 0.2s;
-    z-index: 100;
+    transform: translateY(-8px) scale(0.98);
+    transform-origin: top right;
+    transition: var(--transition-base);
+    z-index: var(--z-dropdown, 100);
+    overflow: hidden;
   }
 
   .user-dropdown.open {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 
   .dropdown-item {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
+    gap: var(--space-3, 0.75rem);
+    padding: var(--space-3, 0.75rem) var(--space-4, 1rem);
     color: var(--text-secondary);
     text-decoration: none;
-    font-size: 0.875rem;
-    transition: all 0.2s;
+    font-size: var(--text-sm, 0.875rem);
+    transition: var(--transition-fast);
   }
 
   .dropdown-item:hover {
-    background-color: var(--bg-tertiary);
+    background: var(--bg-hover);
     color: var(--text-primary);
   }
 
@@ -255,10 +459,23 @@ const { title } = Astro.props;
     color: var(--negative);
   }
 
+  .dropdown-item.text-danger:hover {
+    background: var(--negative-bg);
+  }
+
+  button.dropdown-item {
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+  }
+
   .dropdown-divider {
     height: 1px;
-    background-color: var(--border);
-    margin: 0.5rem 0;
+    background: var(--border);
+    margin: var(--space-2, 0.5rem) 0;
+    opacity: 0.5;
   }
 
   @media (max-width: 1024px) {
@@ -269,5 +486,316 @@ const { title } = Astro.props;
     .user-name {
       display: none;
     }
+
+    .header {
+      padding: 0 var(--space-4, 1rem);
+    }
+  }
+
+  /* Appearance Switcher */
+  .appearance-switcher {
+    position: relative;
+  }
+
+  .appearance-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    border-radius: var(--radius-md, 8px);
+    transition: var(--transition-fast);
+  }
+
+  .appearance-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+  }
+
+  .appearance-btn:active {
+    transform: scale(0.95);
+  }
+
+  .appearance-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 280px;
+    max-height: 80vh;
+    overflow-y: auto;
+    background: var(--glass-bg, var(--bg-elevated));
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--glass-border, var(--border));
+    border-radius: var(--radius-xl, 16px);
+    box-shadow: var(--shadow-xl);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px) scale(0.98);
+    transform-origin: top right;
+    transition: var(--transition-base);
+    z-index: var(--z-dropdown, 200);
+    overflow: hidden;
+  }
+
+  .appearance-dropdown.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+
+  /* Custom scrollbar for dropdown */
+  .appearance-dropdown::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .appearance-dropdown::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .appearance-dropdown::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+  }
+
+  .dropdown-section {
+    padding: var(--space-4, 1rem);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dropdown-section:last-child {
+    border-bottom: none;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: var(--space-3, 0.75rem);
+  }
+
+  .toggle-customizer {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: var(--accent);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-transform: none;
+    letter-spacing: normal;
+    padding: 2px 6px;
+    border-radius: var(--radius-sm, 4px);
+    transition: var(--transition-fast);
+  }
+
+  .toggle-customizer:hover {
+    background: var(--accent-muted);
+  }
+
+  .theme-options,
+  .density-options {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1, 0.25rem);
+  }
+
+  .theme-option,
+  .density-option {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3, 0.75rem);
+    width: 100%;
+    padding: var(--space-3, 0.75rem) var(--space-3, 0.75rem);
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: var(--text-sm, 0.875rem);
+    cursor: pointer;
+    border-radius: var(--radius-md, 8px);
+    transition: var(--transition-fast);
+    text-align: left;
+    position: relative;
+  }
+
+  .theme-option:hover,
+  .density-option:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+  }
+
+  .theme-option.active,
+  .density-option.active {
+    background: var(--accent-muted);
+    color: var(--text-primary);
+  }
+
+  .theme-option.active::after,
+  .density-option.active::after {
+    content: '';
+    position: absolute;
+    right: var(--space-3, 0.75rem);
+    width: 6px;
+    height: 6px;
+    border-radius: var(--radius-full, 9999px);
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  /* Theme Previews */
+  .theme-preview {
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-md, 8px);
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    transition: var(--transition-fast);
+    overflow: hidden;
+  }
+
+  .theme-option:hover .theme-preview,
+  .theme-option.active .theme-preview {
+    border-color: var(--accent);
+  }
+
+  .theme-preview.system {
+    background: linear-gradient(135deg, #f8f9fa 50%, #0f172a 50%);
+  }
+
+  .theme-preview.dashboard {
+    background: linear-gradient(135deg, #0c1222 50%, #3b82f6 50%);
+  }
+
+  .theme-preview.modern {
+    background: linear-gradient(135deg, #fafafa 50%, #6366f1 50%);
+  }
+
+  .theme-preview.bloomberg {
+    background: linear-gradient(135deg, #000000 50%, #ff6600 50%);
+  }
+
+  .theme-preview.custom {
+    background: linear-gradient(135deg, var(--bg-primary) 50%, var(--accent) 50%);
+  }
+
+  /* Density Previews */
+  .density-preview {
+    width: 32px;
+    height: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4px 6px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-sm, 4px);
+    flex-shrink: 0;
+    transition: var(--transition-fast);
+  }
+
+  .density-option:hover .density-preview,
+  .density-option.active .density-preview {
+    background: var(--bg-hover);
+  }
+
+  .density-preview.compact {
+    gap: 2px;
+  }
+
+  .density-preview.comfortable {
+    gap: 3px;
+  }
+
+  .density-preview.spacious {
+    gap: 4px;
+  }
+
+  .preview-line {
+    height: 2px;
+    background: var(--text-muted);
+    border-radius: 1px;
+    opacity: 0.4;
+    transition: var(--transition-fast);
+  }
+
+  .density-option:hover .preview-line,
+  .density-option.active .preview-line {
+    opacity: 0.7;
+  }
+
+  /* Color Customizer */
+  .color-customizer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3, 0.75rem);
+    padding-top: var(--space-3, 0.75rem);
+    border-top: 1px solid var(--border);
+    margin-top: var(--space-3, 0.75rem);
+  }
+
+  .color-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2, 0.5rem);
+  }
+
+  .color-option label {
+    font-size: var(--text-sm, 0.875rem);
+    color: var(--text-secondary);
+  }
+
+  .color-option input[type="color"] {
+    width: 36px;
+    height: 28px;
+    padding: 0;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-md, 8px);
+    cursor: pointer;
+    background: none;
+    transition: var(--transition-fast);
+  }
+
+  .color-option input[type="color"]:hover {
+    border-color: var(--accent);
+  }
+
+  .color-option input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 2px;
+  }
+
+  .color-option input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 4px;
+  }
+
+  .reset-btn {
+    margin-top: var(--space-2, 0.5rem);
+    padding: var(--space-2, 0.5rem) var(--space-3, 0.75rem);
+    font-size: var(--text-sm, 0.875rem);
+    font-weight: 500;
+    color: var(--text-muted);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md, 8px);
+    cursor: pointer;
+    transition: var(--transition-fast);
+  }
+
+  .reset-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+    border-color: var(--border-hover);
+  }
+
+  .reset-btn:active {
+    transform: scale(0.98);
   }
 </style>

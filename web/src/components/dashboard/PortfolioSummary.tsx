@@ -69,13 +69,13 @@ export default function PortfolioSummary() {
         .portfolio-summary {
           display: grid;
           grid-template-columns: repeat(4, 1fr);
-          gap: 1.5rem;
+          gap: calc(1.5rem * var(--spacing-density));
         }
 
         .metric-card {
           display: flex;
           flex-direction: column;
-          gap: 0.25rem;
+          gap: calc(0.25rem * var(--spacing-density));
         }
 
         .metric-label {

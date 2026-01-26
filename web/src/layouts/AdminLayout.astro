@@ -29,7 +29,7 @@ const currentPath = Astro.url.pathname;
   </head>
   <body>
     <!-- Auth guard overlay - blocks page until authenticated as admin -->
-    <AuthGuard client:load requireAdmin={true} />
+    <AuthGuard client:only="react" requireAdmin={true} />
 
     <div class="admin-layout" id="app-container">
       <!-- Sidebar -->
@@ -79,10 +79,13 @@ const currentPath = Astro.url.pathname;
       </main>
     </div>
 
-    <!-- Theme initialization -->
+    <!-- Theme and density initialization -->
     <script>
-      const savedTheme = localStorage.getItem('theme') || 'dashboard';
-      document.documentElement.setAttribute('data-theme', savedTheme);
+      import { initTheme } from '../stores/theme';
+      import { initDensity } from '../stores/density';
+      // Initialize theme from store (handles 'system' preference and media query listener)
+      initTheme();
+      initDensity();
     </script>
   </body>
 </html>

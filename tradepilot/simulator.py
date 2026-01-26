@@ -304,7 +304,7 @@ class TPS:
         self.number_of_stocks_owned = self.allocated_capital /  price
         if self.track_allocations: # track allocations
             self.stocks_values.append(self.allocated_capital)
-            self.stocks_symbols.append(self.number_of_stocks_owned.keys())
+            self.stocks_symbols.append(list(self.number_of_stocks_owned.keys()))
             
     def track_portfolio(self):
         num_of_stocks = self.number_of_stocks_owned.values
@@ -312,7 +312,7 @@ class TPS:
         prices = self.universe.loc[self.day, stocks]
         capital_distribution = num_of_stocks*prices
         val = pd.Series(num_of_stocks @ prices, index = [self.day])
-        self.valuations = self.valuations.append(val)
+        self.valuations = pd.concat([self.valuations, val])
         self.valuation = val.values
             
         
