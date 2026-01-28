@@ -7,3 +7,4 @@
 export * from './auth.helpers';
 export * from './navigation.helpers';
 export * from './assertions.helpers';
+export * from './data.helpers';

@@ -22,10 +22,10 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests/e2e',
-  fullyParallel: false,
+  fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: 1,
+  workers: process.env.CI ? 1 : 4,
   reporter: [
     ['html', { open: 'never' }],
     ['json', { outputFile: 'test-results/results.json' }],
@@ -69,6 +69,28 @@ export default defineConfig({
       ],
       use: {
         ...devices['Desktop Chrome'],
+      },
+    },
+
+    // === USER JOURNEY TESTS ===
+    {
+      name: 'journeys',
+      testMatch: '**/journeys/**/*.spec.ts',
+      use: {
+        ...devices['Desktop Chrome'],
+      },
+    },
+
+    // === USER JOURNEY TESTS (HEADED - UI Visible) ===
+    {
+      name: 'journeys-headed',
+      testMatch: '**/journeys/**/*.spec.ts',
+      use: {
+        ...devices['Desktop Chrome'],
+        headless: false,
+        launchOptions: {
+          slowMo: 100,
+        },
       },
     },
 

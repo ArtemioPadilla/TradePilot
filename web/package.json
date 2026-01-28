@@ -10,6 +10,10 @@
     "test": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
+    "test:journeys": "playwright test --project=journeys",
+    "test:journeys:headed": "playwright test --project=journeys-headed",
+    "test:journeys:ui": "playwright test --project=journeys --ui",
+    "test:journeys:debug": "playwright test --project=journeys --debug",
     "lighthouse": "lhci autorun",
     "lighthouse:collect": "lhci collect --url=http://localhost:4321",
     "analyze": "ANALYZE=true astro build"

@@ -17,9 +17,16 @@ const TEST_ADMIN_PASSWORD = process.env.TEST_ADMIN_PASSWORD || '';
  */
 export async function isAuthenticated(page: Page): Promise<boolean> {
   try {
-    // Check for auth indicators in the page
-    const userMenu = page.locator('[data-testid="user-menu"], .user-menu-btn, button:has-text("artemiop")');
-    return await userMenu.isVisible({ timeout: 2000 }).catch(() => false);
+    // Check for auth indicators in the page - look for user button with name or sidebar
+    const userMenu = page.locator('button:has-text("test"), button:has-text("T test"), [data-testid="user-menu"]');
+    const sidebar = page.locator('aside nav, .sidebar nav');
+    const dashboardHeading = page.getByRole('heading', { name: /dashboard|home|settings|trading/i });
+
+    const hasUserMenu = await userMenu.first().isVisible({ timeout: 2000 }).catch(() => false);
+    const hasSidebar = await sidebar.first().isVisible({ timeout: 1000 }).catch(() => false);
+    const hasHeading = await dashboardHeading.first().isVisible({ timeout: 1000 }).catch(() => false);
+
+    return hasUserMenu || (hasSidebar && hasHeading);
   } catch {
     return false;
   }
@@ -46,19 +53,19 @@ export async function login(page: Page): Promise<void> {
   }
 
   await page.goto('/auth/login');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   // Fill login form
-  await page.locator('#email').fill(TEST_USER_EMAIL);
-  await page.locator('#password').fill(TEST_USER_PASSWORD);
+  await page.getByLabel('Email').fill(TEST_USER_EMAIL);
+  await page.getByLabel('Password').fill(TEST_USER_PASSWORD);
 
   // Submit form
-  await page.locator('button[type="submit"]').click();
+  await page.getByRole('button', { name: /log in/i }).click();
 
   // Wait for redirect to dashboard
   await page.waitForURL('**/dashboard**', { timeout: 30000 });
-  await page.waitForLoadState('networkidle');
-  await page.waitForTimeout(2000); // Allow auth state to stabilize
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForTimeout(1000); // Allow auth state to stabilize
 }
 
 /**
@@ -70,19 +77,19 @@ export async function loginAsAdmin(page: Page): Promise<void> {
   }
 
   await page.goto('/auth/login');
-  await page.waitForLoadState('networkidle');
+  await page.waitForLoadState('domcontentloaded');
 
   // Fill login form
-  await page.locator('#email').fill(TEST_ADMIN_EMAIL);
-  await page.locator('#password').fill(TEST_ADMIN_PASSWORD);
+  await page.getByLabel('Email').fill(TEST_ADMIN_EMAIL);
+  await page.getByLabel('Password').fill(TEST_ADMIN_PASSWORD);
 
   // Submit form
-  await page.locator('button[type="submit"]').click();
+  await page.getByRole('button', { name: /log in/i }).click();
 
   // Wait for redirect to dashboard
   await page.waitForURL('**/dashboard**', { timeout: 30000 });
-  await page.waitForLoadState('networkidle');
-  await page.waitForTimeout(2000);
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForTimeout(1000);
 }
 
 /**
@@ -92,7 +99,7 @@ export async function loginAsAdmin(page: Page): Promise<void> {
 export async function ensureAuthenticated(page: Page): Promise<void> {
   // First check if already on a dashboard page and authenticated
   const currentUrl = page.url();
-  if (currentUrl.includes('/dashboard') || currentUrl.includes('/admin')) {
+  if (currentUrl.includes('/dashboard') || currentUrl.includes('/admin') || currentUrl.includes('/home')) {
     const authenticated = await isAuthenticated(page);
     if (authenticated) {
       return;
@@ -102,12 +109,20 @@ export async function ensureAuthenticated(page: Page): Promise<void> {
   // Navigate to dashboard to check auth status
   await page.goto('/dashboard');
   await page.waitForLoadState('domcontentloaded');
-  await page.waitForTimeout(1000);
+  await page.waitForTimeout(500);
 
-  // Check if redirected to login
+  // Check if redirected to login or if already authenticated
   const url = page.url();
   if (url.includes('/auth/login') || url.includes('/auth/')) {
     await login(page);
+  } else {
+    // Already on dashboard, wait for content
+    const authenticated = await isAuthenticated(page);
+    if (!authenticated) {
+      // If not authenticated on dashboard, go to login
+      await page.goto('/auth/login');
+      await login(page);
+    }
   }
 }
 
@@ -154,19 +169,35 @@ export async function logout(page: Page): Promise<void> {
  * Clear authentication state (useful for testing unauthenticated flows)
  */
 export async function clearAuthState(page: Page): Promise<void> {
-  // Clear localStorage
+  // First navigate to the app to ensure we're in the right origin
+  // This is needed because localStorage is not accessible from about:blank
+  const currentUrl = page.url();
+  if (!currentUrl.includes('localhost') && !currentUrl.includes('127.0.0.1')) {
+    await page.goto('/');
+    await page.waitForLoadState('domcontentloaded');
+  }
+
+  // Clear localStorage and sessionStorage
   await page.evaluate(() => {
-    localStorage.clear();
-    sessionStorage.clear();
+    try {
+      localStorage.clear();
+      sessionStorage.clear();
+    } catch {
+      // Ignore errors if storage is not accessible
+    }
   });
 
   // Clear IndexedDB (Firebase auth storage)
   await page.evaluate(async () => {
-    const databases = await indexedDB.databases();
-    for (const db of databases) {
-      if (db.name) {
-        indexedDB.deleteDatabase(db.name);
+    try {
+      const databases = await indexedDB.databases();
+      for (const db of databases) {
+        if (db.name) {
+          indexedDB.deleteDatabase(db.name);
+        }
       }
+    } catch {
+      // Ignore errors if IndexedDB is not accessible
     }
   });
 }

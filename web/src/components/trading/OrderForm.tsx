@@ -189,18 +189,20 @@ export function OrderForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="order-form bg-white rounded-lg shadow-sm border border-gray-200"
+      className="order-form rounded-lg shadow-sm"
+      style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)' }}
       data-testid="order-form"
     >
       {/* Side Toggle */}
-      <div className="side-toggle flex border-b border-gray-200">
+      <div className="side-toggle flex" style={{ borderBottom: '1px solid var(--border)' }}>
         <button
           type="button"
           className={`flex-1 py-3 font-semibold transition-colors ${
             side === 'buy'
               ? 'bg-green-600 text-white'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              : ''
           }`}
+          style={side !== 'buy' ? { background: 'var(--bg-tertiary)', color: 'var(--text-secondary)' } : undefined}
           onClick={() => setSide('buy')}
           data-testid="buy-button"
         >
@@ -211,8 +213,9 @@ export function OrderForm({
           className={`flex-1 py-3 font-semibold transition-colors ${
             side === 'sell'
               ? 'bg-red-600 text-white'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              : ''
           }`}
+          style={side !== 'sell' ? { background: 'var(--bg-tertiary)', color: 'var(--text-secondary)' } : undefined}
           onClick={() => setSide('sell')}
           data-testid="sell-button"
         >
@@ -223,7 +226,7 @@ export function OrderForm({
       <div className="p-4 space-y-4">
         {/* Symbol Input */}
         <div className="form-group">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium mb-1" style={{ color: 'var(--text-secondary)' }}>
             Symbol
           </label>
           <input
@@ -231,9 +234,10 @@ export function OrderForm({
             value={symbol}
             onChange={(e) => setSymbol(e.target.value.toUpperCase())}
             placeholder="AAPL"
-            className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-              errors.symbol ? 'border-red-500' : 'border-gray-300'
+            className={`w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+              errors.symbol ? 'border-red-500' : ''
             }`}
+            style={{ background: 'var(--bg-tertiary)', border: `1px solid ${errors.symbol ? '#ef4444' : 'var(--border)'}`, color: 'var(--text-primary)' }}
             data-testid="symbol-input"
           />
           {errors.symbol && (
@@ -243,7 +247,7 @@ export function OrderForm({
 
         {/* Current Price Display */}
         {quote && (
-          <div className="price-display-wrapper bg-gray-50 rounded-lg p-3">
+          <div className="price-display-wrapper rounded-lg p-3" style={{ background: 'var(--bg-tertiary)' }}>
             <PriceDisplay
               price={quote.lastPrice}
               symbol={symbol}
@@ -256,13 +260,14 @@ export function OrderForm({
 
         {/* Order Type */}
         <div className="form-group">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium mb-1" style={{ color: 'var(--text-secondary)' }}>
             Order Type
           </label>
           <select
             value={orderType}
             onChange={(e) => setOrderType(e.target.value as OrderType)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500"
+            style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
             data-testid="order-type-select"
           >
             {ORDER_TYPES.map((type) => (
@@ -271,7 +276,7 @@ export function OrderForm({
               </option>
             ))}
           </select>
-          <p className="text-gray-500 text-xs mt-1">
+          <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
             {ORDER_TYPES.find((t) => t.value === orderType)?.description}
           </p>
         </div>
@@ -279,7 +284,7 @@ export function OrderForm({
         {/* Quantity / Notional Toggle */}
         <div className="form-group">
           <div className="flex items-center justify-between mb-1">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
               {useNotional ? 'Dollar Amount' : 'Shares'}
             </label>
             <button
@@ -293,7 +298,7 @@ export function OrderForm({
 
           {useNotional ? (
             <div className="relative">
-              <span className="absolute left-3 top-2 text-gray-500">{currency}</span>
+              <span className="absolute left-3 top-2" style={{ color: 'var(--text-muted)' }}>{currency}</span>
               <input
                 type="number"
                 value={notional}
@@ -301,9 +306,8 @@ export function OrderForm({
                 placeholder="0.00"
                 step="0.01"
                 min="0"
-                className={`w-full pl-7 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 ${
-                  errors.notional ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className="w-full pl-7 pr-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500"
+                style={{ background: 'var(--bg-tertiary)', border: `1px solid ${errors.notional ? '#ef4444' : 'var(--border)'}`, color: 'var(--text-primary)' }}
                 data-testid="notional-input"
               />
               {errors.notional && (
@@ -319,9 +323,8 @@ export function OrderForm({
                 placeholder="0"
                 step="1"
                 min="0"
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 ${
-                  errors.quantity ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500"
+                style={{ background: 'var(--bg-tertiary)', border: `1px solid ${errors.quantity ? '#ef4444' : 'var(--border)'}`, color: 'var(--text-primary)' }}
                 data-testid="quantity-input"
               />
               {errors.quantity && (
@@ -336,7 +339,8 @@ export function OrderForm({
               <button
                 key={pct}
                 type="button"
-                className="flex-1 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded transition-colors"
+                className="flex-1 py-1 text-xs rounded transition-colors"
+                style={{ background: 'var(--bg-tertiary)', color: 'var(--text-secondary)' }}
                 onClick={() => handleQuickFill(pct)}
               >
                 {pct === 1 ? 'Max' : `${pct * 100}%`}
@@ -348,11 +352,11 @@ export function OrderForm({
         {/* Limit Price (for limit/stop_limit orders) */}
         {(orderType === 'limit' || orderType === 'stop_limit') && (
           <div className="form-group">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium mb-1" style={{ color: 'var(--text-secondary)' }}>
               Limit Price
             </label>
             <div className="relative">
-              <span className="absolute left-3 top-2 text-gray-500">{currency}</span>
+              <span className="absolute left-3 top-2" style={{ color: 'var(--text-muted)' }}>{currency}</span>
               <input
                 type="number"
                 value={limitPrice}
@@ -360,9 +364,8 @@ export function OrderForm({
                 placeholder="0.00"
                 step="0.01"
                 min="0"
-                className={`w-full pl-7 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 ${
-                  errors.limitPrice ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className="w-full pl-7 pr-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500"
+                style={{ background: 'var(--bg-tertiary)', border: `1px solid ${errors.limitPrice ? '#ef4444' : 'var(--border)'}`, color: 'var(--text-primary)' }}
                 data-testid="limit-price-input"
               />
             </div>
@@ -375,11 +378,11 @@ export function OrderForm({
         {/* Stop Price (for stop/stop_limit orders) */}
         {(orderType === 'stop' || orderType === 'stop_limit') && (
           <div className="form-group">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium mb-1" style={{ color: 'var(--text-secondary)' }}>
               Stop Price
             </label>
             <div className="relative">
-              <span className="absolute left-3 top-2 text-gray-500">{currency}</span>
+              <span className="absolute left-3 top-2" style={{ color: 'var(--text-muted)' }}>{currency}</span>
               <input
                 type="number"
                 value={stopPrice}
@@ -387,9 +390,8 @@ export function OrderForm({
                 placeholder="0.00"
                 step="0.01"
                 min="0"
-                className={`w-full pl-7 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 ${
-                  errors.stopPrice ? 'border-red-500' : 'border-gray-300'
-                }`}
+                className="w-full pl-7 pr-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500"
+                style={{ background: 'var(--bg-tertiary)', border: `1px solid ${errors.stopPrice ? '#ef4444' : 'var(--border)'}`, color: 'var(--text-primary)' }}
                 data-testid="stop-price-input"
               />
             </div>
@@ -402,7 +404,7 @@ export function OrderForm({
         {/* Trailing Stop Options */}
         {orderType === 'trailing_stop' && (
           <div className="form-group">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium mb-1" style={{ color: 'var(--text-secondary)' }}>
               Trail Amount
             </label>
             <div className="grid grid-cols-2 gap-2">
@@ -417,12 +419,13 @@ export function OrderForm({
                   placeholder="Trail %"
                   step="0.1"
                   min="0"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                   data-testid="trail-percent-input"
                 />
               </div>
               <div className="relative">
-                <span className="absolute left-3 top-2 text-gray-500">{currency}</span>
+                <span className="absolute left-3 top-2" style={{ color: 'var(--text-muted)' }}>{currency}</span>
                 <input
                   type="number"
                   value={trailPrice}
@@ -433,7 +436,8 @@ export function OrderForm({
                   placeholder="Trail $"
                   step="0.01"
                   min="0"
-                  className="w-full pl-7 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  className="w-full pl-7 pr-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                   data-testid="trail-price-input"
                 />
               </div>
@@ -446,13 +450,14 @@ export function OrderForm({
 
         {/* Time in Force */}
         <div className="form-group">
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium mb-1" style={{ color: 'var(--text-secondary)' }}>
             Time in Force
           </label>
           <select
             value={timeInForce}
             onChange={(e) => setTimeInForce(e.target.value as TimeInForce)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500"
+            style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
             data-testid="time-in-force-select"
           >
             {TIME_IN_FORCE.map((tif) => (
@@ -471,10 +476,11 @@ export function OrderForm({
                 type="checkbox"
                 checked={extendedHours}
                 onChange={(e) => setExtendedHours(e.target.checked)}
-                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
+                style={{ borderColor: 'var(--border)' }}
                 data-testid="extended-hours-checkbox"
               />
-              <span className="text-sm text-gray-700">
+              <span className="text-sm" style={{ color: 'var(--text-secondary)' }}>
                 Allow extended hours trading
               </span>
             </label>
@@ -482,32 +488,32 @@ export function OrderForm({
         )}
 
         {/* Order Summary */}
-        <div className="order-summary bg-gray-50 rounded-lg p-3 space-y-2">
+        <div className="order-summary rounded-lg p-3 space-y-2" style={{ background: 'var(--bg-tertiary)' }}>
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Estimated {side === 'buy' ? 'Cost' : 'Proceeds'}</span>
-            <span className="font-semibold">
+            <span style={{ color: 'var(--text-secondary)' }}>Estimated {side === 'buy' ? 'Cost' : 'Proceeds'}</span>
+            <span className="font-semibold" style={{ color: 'var(--text-primary)' }}>
               {currency}{estimatedValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Estimated Fees</span>
-            <span className="text-green-600 font-medium">
+            <span style={{ color: 'var(--text-secondary)' }}>Estimated Fees</span>
+            <span className="text-green-500 font-medium">
               {currency}0.00
-              <span className="text-xs text-gray-500 ml-1">(Commission-free)</span>
+              <span className="text-xs ml-1" style={{ color: 'var(--text-muted)' }}>(Commission-free)</span>
             </span>
           </div>
           {side === 'buy' && buyingPower > 0 && (
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Buying Power</span>
-              <span className={estimatedValue > buyingPower ? 'text-red-600' : 'text-gray-700'}>
+              <span style={{ color: 'var(--text-secondary)' }}>Buying Power</span>
+              <span className={estimatedValue > buyingPower ? 'text-red-500' : ''} style={estimatedValue > buyingPower ? undefined : { color: 'var(--text-primary)' }}>
                 {currency}{buyingPower.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </span>
             </div>
           )}
           {side === 'sell' && currentPosition > 0 && (
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Current Position</span>
-              <span className={qty > currentPosition ? 'text-red-600' : 'text-gray-700'}>
+              <span style={{ color: 'var(--text-secondary)' }}>Current Position</span>
+              <span className={qty > currentPosition ? 'text-red-500' : ''} style={qty > currentPosition ? undefined : { color: 'var(--text-primary)' }}>
                 {currentPosition} shares
               </span>
             </div>
@@ -520,7 +526,8 @@ export function OrderForm({
             <button
               type="button"
               onClick={onCancel}
-              className="flex-1 py-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+              className="flex-1 py-2 px-4 rounded-lg transition-colors"
+              style={{ border: '1px solid var(--border)', color: 'var(--text-secondary)' }}
               disabled={isSubmitting}
             >
               Cancel

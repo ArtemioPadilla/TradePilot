@@ -215,11 +215,11 @@ export function OrderHistoryTable({
 
   if (loading) {
     return (
-      <div className="order-history-table bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+      <div className="order-history-table rounded-lg shadow-sm p-8" style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)' }}>
         <div className="animate-pulse space-y-4">
-          <div className="h-10 bg-gray-200 rounded w-full"></div>
+          <div className="h-10 rounded w-full" style={{ background: 'var(--bg-tertiary)' }}></div>
           {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="h-12 bg-gray-100 rounded w-full"></div>
+            <div key={i} className="h-12 rounded w-full" style={{ background: 'var(--bg-tertiary)' }}></div>
           ))}
         </div>
       </div>
@@ -228,21 +228,23 @@ export function OrderHistoryTable({
 
   return (
     <div
-      className="order-history-table bg-white rounded-lg shadow-sm border border-gray-200"
+      className="order-history-table rounded-lg shadow-sm"
+      style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border)' }}
       data-testid="order-history-table"
     >
       {/* Header */}
-      <div className="table-header p-4 border-b border-gray-200">
+      <div className="table-header p-4" style={{ borderBottom: '1px solid var(--border)' }}>
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-lg font-semibold text-gray-900">Order History</h3>
+          <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>Order History</h3>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className={`px-3 py-1.5 text-sm border rounded-lg transition-colors ${
+              className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
                 showFilters || activeFilterCount > 0
-                  ? 'border-blue-500 text-blue-600 bg-blue-50'
-                  : 'border-gray-300 text-gray-600 hover:bg-gray-50'
+                  ? 'border-blue-500 text-blue-600 bg-blue-900/30'
+                  : ''
               }`}
+              style={showFilters || activeFilterCount > 0 ? { border: '1px solid #3b82f6' } : { border: '1px solid var(--border)', color: 'var(--text-secondary)' }}
               data-testid="toggle-filters"
             >
               <span className="flex items-center gap-1">
@@ -260,7 +262,8 @@ export function OrderHistoryTable({
             {onRefresh && (
               <button
                 onClick={onRefresh}
-                className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 rounded-lg transition-colors"
+                style={{ color: 'var(--text-secondary)' }}
                 title="Refresh orders"
                 data-testid="refresh-button"
               >
@@ -274,13 +277,14 @@ export function OrderHistoryTable({
 
         {/* Expanded Filters */}
         {showFilters && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-3 border-t border-gray-100">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-3" style={{ borderTop: '1px solid var(--border)' }}>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Status</label>
+              <label className="block text-xs font-medium mb-1" style={{ color: 'var(--text-muted)' }}>Status</label>
               <select
                 value={statusFilter}
                 onChange={(e) => handleFilterChange(setStatusFilter)(e.target.value as StatusFilter)}
-                className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-2 py-1.5 text-sm rounded-lg focus:ring-2 focus:ring-blue-500"
+                style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                 data-testid="status-filter"
               >
                 <option value="all">All Status</option>
@@ -291,11 +295,12 @@ export function OrderHistoryTable({
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Side</label>
+              <label className="block text-xs font-medium mb-1" style={{ color: 'var(--text-muted)' }}>Side</label>
               <select
                 value={sideFilter}
                 onChange={(e) => handleFilterChange(setSideFilter)(e.target.value as SideFilter)}
-                className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-2 py-1.5 text-sm rounded-lg focus:ring-2 focus:ring-blue-500"
+                style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                 data-testid="side-filter"
               >
                 <option value="all">All Sides</option>
@@ -304,11 +309,12 @@ export function OrderHistoryTable({
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Date Range</label>
+              <label className="block text-xs font-medium mb-1" style={{ color: 'var(--text-muted)' }}>Date Range</label>
               <select
                 value={dateFilter}
                 onChange={(e) => handleFilterChange(setDateFilter)(e.target.value as DateFilter)}
-                className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-2 py-1.5 text-sm rounded-lg focus:ring-2 focus:ring-blue-500"
+                style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                 data-testid="date-filter"
               >
                 <option value="all">All Time</option>
@@ -319,13 +325,14 @@ export function OrderHistoryTable({
               </select>
             </div>
             <div>
-              <label className="block text-xs font-medium text-gray-500 mb-1">Symbol</label>
+              <label className="block text-xs font-medium mb-1" style={{ color: 'var(--text-muted)' }}>Symbol</label>
               <input
                 type="text"
                 value={symbolFilter}
                 onChange={(e) => handleFilterChange(setSymbolFilter)(e.target.value)}
                 placeholder="Search symbol..."
-                className="w-full px-2 py-1.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                className="w-full px-2 py-1.5 text-sm rounded-lg focus:ring-2 focus:ring-blue-500"
+                style={{ background: 'var(--bg-tertiary)', border: '1px solid var(--border)', color: 'var(--text-primary)' }}
                 data-testid="symbol-filter"
               />
             </div>
@@ -335,11 +342,11 @@ export function OrderHistoryTable({
 
       {/* Table */}
       {paginatedOrders.length === 0 ? (
-        <div className="p-8 text-center text-gray-500">
-          <svg className="w-12 h-12 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="p-8 text-center" style={{ color: 'var(--text-muted)' }}>
+          <svg className="w-12 h-12 mx-auto mb-4" style={{ color: 'var(--border)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
-          <p className="font-medium">No orders found</p>
+          <p className="font-medium" style={{ color: 'var(--text-secondary)' }}>No orders found</p>
           <p className="text-sm mt-1">
             {activeFilterCount > 0
               ? 'Try adjusting your filters to see more orders.'
@@ -363,90 +370,96 @@ export function OrderHistoryTable({
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50">
+            <thead style={{ background: 'var(--bg-tertiary)' }}>
               <tr>
                 <th
-                  className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider cursor-pointer"
+                  style={{ color: 'var(--text-muted)' }}
                   onClick={() => handleSort('createdAt')}
                 >
                   Date <SortIndicator field="createdAt" />
                 </th>
                 <th
-                  className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider cursor-pointer"
+                  style={{ color: 'var(--text-muted)' }}
                   onClick={() => handleSort('symbol')}
                 >
                   Symbol <SortIndicator field="symbol" />
                 </th>
                 <th
-                  className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider cursor-pointer"
+                  style={{ color: 'var(--text-muted)' }}
                   onClick={() => handleSort('side')}
                 >
                   Side <SortIndicator field="side" />
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
                   Type
                 </th>
                 <th
-                  className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider cursor-pointer"
+                  style={{ color: 'var(--text-muted)' }}
                   onClick={() => handleSort('qty')}
                 >
                   Qty <SortIndicator field="qty" />
                 </th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
                   Filled
                 </th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
                   Avg Price
                 </th>
                 <th
-                  className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+                  className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider cursor-pointer"
+                  style={{ color: 'var(--text-muted)' }}
                   onClick={() => handleSort('status')}
                 >
                   Status <SortIndicator field="status" />
                 </th>
-                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody style={{ borderTop: '1px solid var(--border)' }}>
               {paginatedOrders.map((order) => (
                 <>
                   <tr
                     key={order.id}
-                    className="hover:bg-gray-50 transition-colors"
+                    className="transition-colors"
+                    style={{ borderBottom: '1px solid var(--border)' }}
                     data-testid={`order-row-${order.id}`}
                   >
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm" style={{ color: 'var(--text-secondary)' }}>
                       <div>{new Date(order.createdAt).toLocaleDateString()}</div>
-                      <div className="text-xs text-gray-400">
+                      <div className="text-xs" style={{ color: 'var(--text-muted)' }}>
                         {new Date(order.createdAt).toLocaleTimeString()}
                       </div>
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
-                      <span className="font-semibold text-gray-900">{order.symbol}</span>
+                      <span className="font-semibold" style={{ color: 'var(--text-primary)' }}>{order.symbol}</span>
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
                       <span
                         className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
                           order.side === 'buy'
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-red-100 text-red-800'
+                            ? 'bg-green-900/50 text-green-400'
+                            : 'bg-red-900/50 text-red-400'
                         }`}
                       >
                         {order.side.toUpperCase()}
                       </span>
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-600">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm" style={{ color: 'var(--text-secondary)' }}>
                       {formatOrderType(order.type, order.limitPrice, order.stopPrice)}
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-right text-gray-900">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-right" style={{ color: 'var(--text-primary)' }}>
                       {order.qty}
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-right text-gray-600">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-right" style={{ color: 'var(--text-secondary)' }}>
                       {order.filledQty > 0 ? order.filledQty : '-'}
                     </td>
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-right text-gray-900">
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-right" style={{ color: 'var(--text-primary)' }}>
                       {order.filledAvgPrice
                         ? `${currency}${order.filledAvgPrice.toFixed(2)}`
                         : '-'}
@@ -468,7 +481,8 @@ export function OrderHistoryTable({
                               expandedOrderId === order.id ? null : order.id
                             )
                           }
-                          className="text-gray-400 hover:text-gray-600 p-1"
+                          className="p-1"
+                          style={{ color: 'var(--text-muted)' }}
                           title="View details"
                         >
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -499,41 +513,41 @@ export function OrderHistoryTable({
                     </td>
                   </tr>
                   {expandedOrderId === order.id && (
-                    <tr className="bg-gray-50">
+                    <tr style={{ background: 'var(--bg-tertiary)' }}>
                       <td colSpan={9} className="px-4 py-3">
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                           <div>
-                            <span className="text-gray-500">Order ID</span>
-                            <p className="font-mono text-xs mt-1">{order.id}</p>
+                            <span style={{ color: 'var(--text-muted)' }}>Order ID</span>
+                            <p className="font-mono text-xs mt-1" style={{ color: 'var(--text-primary)' }}>{order.id}</p>
                           </div>
                           <div>
-                            <span className="text-gray-500">Client Order ID</span>
-                            <p className="font-mono text-xs mt-1">{order.clientOrderId}</p>
+                            <span style={{ color: 'var(--text-muted)' }}>Client Order ID</span>
+                            <p className="font-mono text-xs mt-1" style={{ color: 'var(--text-primary)' }}>{order.clientOrderId}</p>
                           </div>
                           <div>
-                            <span className="text-gray-500">Time in Force</span>
-                            <p className="mt-1 uppercase">{order.timeInForce}</p>
+                            <span style={{ color: 'var(--text-muted)' }}>Time in Force</span>
+                            <p className="mt-1 uppercase" style={{ color: 'var(--text-primary)' }}>{order.timeInForce}</p>
                           </div>
                           <div>
-                            <span className="text-gray-500">Extended Hours</span>
-                            <p className="mt-1">{order.extendedHours ? 'Yes' : 'No'}</p>
+                            <span style={{ color: 'var(--text-muted)' }}>Extended Hours</span>
+                            <p className="mt-1" style={{ color: 'var(--text-primary)' }}>{order.extendedHours ? 'Yes' : 'No'}</p>
                           </div>
                           {order.filledAt && (
                             <div>
-                              <span className="text-gray-500">Filled At</span>
-                              <p className="mt-1">{new Date(order.filledAt).toLocaleString()}</p>
+                              <span style={{ color: 'var(--text-muted)' }}>Filled At</span>
+                              <p className="mt-1" style={{ color: 'var(--text-primary)' }}>{new Date(order.filledAt).toLocaleString()}</p>
                             </div>
                           )}
                           {order.canceledAt && (
                             <div>
-                              <span className="text-gray-500">Canceled At</span>
-                              <p className="mt-1">{new Date(order.canceledAt).toLocaleString()}</p>
+                              <span style={{ color: 'var(--text-muted)' }}>Canceled At</span>
+                              <p className="mt-1" style={{ color: 'var(--text-primary)' }}>{new Date(order.canceledAt).toLocaleString()}</p>
                             </div>
                           )}
                           {order.expiredAt && (
                             <div>
-                              <span className="text-gray-500">Expired At</span>
-                              <p className="mt-1">{new Date(order.expiredAt).toLocaleString()}</p>
+                              <span style={{ color: 'var(--text-muted)' }}>Expired At</span>
+                              <p className="mt-1" style={{ color: 'var(--text-primary)' }}>{new Date(order.expiredAt).toLocaleString()}</p>
                             </div>
                           )}
                         </div>
@@ -548,8 +562,8 @@ export function OrderHistoryTable({
       )}
 
       {/* Footer with pagination */}
-      <div className="table-footer px-4 py-3 border-t border-gray-200 flex items-center justify-between">
-        <div className="text-sm text-gray-500">
+      <div className="table-footer px-4 py-3 flex items-center justify-between" style={{ borderTop: '1px solid var(--border)' }}>
+        <div className="text-sm" style={{ color: 'var(--text-muted)' }}>
           Showing {paginatedOrders.length > 0 ? (currentPage - 1) * pageSize + 1 : 0} to{' '}
           {Math.min(currentPage * pageSize, filteredOrders.length)} of {filteredOrders.length} orders
           {filteredOrders.length !== orders.length && ` (${orders.length} total)`}
@@ -560,7 +574,8 @@ export function OrderHistoryTable({
             <button
               onClick={() => setCurrentPage(1)}
               disabled={currentPage === 1}
-              className="p-1.5 text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ color: 'var(--text-muted)' }}
               title="First page"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -570,7 +585,8 @@ export function OrderHistoryTable({
             <button
               onClick={() => setCurrentPage(currentPage - 1)}
               disabled={currentPage === 1}
-              className="p-1.5 text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ color: 'var(--text-muted)' }}
               title="Previous page"
               data-testid="prev-page"
             >
@@ -579,14 +595,15 @@ export function OrderHistoryTable({
               </svg>
             </button>
 
-            <span className="px-3 py-1 text-sm text-gray-700">
+            <span className="px-3 py-1 text-sm" style={{ color: 'var(--text-secondary)' }}>
               Page {currentPage} of {totalPages}
             </span>
 
             <button
               onClick={() => setCurrentPage(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="p-1.5 text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ color: 'var(--text-muted)' }}
               title="Next page"
               data-testid="next-page"
             >
@@ -597,7 +614,8 @@ export function OrderHistoryTable({
             <button
               onClick={() => setCurrentPage(totalPages)}
               disabled={currentPage === totalPages}
-              className="p-1.5 text-gray-500 hover:text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-1.5 disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ color: 'var(--text-muted)' }}
               title="Last page"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
