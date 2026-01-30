@@ -1,22 +1,147 @@
-import { useStore } from '@nanostores/react';
-import { $accounts } from '../../stores/portfolio';
-import { formatCurrency, formatPercent, calculatePnL } from '../../lib/utils';
+/**
+ * HoldingsTable Component
+ *
+ * Displays user's current holdings from Alpaca positions.
+ */
+
+import { useAlpacaData } from '../../hooks/useAlpacaData';
+import { formatCurrency, formatPercent } from '../../lib/utils';
+
+// Map common stock symbols to company names
+const SYMBOL_NAMES: Record<string, string> = {
+  AAPL: 'Apple Inc',
+  GOOGL: 'Alphabet Inc',
+  GOOG: 'Alphabet Inc',
+  MSFT: 'Microsoft Corp',
+  AMZN: 'Amazon.com Inc',
+  NVDA: 'NVIDIA Corp',
+  TSLA: 'Tesla Inc',
+  META: 'Meta Platforms',
+  JPM: 'JPMorgan Chase',
+  V: 'Visa Inc',
+  JNJ: 'Johnson & Johnson',
+  UNH: 'UnitedHealth Group',
+  AMD: 'AMD Inc',
+  NFLX: 'Netflix Inc',
+  DIS: 'Walt Disney Co',
+  PYPL: 'PayPal Holdings',
+  INTC: 'Intel Corp',
+  VTI: 'Vanguard Total Stock',
+  VOO: 'Vanguard S&P 500',
+  QQQ: 'Invesco QQQ Trust',
+  SPY: 'SPDR S&P 500',
+  IWM: 'iShares Russell 2000',
+  BND: 'Vanguard Total Bond',
+};
 
 export default function HoldingsTable() {
-  const accounts = useStore($accounts);
+  const { positions, isLoading, isConnected } = useAlpacaData();
 
-  // Flatten all holdings from all accounts
-  const allHoldings = accounts.flatMap((account) =>
-    account.holdings.map((holding) => ({
-      ...holding,
-      accountName: account.name,
-      pnl: calculatePnL(holding.quantity, holding.avgCost, holding.currentPrice),
-      marketValue: holding.quantity * holding.currentPrice,
-    }))
-  );
+  // Transform positions to table data
+  const holdings = positions.map(pos => ({
+    id: pos.assetId,
+    symbol: pos.symbol,
+    name: SYMBOL_NAMES[pos.symbol] || pos.symbol,
+    quantity: pos.qty,
+    currentPrice: pos.currentPrice,
+    marketValue: pos.marketValue,
+    costBasis: pos.costBasis,
+    avgCost: pos.avgEntryPrice,
+    unrealizedPL: pos.unrealizedPl,
+    unrealizedPLPercent: pos.unrealizedPlPercent,
+  }));
 
   // Sort by market value descending
-  const sortedHoldings = allHoldings.sort((a, b) => b.marketValue - a.marketValue).slice(0, 10);
+  const sortedHoldings = holdings.sort((a, b) => b.marketValue - a.marketValue).slice(0, 10);
+
+  if (!isConnected && !isLoading) {
+    return (
+      <div className="holdings-table-container">
+        <div className="empty-state">
+          <p>Connect to Alpaca to see your holdings</p>
+          <a href="/dashboard/trading" className="connect-link">Connect Account</a>
+        </div>
+        <style>{`
+          .holdings-table-container {
+            overflow-x: auto;
+          }
+          .empty-state {
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+          }
+          .connect-link {
+            display: inline-block;
+            margin-top: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+          }
+          .connect-link:hover {
+            text-decoration: underline;
+          }
+        `}</style>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="holdings-table-container">
+        <table className="holdings-table">
+          <thead>
+            <tr>
+              <th>Symbol</th>
+              <th>Name</th>
+              <th className="text-right">Qty</th>
+              <th className="text-right">Price</th>
+              <th className="text-right">Value</th>
+              <th className="text-right">P&L</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[1, 2, 3].map(i => (
+              <tr key={i}>
+                <td><span className="skeleton" style={{ width: '50px' }} /></td>
+                <td><span className="skeleton" style={{ width: '120px' }} /></td>
+                <td className="text-right"><span className="skeleton" style={{ width: '40px' }} /></td>
+                <td className="text-right"><span className="skeleton" style={{ width: '70px' }} /></td>
+                <td className="text-right"><span className="skeleton" style={{ width: '80px' }} /></td>
+                <td className="text-right"><span className="skeleton" style={{ width: '90px' }} /></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <style>{`
+          .holdings-table-container { overflow-x: auto; }
+          .holdings-table { width: 100%; border-collapse: collapse; }
+          .holdings-table th, .holdings-table td {
+            padding: calc(0.75rem * var(--spacing-density)) calc(0.5rem * var(--spacing-density));
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+          }
+          .holdings-table th {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+          }
+          .text-right { text-align: right; }
+          .skeleton {
+            display: inline-block;
+            height: 16px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            animation: pulse 1.5s infinite;
+          }
+          @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+          }
+        `}</style>
+      </div>
+    );
+  }
 
   return (
     <div className="holdings-table-container">
@@ -45,11 +170,11 @@ export default function HoldingsTable() {
               <td className="text-right">{formatCurrency(holding.marketValue)}</td>
               <td className="text-right">
                 <div className="pnl-cell">
-                  <span className={holding.pnl.value >= 0 ? 'positive' : 'negative'}>
-                    {formatCurrency(holding.pnl.value)}
+                  <span className={holding.unrealizedPL >= 0 ? 'positive' : 'negative'}>
+                    {formatCurrency(holding.unrealizedPL)}
                   </span>
-                  <span className={`pnl-percent ${holding.pnl.percent >= 0 ? 'positive' : 'negative'}`}>
-                    {formatPercent(holding.pnl.percent)}
+                  <span className={`pnl-percent ${holding.unrealizedPLPercent >= 0 ? 'positive' : 'negative'}`}>
+                    {formatPercent(holding.unrealizedPLPercent)}
                   </span>
                 </div>
               </td>
@@ -60,7 +185,7 @@ export default function HoldingsTable() {
 
       {sortedHoldings.length === 0 && (
         <div className="empty-state">
-          <p>No holdings yet. Add your first position to get started.</p>
+          <p>No positions yet. Start trading to build your portfolio.</p>
         </div>
       )}
 

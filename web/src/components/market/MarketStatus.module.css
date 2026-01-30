@@ -1,0 +1,180 @@
+/**
+ * Market Status Styles
+ */
+
+/* Container */
+.container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: var(--color-surface, #f8f9fa);
+  font-size: 13px;
+}
+
+/* Compact mode */
+.compact {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+/* Item */
+.item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.icon {
+  font-size: 14px;
+}
+
+.label {
+  color: var(--color-text-primary, #1a1a1a);
+  font-weight: 500;
+}
+
+.time {
+  color: var(--color-text-muted, #6b7280);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Divider */
+.divider {
+  color: var(--color-border, #e5e7eb);
+}
+
+/* Status Colors */
+.open .label {
+  color: var(--color-success, #16a34a);
+}
+
+.closed .label {
+  color: var(--color-text-muted, #6b7280);
+}
+
+.pre .label,
+.post .label,
+.extended .label {
+  color: var(--color-warning, #d97706);
+}
+
+.holiday .label {
+  color: var(--color-error, #dc2626);
+}
+
+/* Connection */
+.connected .label {
+  color: var(--color-success, #16a34a);
+}
+
+.disconnected .label {
+  color: var(--color-error, #dc2626);
+}
+
+/* Refresh */
+.refresh {
+  color: var(--color-text-muted, #6b7280);
+}
+
+/* Badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.badge.open {
+  background: var(--color-success-light, #dcfce7);
+  color: var(--color-success, #16a34a);
+}
+
+.badge.closed {
+  background: var(--color-muted-light, #e5e7eb);
+  color: var(--color-text-muted, #6b7280);
+}
+
+.badge.pre,
+.badge.post,
+.badge.extended {
+  background: var(--color-warning-light, #fef3c7);
+  color: var(--color-warning, #d97706);
+}
+
+.badge.holiday {
+  background: var(--color-error-light, #fee2e2);
+  color: var(--color-error, #dc2626);
+}
+
+.badge.unknown {
+  background: var(--color-muted-light, #e5e7eb);
+  color: var(--color-text-muted, #6b7280);
+}
+
+/* Status Indicator */
+.statusIndicator {
+  font-size: 10px;
+}
+
+/* Connection Dot */
+.connectionDot {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+}
+
+.connectionDot.initializing {
+  color: var(--color-text-muted, #6b7280);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .container {
+    background: var(--color-surface-dark, #1f2937);
+  }
+
+  .label {
+    color: var(--color-text-primary-dark, #f9fafb);
+  }
+
+  .divider {
+    color: var(--color-border-dark, #374151);
+  }
+
+  .badge.open {
+    background: rgba(22, 163, 74, 0.2);
+  }
+
+  .badge.closed,
+  .badge.unknown {
+    background: rgba(107, 114, 128, 0.2);
+  }
+
+  .badge.pre,
+  .badge.post,
+  .badge.extended {
+    background: rgba(217, 119, 6, 0.2);
+  }
+
+  .badge.holiday {
+    background: rgba(220, 38, 38, 0.2);
+  }
+}

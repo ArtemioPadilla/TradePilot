@@ -181,9 +181,20 @@ TradePilot/
 
 ---
 
+## Documentation
+
+Detailed architecture documentation is available:
+
+- **[Backend Architecture](docs/architecture/BACKEND_ARCHITECTURE.md)** - Python library structure and data flows
+- **[Integration Guide](docs/architecture/INTEGRATION.md)** - How backend and web app work together
+- **[Web Data Architecture](web/docs/architecture/DATA_ARCHITECTURE.md)** - Market data and caching system
+- **[Permissions](web/docs/architecture/PERMISSIONS.md)** - Access control and GDPR compliance
+
+---
+
 ## Contributing
 
-We welcome contributions from the community! Here’s how you can help:
+We welcome contributions from the community! Here's how you can help:
 
 1. **Fork the Repository:**  
    Create your own fork of this repository.

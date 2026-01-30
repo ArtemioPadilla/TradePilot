@@ -205,3 +205,34 @@ export type AssetAction =
   | 'view_chart'
   | 'add_to_strategy'
   | 'run_backtest';
+
+/**
+ * Source of a symbol search result for prioritization
+ */
+export type SymbolSearchSource =
+  | 'watchlist'
+  | 'holdings'
+  | 'recent'
+  | 'search';
+
+/**
+ * Symbol search result for autocomplete dropdown
+ */
+export interface SymbolSearchResult {
+  symbol: string;
+  name: string;
+  category: AssetCategory;
+
+  // Price data (optional, fetched separately)
+  price?: number;
+  change?: number;
+  changePercent?: number;
+
+  // Source for grouping and prioritization
+  source: SymbolSearchSource;
+
+  // User context
+  isInWatchlist: boolean;
+  isOwned: boolean;
+  ownedQuantity?: number;
+}

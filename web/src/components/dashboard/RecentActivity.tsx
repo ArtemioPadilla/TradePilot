@@ -1,4 +1,12 @@
+/**
+ * RecentActivity Component
+ *
+ * Displays recent trading activity from Alpaca orders.
+ */
+
+import { useAlpacaData } from '../../hooks/useAlpacaData';
 import { formatCurrency, formatRelativeTime } from '../../lib/utils';
+import type { AlpacaOrder } from '../../types/alpaca';
 
 interface Activity {
   id: string;
@@ -7,15 +15,8 @@ interface Activity {
   amount: number;
   quantity?: number;
   timestamp: Date;
+  status?: string;
 }
-
-const mockActivities: Activity[] = [
-  { id: '1', type: 'buy', symbol: 'AAPL', amount: 1854.2, quantity: 10, timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000) },
-  { id: '2', type: 'sell', symbol: 'TSLA', amount: 2485.0, quantity: 10, timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000) },
-  { id: '3', type: 'dividend', symbol: 'VTI', amount: 45.32, timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000) },
-  { id: '4', type: 'buy', symbol: 'NVDA', amount: 721.28, quantity: 1, timestamp: new Date(Date.now() - 48 * 60 * 60 * 1000) },
-  { id: '5', type: 'deposit', amount: 5000, timestamp: new Date(Date.now() - 72 * 60 * 60 * 1000) },
-];
 
 const getActivityIcon = (type: Activity['type']) => {
   switch (type) {
@@ -60,18 +61,149 @@ const getActivityLabel = (activity: Activity) => {
   }
 };
 
+/**
+ * Convert Alpaca orders to activities
+ */
+function ordersToActivities(orders: AlpacaOrder[]): Activity[] {
+  return orders
+    .filter(order => order.status === 'filled' || order.status === 'partially_filled')
+    .slice(0, 5)
+    .map(order => ({
+      id: order.id,
+      type: order.side as 'buy' | 'sell',
+      symbol: order.symbol,
+      amount: (order.filledAvgPrice || 0) * (order.filledQty || order.qty || 0),
+      quantity: order.filledQty || order.qty,
+      timestamp: new Date(order.filledAt || order.submittedAt),
+      status: order.status,
+    }));
+}
+
 export default function RecentActivity() {
+  const { orders, isLoading, isConnected } = useAlpacaData();
+
+  // Convert orders to activities
+  const activities = ordersToActivities(orders);
+
+  if (!isConnected && !isLoading) {
+    return (
+      <div className="recent-activity">
+        <div className="empty-state">
+          <p>Connect to Alpaca to see your activity</p>
+        </div>
+        <style>{`
+          .recent-activity {
+            display: flex;
+            flex-direction: column;
+          }
+          .empty-state {
+            padding: 1rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+          }
+        `}</style>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="recent-activity">
+        <div className="activity-list">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="activity-item loading">
+              <div className="activity-icon skeleton" />
+              <div className="activity-details">
+                <span className="activity-label skeleton" />
+                <span className="activity-time skeleton" />
+              </div>
+              <span className="activity-amount skeleton" />
+            </div>
+          ))}
+        </div>
+        <style>{`
+          .recent-activity {
+            display: flex;
+            flex-direction: column;
+          }
+          .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: calc(0.75rem * var(--spacing-density));
+          }
+          .activity-item {
+            display: flex;
+            align-items: center;
+            gap: calc(0.75rem * var(--spacing-density));
+            padding: calc(0.5rem * var(--spacing-density)) 0;
+          }
+          .skeleton {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            animation: pulse 1.5s infinite;
+          }
+          .activity-icon.skeleton {
+            width: 32px;
+            height: 32px;
+          }
+          .activity-label.skeleton {
+            width: 120px;
+            height: 16px;
+            display: block;
+          }
+          .activity-time.skeleton {
+            width: 60px;
+            height: 12px;
+            display: block;
+            margin-top: 4px;
+          }
+          .activity-amount.skeleton {
+            width: 80px;
+            height: 16px;
+          }
+          @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+          }
+        `}</style>
+      </div>
+    );
+  }
+
+  if (activities.length === 0) {
+    return (
+      <div className="recent-activity">
+        <div className="empty-state">
+          <p>No recent trades</p>
+        </div>
+        <style>{`
+          .recent-activity {
+            display: flex;
+            flex-direction: column;
+          }
+          .empty-state {
+            padding: 1rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+          }
+        `}</style>
+      </div>
+    );
+  }
+
   return (
     <div className="recent-activity">
       <div className="activity-list">
-        {mockActivities.map((activity) => (
+        {activities.map((activity) => (
           <div key={activity.id} className="activity-item">
             <div className={`activity-icon ${activity.type}`}>{getActivityIcon(activity.type)}</div>
             <div className="activity-details">
               <span className="activity-label">{getActivityLabel(activity)}</span>
               <span className="activity-time">{formatRelativeTime(activity.timestamp)}</span>
             </div>
-            <span className={`activity-amount ${activity.type === 'sell' || activity.type === 'dividend' || activity.type === 'deposit' ? 'positive' : ''}`}>
+            <span className={`activity-amount ${activity.type === 'sell' ? 'positive' : ''}`}>
               {activity.type === 'buy' ? '-' : '+'}
               {formatCurrency(activity.amount)}
             </span>

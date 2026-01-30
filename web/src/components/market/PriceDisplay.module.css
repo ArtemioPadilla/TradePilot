@@ -1,0 +1,265 @@
+/**
+ * Price Display Styles
+ */
+
+/* Container */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--color-surface, #f8f9fa);
+  transition: background-color 0.3s ease;
+}
+
+/* Compact mode */
+.compact {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: transparent;
+}
+
+/* Size variants */
+.sm {
+  font-size: 12px;
+}
+
+.sm .price {
+  font-size: 14px;
+}
+
+.md {
+  font-size: 14px;
+}
+
+.md .price {
+  font-size: 20px;
+}
+
+.lg {
+  font-size: 16px;
+}
+
+.lg .price {
+  font-size: 28px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.symbol {
+  font-weight: 600;
+  color: var(--color-text-primary, #1a1a1a);
+  letter-spacing: 0.5px;
+}
+
+.status {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status.open {
+  background: var(--color-success-light, #dcfce7);
+  color: var(--color-success, #16a34a);
+}
+
+.status.pre,
+.status.post,
+.status.extended {
+  background: var(--color-warning-light, #fef3c7);
+  color: var(--color-warning, #d97706);
+}
+
+.status.closed,
+.status.holiday {
+  background: var(--color-muted-light, #e5e7eb);
+  color: var(--color-muted, #6b7280);
+}
+
+/* Price row */
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.price {
+  font-weight: 700;
+  color: var(--color-text-primary, #1a1a1a);
+  font-variant-numeric: tabular-nums;
+}
+
+.change {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.positive {
+  color: var(--color-success, #16a34a);
+}
+
+.negative {
+  color: var(--color-error, #dc2626);
+}
+
+.percent {
+  margin-left: 2px;
+  opacity: 0.8;
+}
+
+/* Footer */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.lastUpdate {
+  font-size: 11px;
+  color: var(--color-text-muted, #6b7280);
+}
+
+/* Countdown */
+.countdown {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--color-text-muted, #6b7280);
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--color-surface-alt, #e5e7eb);
+  overflow: hidden;
+}
+
+.progressBar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: var(--color-primary-light, #dbeafe);
+  transition: width 1s linear;
+  z-index: 0;
+}
+
+.countdownText {
+  position: relative;
+  z-index: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Loading state */
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.skeleton {
+  width: 80px;
+  height: 24px;
+  border-radius: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-alt, #e5e7eb) 25%,
+    var(--color-surface, #f8f9fa) 50%,
+    var(--color-surface-alt, #e5e7eb) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.noData {
+  color: var(--color-text-muted, #6b7280);
+}
+
+/* Flash animations */
+.flashUp {
+  animation: flashGreen 0.5s ease;
+}
+
+.flashDown {
+  animation: flashRed 0.5s ease;
+}
+
+@keyframes flashGreen {
+  0% {
+    background-color: var(--color-success-light, #dcfce7);
+  }
+  100% {
+    background-color: var(--color-surface, #f8f9fa);
+  }
+}
+
+@keyframes flashRed {
+  0% {
+    background-color: var(--color-error-light, #fee2e2);
+  }
+  100% {
+    background-color: var(--color-surface, #f8f9fa);
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .container {
+    background: var(--color-surface-dark, #1f2937);
+  }
+
+  .symbol,
+  .price {
+    color: var(--color-text-primary-dark, #f9fafb);
+  }
+
+  .countdown {
+    background: var(--color-surface-alt-dark, #374151);
+  }
+
+  .progressBar {
+    background: var(--color-primary-dark, #1e3a5f);
+  }
+
+  @keyframes flashGreen {
+    0% {
+      background-color: rgba(22, 163, 74, 0.2);
+    }
+    100% {
+      background-color: var(--color-surface-dark, #1f2937);
+    }
+  }
+
+  @keyframes flashRed {
+    0% {
+      background-color: rgba(220, 38, 38, 0.2);
+    }
+    100% {
+      background-color: var(--color-surface-dark, #1f2937);
+    }
+  }
+}

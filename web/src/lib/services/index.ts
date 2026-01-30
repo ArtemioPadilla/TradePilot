@@ -35,8 +35,15 @@ export * from './offline-sync';
 export * from './profile';
 export * from './security';
 
-// Market Data
+// Market Data (legacy mock data)
 export * from './market-data';
+
+// Market Data Services (new - caching, providers)
+export * from './market-data/service';
+export * from './market-data/cache';
+
+// Data Providers
+export * from './data-providers';
 
 // Watchlists
 export * from './watchlists';

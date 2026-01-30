@@ -13,6 +13,7 @@ import type {
   AlpacaQuote,
 } from '../../types/alpaca';
 import { PriceDisplay } from './PriceDisplay';
+import { SymbolAutocomplete } from './SymbolAutocomplete';
 
 interface OrderFormProps {
   /** Symbol to trade (pre-filled) */
@@ -33,6 +34,10 @@ interface OrderFormProps {
   defaultSide?: OrderSide;
   /** Currency symbol */
   currency?: string;
+  /** User's current holdings (symbols they own) for autocomplete */
+  holdings?: string[];
+  /** Recent trade symbols for autocomplete */
+  recentTrades?: string[];
 }
 
 const ORDER_TYPES: { value: OrderType; label: string; description: string }[] = [
@@ -62,6 +67,8 @@ export function OrderForm({
   isSubmitting = false,
   defaultSide = 'buy',
   currency = '$',
+  holdings = [],
+  recentTrades = [],
 }: OrderFormProps) {
   // Form state
   const [symbol, setSymbol] = useState(initialSymbol);
@@ -224,25 +231,21 @@ export function OrderForm({
       </div>
 
       <div className="p-4 space-y-4">
-        {/* Symbol Input */}
+        {/* Symbol Input with Autocomplete */}
         <div className="form-group">
           <label className="block text-sm font-medium mb-1" style={{ color: 'var(--text-secondary)' }}>
             Symbol
           </label>
-          <input
-            type="text"
+          <SymbolAutocomplete
             value={symbol}
-            onChange={(e) => setSymbol(e.target.value.toUpperCase())}
-            placeholder="AAPL"
-            className={`w-full px-3 py-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-              errors.symbol ? 'border-red-500' : ''
-            }`}
-            style={{ background: 'var(--bg-tertiary)', border: `1px solid ${errors.symbol ? '#ef4444' : 'var(--border)'}`, color: 'var(--text-primary)' }}
+            onChange={setSymbol}
+            placeholder="Search symbol..."
+            error={!!errors.symbol}
+            errorMessage={errors.symbol}
+            holdings={holdings}
+            recentTrades={recentTrades}
             data-testid="symbol-input"
           />
-          {errors.symbol && (
-            <p className="text-red-500 text-xs mt-1">{errors.symbol}</p>
-          )}
         </div>
 
         {/* Current Price Display */}

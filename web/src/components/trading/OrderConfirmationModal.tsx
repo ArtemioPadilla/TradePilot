@@ -126,27 +126,23 @@ export function OrderConfirmationModal({
 
   return (
     <div
-      className="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+      className="modal-overlay fixed inset-0 flex items-center justify-center z-50 p-4"
       onClick={handleClose}
       data-testid="order-confirmation-modal"
     >
       <div
-        className="modal-content bg-white rounded-xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-auto"
+        className="modal-content rounded-xl max-w-md w-full max-h-[90vh] overflow-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div
-          className={`modal-header p-4 rounded-t-xl ${
-            isBuy ? 'bg-green-600' : 'bg-red-600'
-          } text-white`}
-        >
+        <div className={`modal-header p-4 rounded-t-xl ${isBuy ? 'buy' : 'sell'}`}>
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold">
               {success ? 'Order Submitted' : 'Confirm Order'}
             </h2>
             <button
               onClick={handleClose}
-              className="text-white hover:text-gray-200 transition-colors"
+              className="close-btn transition-colors"
               aria-label="Close"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -162,34 +158,34 @@ export function OrderConfirmationModal({
         {/* Success State */}
         {success && (
           <div className="p-6 text-center">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="success-icon w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+            <h3 className="text-lg font-semibold text-primary mb-2">
               Order Submitted Successfully
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-secondary mb-4">
               Your {order.side} order for {order.symbol} has been placed.
             </p>
-            <div className="bg-gray-50 rounded-lg p-4 text-left text-sm">
+            <div className="success-details rounded-lg p-4 text-left text-sm">
               <div className="flex justify-between mb-2">
-                <span className="text-gray-600">Order ID</span>
+                <span className="text-secondary">Order ID</span>
                 <span className="font-mono text-xs">{success.id.slice(0, 12)}...</span>
               </div>
               <div className="flex justify-between mb-2">
-                <span className="text-gray-600">Status</span>
+                <span className="text-secondary">Status</span>
                 <span className="capitalize">{success.status}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Submitted At</span>
+                <span className="text-secondary">Submitted At</span>
                 <span>{new Date(success.submittedAt).toLocaleTimeString()}</span>
               </div>
             </div>
             <button
               onClick={handleClose}
-              className="mt-6 w-full py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+              className="btn-done mt-6 w-full py-2 rounded-lg transition-colors"
             >
               Done
             </button>
@@ -199,28 +195,28 @@ export function OrderConfirmationModal({
         {/* Error State */}
         {error && !success && (
           <div className="p-6">
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+            <div className="error-box rounded-lg p-4 mb-4">
               <div className="flex items-start gap-3">
-                <svg className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 error-icon flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <div>
-                  <h4 className="font-medium text-red-800">Order Failed</h4>
-                  <p className="text-sm text-red-600 mt-1">{error}</p>
+                  <h4 className="font-medium error-title">Order Failed</h4>
+                  <p className="text-sm error-message mt-1">{error}</p>
                 </div>
               </div>
             </div>
             <div className="flex gap-3">
               <button
                 onClick={handleClose}
-                className="flex-1 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+                className="btn-cancel flex-1 py-2 rounded-lg transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleConfirm}
                 disabled={isSubmitting}
-                className="flex-1 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="btn-retry flex-1 py-2 rounded-lg transition-colors"
               >
                 Try Again
               </button>
@@ -233,23 +229,23 @@ export function OrderConfirmationModal({
           <div className="p-6">
             {/* Order Details */}
             <div className="order-details space-y-3 mb-6">
-              <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                <span className="text-gray-600">Action</span>
-                <span className={`font-semibold ${isBuy ? 'text-green-600' : 'text-red-600'}`}>
+              <div className="detail-row flex justify-between items-center py-2">
+                <span className="text-secondary">Action</span>
+                <span className={`font-semibold ${isBuy ? 'text-positive' : 'text-negative'}`}>
                   {isBuy ? 'BUY' : 'SELL'}
                 </span>
               </div>
 
-              <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                <span className="text-gray-600">Symbol</span>
-                <span className="font-semibold">{order.symbol}</span>
+              <div className="detail-row flex justify-between items-center py-2">
+                <span className="text-secondary">Symbol</span>
+                <span className="font-semibold text-primary">{order.symbol}</span>
               </div>
 
-              <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                <span className="text-gray-600">
+              <div className="detail-row flex justify-between items-center py-2">
+                <span className="text-secondary">
                   {order.notional ? 'Dollar Amount' : 'Quantity'}
                 </span>
-                <span className="font-semibold">
+                <span className="font-semibold text-primary">
                   {order.notional
                     ? `${currency}${order.notional.toLocaleString()}`
                     : `${order.qty} shares`}
@@ -257,45 +253,45 @@ export function OrderConfirmationModal({
               </div>
 
               {order.limitPrice && (
-                <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-gray-600">Limit Price</span>
-                  <span className="font-semibold">{currency}{order.limitPrice.toFixed(2)}</span>
+                <div className="detail-row flex justify-between items-center py-2">
+                  <span className="text-secondary">Limit Price</span>
+                  <span className="font-semibold text-primary">{currency}{order.limitPrice.toFixed(2)}</span>
                 </div>
               )}
 
               {order.stopPrice && (
-                <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-gray-600">Stop Price</span>
-                  <span className="font-semibold">{currency}{order.stopPrice.toFixed(2)}</span>
+                <div className="detail-row flex justify-between items-center py-2">
+                  <span className="text-secondary">Stop Price</span>
+                  <span className="font-semibold text-primary">{currency}{order.stopPrice.toFixed(2)}</span>
                 </div>
               )}
 
               {order.trailPercent && (
-                <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-gray-600">Trail Percent</span>
-                  <span className="font-semibold">{order.trailPercent}%</span>
+                <div className="detail-row flex justify-between items-center py-2">
+                  <span className="text-secondary">Trail Percent</span>
+                  <span className="font-semibold text-primary">{order.trailPercent}%</span>
                 </div>
               )}
 
               {order.trailPrice && (
-                <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-gray-600">Trail Price</span>
-                  <span className="font-semibold">{currency}{order.trailPrice.toFixed(2)}</span>
+                <div className="detail-row flex justify-between items-center py-2">
+                  <span className="text-secondary">Trail Price</span>
+                  <span className="font-semibold text-primary">{currency}{order.trailPrice.toFixed(2)}</span>
                 </div>
               )}
 
               {order.extendedHours && (
-                <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <span className="text-gray-600">Extended Hours</span>
-                  <span className="font-semibold text-blue-600">Enabled</span>
+                <div className="detail-row flex justify-between items-center py-2">
+                  <span className="text-secondary">Extended Hours</span>
+                  <span className="font-semibold text-accent">Enabled</span>
                 </div>
               )}
 
-              <div className="flex justify-between items-center py-3 bg-gray-50 rounded-lg px-3 mt-4">
-                <span className="text-gray-700 font-medium">
+              <div className="estimated-total flex justify-between items-center py-3 rounded-lg px-3 mt-4">
+                <span className="text-primary font-medium">
                   Estimated {isBuy ? 'Cost' : 'Proceeds'}
                 </span>
-                <span className="text-xl font-bold">
+                <span className="text-xl font-bold text-primary">
                   {currency}{estimatedTotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </span>
               </div>
@@ -303,8 +299,8 @@ export function OrderConfirmationModal({
 
             {/* Portfolio Impact Section */}
             {portfolioValue > 0 && (
-              <div className="portfolio-impact bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6" data-testid="portfolio-impact">
-                <h4 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
+              <div className="portfolio-impact rounded-lg p-4 mb-6" data-testid="portfolio-impact">
+                <h4 className="font-semibold impact-title mb-3 flex items-center gap-2">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                   </svg>
@@ -312,29 +308,29 @@ export function OrderConfirmationModal({
                 </h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-blue-700">Position Weight</span>
-                    <span className="text-blue-900">
+                    <span className="impact-label">Position Weight</span>
+                    <span className="impact-value">
                       {currentAllocation.toFixed(2)}%
                       <span className="mx-1">→</span>
-                      <span className={`font-semibold ${allocationChange > 0 ? 'text-green-600' : allocationChange < 0 ? 'text-red-600' : ''}`}>
+                      <span className={`font-semibold ${allocationChange > 0 ? 'text-positive' : allocationChange < 0 ? 'text-negative' : ''}`}>
                         {newAllocation.toFixed(2)}%
                       </span>
-                      <span className={`text-xs ml-1 ${allocationChange > 0 ? 'text-green-600' : allocationChange < 0 ? 'text-red-600' : 'text-gray-500'}`}>
+                      <span className={`text-xs ml-1 ${allocationChange > 0 ? 'text-positive' : allocationChange < 0 ? 'text-negative' : 'text-muted'}`}>
                         ({allocationChange > 0 ? '+' : ''}{allocationChange.toFixed(2)}%)
                       </span>
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-blue-700">Cash After Trade</span>
-                    <span className={`font-medium ${cashAfterTrade < 0 ? 'text-red-600' : 'text-blue-900'}`}>
+                    <span className="impact-label">Cash After Trade</span>
+                    <span className={`font-medium ${cashAfterTrade < 0 ? 'text-negative' : 'impact-value'}`}>
                       {currency}{Math.max(0, cashAfterTrade).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-blue-700">New Position Size</span>
-                    <span className="text-blue-900">
+                    <span className="impact-label">New Position Size</span>
+                    <span className="impact-value">
                       {newShares.toLocaleString()} shares
-                      <span className="text-xs text-gray-500 ml-1">
+                      <span className="text-xs text-muted ml-1">
                         ({currency}{newPositionValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })})
                       </span>
                     </span>
@@ -345,12 +341,12 @@ export function OrderConfirmationModal({
 
             {/* Warnings */}
             {warnings.length > 0 && (
-              <div className="warnings bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-6">
+              <div className="warnings-box rounded-lg p-3 mb-6">
                 <div className="flex items-start gap-2">
-                  <svg className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 warning-icon flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                   </svg>
-                  <ul className="text-sm text-yellow-800 space-y-1">
+                  <ul className="text-sm warning-text space-y-1">
                     {warnings.map((warning, index) => (
                       <li key={index}>{warning}</li>
                     ))}
@@ -364,7 +360,7 @@ export function OrderConfirmationModal({
               <button
                 onClick={handleClose}
                 disabled={isSubmitting}
-                className="flex-1 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors font-medium"
+                className="btn-cancel flex-1 py-3 rounded-lg font-medium transition-colors"
                 data-testid="cancel-order-button"
               >
                 Cancel
@@ -373,9 +369,7 @@ export function OrderConfirmationModal({
                 onClick={handleConfirm}
                 disabled={isSubmitting}
                 className={`flex-1 py-3 rounded-lg font-semibold text-white transition-colors ${
-                  isBuy
-                    ? 'bg-green-600 hover:bg-green-700'
-                    : 'bg-red-600 hover:bg-red-700'
+                  isBuy ? 'btn-confirm-buy' : 'btn-confirm-sell'
                 } ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                 data-testid="confirm-order-button"
               >
@@ -393,12 +387,199 @@ export function OrderConfirmationModal({
               </button>
             </div>
 
-            <p className="text-xs text-gray-500 text-center mt-4">
+            <p className="text-xs text-muted text-center mt-4">
               By confirming, you agree to execute this trade at Alpaca Markets.
             </p>
           </div>
         )}
       </div>
+
+      <style>{`
+        .modal-overlay {
+          background: rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-content {
+          background: var(--bg-secondary);
+          border: 1px solid var(--border);
+          box-shadow: var(--shadow-xl);
+        }
+
+        .modal-header {
+          color: var(--text-primary);
+        }
+
+        .modal-header.buy {
+          background: var(--positive-bg);
+          border-bottom: 3px solid var(--positive);
+        }
+
+        .modal-header.sell {
+          background: var(--negative-bg);
+          border-bottom: 3px solid var(--negative);
+        }
+
+        .modal-header.buy h2 {
+          color: var(--positive);
+        }
+
+        .modal-header.sell h2 {
+          color: var(--negative);
+        }
+
+        .close-btn {
+          color: var(--text-secondary);
+          background: none;
+          border: none;
+          cursor: pointer;
+        }
+
+        .close-btn:hover {
+          color: var(--text-primary);
+        }
+
+        /* Text colors */
+        .text-primary {
+          color: var(--text-primary);
+        }
+
+        .text-secondary {
+          color: var(--text-secondary);
+        }
+
+        .text-muted {
+          color: var(--text-muted);
+        }
+
+        .text-positive {
+          color: var(--positive);
+        }
+
+        .text-negative {
+          color: var(--negative);
+        }
+
+        .text-accent {
+          color: var(--accent);
+        }
+
+        /* Success state */
+        .success-icon {
+          background: var(--positive-bg);
+          color: var(--positive);
+        }
+
+        .success-details {
+          background: var(--bg-tertiary);
+          color: var(--text-primary);
+        }
+
+        .btn-done {
+          background: var(--bg-primary);
+          color: var(--text-primary);
+          border: 1px solid var(--border);
+        }
+
+        .btn-done:hover {
+          background: var(--bg-tertiary);
+        }
+
+        /* Error state */
+        .error-box {
+          background: var(--negative-bg);
+          border: 1px solid var(--negative);
+        }
+
+        .error-icon {
+          color: var(--negative);
+        }
+
+        .error-title {
+          color: var(--negative);
+        }
+
+        .error-message {
+          color: var(--negative);
+          opacity: 0.9;
+        }
+
+        /* Order details */
+        .detail-row {
+          border-bottom: 1px solid var(--border);
+        }
+
+        .estimated-total {
+          background: var(--bg-tertiary);
+        }
+
+        /* Portfolio impact */
+        .portfolio-impact {
+          background: rgba(var(--accent-rgb), 0.1);
+          border: 1px solid rgba(var(--accent-rgb), 0.3);
+        }
+
+        .impact-title {
+          color: var(--accent);
+        }
+
+        .impact-label {
+          color: var(--text-secondary);
+        }
+
+        .impact-value {
+          color: var(--text-primary);
+        }
+
+        /* Warnings */
+        .warnings-box {
+          background: var(--warning-bg);
+          border: 1px solid var(--warning);
+        }
+
+        .warning-icon {
+          color: var(--warning);
+        }
+
+        .warning-text {
+          color: var(--warning);
+        }
+
+        /* Buttons */
+        .btn-cancel {
+          background: var(--bg-tertiary);
+          color: var(--text-secondary);
+          border: 1px solid var(--border);
+        }
+
+        .btn-cancel:hover:not(:disabled) {
+          background: var(--bg-hover);
+        }
+
+        .btn-retry {
+          background: var(--accent);
+          color: white;
+        }
+
+        .btn-retry:hover:not(:disabled) {
+          background: var(--accent-hover);
+        }
+
+        .btn-confirm-buy {
+          background: var(--positive);
+        }
+
+        .btn-confirm-buy:hover:not(:disabled) {
+          filter: brightness(0.9);
+        }
+
+        .btn-confirm-sell {
+          background: var(--negative);
+        }
+
+        .btn-confirm-sell:hover:not(:disabled) {
+          filter: brightness(0.9);
+        }
+      `}</style>
     </div>
   );
 }

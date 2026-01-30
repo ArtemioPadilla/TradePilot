@@ -27,6 +27,13 @@ and live trading modules into a unified framework for algorithmic trading.
    api/modules
 
 .. toctree::
+   :maxdepth: 2
+   :caption: Architecture
+
+   architecture/BACKEND_ARCHITECTURE
+   architecture/INTEGRATION
+
+.. toctree::
    :maxdepth: 1
    :caption: Additional Information
 

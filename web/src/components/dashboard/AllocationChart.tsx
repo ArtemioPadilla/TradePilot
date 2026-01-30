@@ -1,25 +1,17 @@
-import { useStore } from '@nanostores/react';
-import { $accounts } from '../../stores/portfolio';
+import { useAlpacaData } from '../../hooks/useAlpacaData';
 import { formatPercent } from '../../lib/utils';
 
 export default function AllocationChart() {
-  const accounts = useStore($accounts);
+  const { positions, isLoading, isConnected } = useAlpacaData();
 
-  // Calculate allocation by symbol
-  const allHoldings = accounts.flatMap((account) =>
-    account.holdings.map((h) => ({
-      symbol: h.symbol,
-      value: h.quantity * h.currentPrice,
-    }))
-  );
+  // Calculate allocation from Alpaca positions
+  const totalValue = positions.reduce((sum, pos) => sum + pos.marketValue, 0);
 
-  const totalValue = allHoldings.reduce((sum, h) => sum + h.value, 0);
-
-  const allocations = allHoldings
-    .map((h) => ({
-      symbol: h.symbol,
-      value: h.value,
-      percent: (h.value / totalValue) * 100,
+  const allocations = positions
+    .map((pos) => ({
+      symbol: pos.symbol,
+      value: pos.marketValue,
+      percent: totalValue > 0 ? (pos.marketValue / totalValue) * 100 : 0,
     }))
     .sort((a, b) => b.percent - a.percent);
 
@@ -83,6 +75,123 @@ export default function AllocationChart() {
       </svg>
     `;
   };
+
+  if (!isConnected && !isLoading) {
+    return (
+      <div className="allocation-chart">
+        <div className="empty-state">
+          <p>Connect to Alpaca to see your allocation</p>
+          <a href="/dashboard/trading" className="connect-link">Connect Account</a>
+        </div>
+        <style>{`
+          .allocation-chart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+          }
+          .empty-state {
+            text-align: center;
+            color: var(--text-muted);
+          }
+          .connect-link {
+            display: inline-block;
+            margin-top: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+          }
+          .connect-link:hover {
+            text-decoration: underline;
+          }
+        `}</style>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="allocation-chart">
+        <div className="chart-wrapper">
+          <div className="skeleton-chart" />
+        </div>
+        <div className="legend">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="legend-item">
+              <span className="legend-color skeleton" />
+              <span className="legend-symbol skeleton" style={{ width: '60px', height: '16px' }} />
+              <span className="legend-percent skeleton" style={{ width: '40px', height: '16px' }} />
+            </div>
+          ))}
+        </div>
+        <style>{`
+          .allocation-chart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: calc(1.5rem * var(--spacing-density));
+            padding: calc(1rem * var(--spacing-density)) 0;
+          }
+          .skeleton-chart {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            animation: pulse 1.5s infinite;
+          }
+          .legend {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: calc(0.5rem * var(--spacing-density));
+          }
+          .legend-item {
+            display: flex;
+            align-items: center;
+            gap: calc(0.5rem * var(--spacing-density));
+          }
+          .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+          }
+          .skeleton {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            animation: pulse 1.5s infinite;
+          }
+          @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+          }
+        `}</style>
+      </div>
+    );
+  }
+
+  if (allocations.length === 0) {
+    return (
+      <div className="allocation-chart">
+        <div className="empty-state">
+          <p>No positions yet. Start trading to see your allocation.</p>
+        </div>
+        <style>{`
+          .allocation-chart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+          }
+          .empty-state {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+          }
+        `}</style>
+      </div>
+    );
+  }
 
   return (
     <div className="allocation-chart">
