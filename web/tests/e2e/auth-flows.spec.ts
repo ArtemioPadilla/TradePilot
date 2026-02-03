@@ -208,12 +208,28 @@ test.describe('Session Management', () => {
     await page.goto('/auth/login');
     await page.waitForTimeout(500);
 
+    // Hide Astro dev toolbar if present (it can intercept clicks)
+    await page.evaluate(() => {
+      const toolbar = document.querySelector('astro-dev-toolbar');
+      if (toolbar) {
+        (toolbar as HTMLElement).style.display = 'none';
+      }
+    });
+
     // Navigate to register
-    await page.getByRole('link', { name: /sign up/i }).click();
+    await page.getByRole('link', { name: /sign up/i }).click({ force: true });
     await expect(page).toHaveURL('/auth/register');
 
+    // Hide toolbar on new page
+    await page.evaluate(() => {
+      const toolbar = document.querySelector('astro-dev-toolbar');
+      if (toolbar) {
+        (toolbar as HTMLElement).style.display = 'none';
+      }
+    });
+
     // Navigate back to login
-    await page.getByRole('link', { name: /log in/i }).click();
+    await page.getByRole('link', { name: /log in/i }).click({ force: true });
     await expect(page).toHaveURL('/auth/login');
 
     // Form should still be functional

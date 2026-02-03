@@ -20,8 +20,12 @@ export type {
   AllocationItem,
   NetWorthSnapshot,
   CSVFormat,
+  SyncStatus,
   // Note: Currency also defined in assets.ts
 } from './portfolio';
+
+// Integration types
+export * from './integrations';
 
 // Backtest types (renamed to avoid conflicts with strategies)
 export type {

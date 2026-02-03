@@ -1,12 +1,15 @@
 /**
  * RecentActivity Component
  *
- * Displays recent trading activity from Alpaca orders.
+ * Displays recent trading activity from connected sources.
  */
 
-import { useAlpacaData } from '../../hooks/useAlpacaData';
+import { useState, useEffect } from 'react';
+import { usePortfolio } from '../../hooks/usePortfolio';
+import { getIntegrationService } from '../../lib/services/integrations';
+import { adapterRegistry } from '../../lib/services/adapters';
 import { formatCurrency, formatRelativeTime } from '../../lib/utils';
-import type { AlpacaOrder } from '../../types/alpaca';
+import type { ExternalOrder } from '../../lib/services/adapters/types';
 
 interface Activity {
   id: string;
@@ -16,6 +19,7 @@ interface Activity {
   quantity?: number;
   timestamp: Date;
   status?: string;
+  source?: string;
 }
 
 const getActivityIcon = (type: Activity['type']) => {
@@ -62,34 +66,95 @@ const getActivityLabel = (activity: Activity) => {
 };
 
 /**
- * Convert Alpaca orders to activities
+ * Convert orders to activities
  */
-function ordersToActivities(orders: AlpacaOrder[]): Activity[] {
+function ordersToActivities(orders: ExternalOrder[]): Activity[] {
   return orders
     .filter(order => order.status === 'filled' || order.status === 'partially_filled')
     .slice(0, 5)
     .map(order => ({
-      id: order.id,
+      id: order.externalId,
       type: order.side as 'buy' | 'sell',
       symbol: order.symbol,
-      amount: (order.filledAvgPrice || 0) * (order.filledQty || order.qty || 0),
-      quantity: order.filledQty || order.qty,
-      timestamp: new Date(order.filledAt || order.submittedAt),
+      amount: (order.avgFillPrice || 0) * (order.filledQuantity || order.quantity || 0),
+      quantity: order.filledQuantity || order.quantity,
+      timestamp: order.filledAt || order.submittedAt,
       status: order.status,
     }));
 }
 
 export default function RecentActivity() {
-  const { orders, isLoading, isConnected } = useAlpacaData();
+  const { isLoading, hasIntegrations, userId, integrations } = usePortfolio();
+  const [activities, setActivities] = useState<Activity[]>([]);
+  const [ordersLoading, setOrdersLoading] = useState(false);
 
-  // Convert orders to activities
-  const activities = ordersToActivities(orders);
+  // Load orders from connected adapters
+  useEffect(() => {
+    if (!userId || !hasIntegrations) {
+      setActivities([]);
+      return;
+    }
 
-  if (!isConnected && !isLoading) {
+    let isMounted = true;
+    const abortController = new AbortController();
+
+    const loadOrders = async () => {
+      setOrdersLoading(true);
+      const integrationService = getIntegrationService();
+
+      try {
+        // Get active integrations
+        const activeIntegrations = integrations.filter(i => i.status === 'active');
+
+        // Fetch orders from all integrations in parallel
+        const orderPromises = activeIntegrations.map(async (integration) => {
+          try {
+            const adapter = await integrationService.getConnectedAdapter(userId, integration.source);
+            if (!adapter?.getOrders) return [];
+
+            const orders = await adapter.getOrders(undefined, { status: 'all', limit: 10 });
+            return ordersToActivities(orders).map(a => ({
+              ...a,
+              source: integration.source,
+            }));
+          } catch (err) {
+            console.error(`Failed to load orders from ${integration.source}:`, err);
+            return [];
+          }
+        });
+
+        const results = await Promise.all(orderPromises);
+
+        // Only update state if component is still mounted
+        if (!isMounted) return;
+
+        // Flatten, sort by timestamp descending, and take top 5
+        const allActivities = results.flat();
+        allActivities.sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+        setActivities(allActivities.slice(0, 5));
+      } finally {
+        if (isMounted) {
+          setOrdersLoading(false);
+        }
+      }
+    };
+
+    loadOrders();
+
+    // Cleanup function to prevent state updates after unmount
+    return () => {
+      isMounted = false;
+      abortController.abort();
+    };
+  }, [userId, hasIntegrations, integrations]);
+
+  const loading = isLoading || ordersLoading;
+
+  if (!hasIntegrations && !loading) {
     return (
       <div className="recent-activity">
         <div className="empty-state">
-          <p>Connect to Alpaca to see your activity</p>
+          <p>Connect an account to see your activity</p>
         </div>
         <style>{`
           .recent-activity {
@@ -107,7 +172,7 @@ export default function RecentActivity() {
     );
   }
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="recent-activity">
         <div className="activity-list">

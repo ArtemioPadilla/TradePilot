@@ -1,10 +1,10 @@
 /**
  * HoldingsTable Component
  *
- * Displays user's current holdings from Alpaca positions.
+ * Displays user's current holdings from all connected sources.
  */
 
-import { useAlpacaData } from '../../hooks/useAlpacaData';
+import { usePortfolio } from '../../hooks/usePortfolio';
 import { formatCurrency, formatPercent } from '../../lib/utils';
 
 // Map common stock symbols to company names
@@ -35,31 +35,32 @@ const SYMBOL_NAMES: Record<string, string> = {
 };
 
 export default function HoldingsTable() {
-  const { positions, isLoading, isConnected } = useAlpacaData();
+  const { holdings: portfolioHoldings, isLoading, hasIntegrations } = usePortfolio();
 
-  // Transform positions to table data
-  const holdings = positions.map(pos => ({
-    id: pos.assetId,
-    symbol: pos.symbol,
-    name: SYMBOL_NAMES[pos.symbol] || pos.symbol,
-    quantity: pos.qty,
-    currentPrice: pos.currentPrice,
-    marketValue: pos.marketValue,
-    costBasis: pos.costBasis,
-    avgCost: pos.avgEntryPrice,
-    unrealizedPL: pos.unrealizedPl,
-    unrealizedPLPercent: pos.unrealizedPlPercent,
+  // Transform holdings to table data
+  const holdings = portfolioHoldings.map(holding => ({
+    id: holding.id,
+    symbol: holding.symbol,
+    name: holding.name || SYMBOL_NAMES[holding.symbol] || holding.symbol,
+    quantity: holding.quantity,
+    currentPrice: holding.currentPrice || 0,
+    marketValue: holding.marketValue || 0,
+    costBasis: holding.totalCostBasis,
+    avgCost: holding.costBasisPerShare,
+    unrealizedPL: holding.unrealizedPL || 0,
+    unrealizedPLPercent: holding.unrealizedPLPercent || 0,
+    source: holding.dataSource,
   }));
 
   // Sort by market value descending
   const sortedHoldings = holdings.sort((a, b) => b.marketValue - a.marketValue).slice(0, 10);
 
-  if (!isConnected && !isLoading) {
+  if (!hasIntegrations && !isLoading) {
     return (
       <div className="holdings-table-container">
         <div className="empty-state">
-          <p>Connect to Alpaca to see your holdings</p>
-          <a href="/dashboard/trading" className="connect-link">Connect Account</a>
+          <p>Connect an account to see your holdings</p>
+          <a href="/dashboard/settings?tab=connections" className="connect-link">Connect Account</a>
         </div>
         <style>{`
           .holdings-table-container {

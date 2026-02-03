@@ -1,51 +1,30 @@
 /**
  * PortfolioSummary Component
  *
- * Displays key portfolio metrics from Alpaca account data.
+ * Displays key portfolio metrics from all connected sources.
  */
 
-import { useAlpacaData } from '../../hooks/useAlpacaData';
+import { usePortfolio } from '../../hooks/usePortfolio';
 import { formatCurrency, formatPercent } from '../../lib/utils';
 
 export default function PortfolioSummary() {
-  const { account, positions, isLoading, isConnected } = useAlpacaData();
-
-  // Calculate totals from positions
-  const totalMarketValue = positions.reduce(
-    (sum, pos) => sum + pos.marketValue,
-    0
-  );
-  const totalCostBasis = positions.reduce(
-    (sum, pos) => sum + Math.abs(pos.costBasis),
-    0
-  );
-  const totalUnrealizedPL = positions.reduce(
-    (sum, pos) => sum + pos.unrealizedPl,
-    0
-  );
-  const totalUnrealizedPLPercent = totalCostBasis > 0
-    ? (totalUnrealizedPL / totalCostBasis) * 100
-    : 0;
-
-  // Today's change from positions (calculated from price difference)
-  const todayChange = positions.reduce(
-    (sum, pos) => sum + (pos.currentPrice - pos.lastdayPrice) * pos.qty,
-    0
-  );
-  const todayChangePercent = positions.reduce(
-    (sum, pos) => sum + pos.changeToday,
-    0
-  ) / (positions.length || 1);
-
-  // Total portfolio value = equity from account
-  const portfolioValue = account?.portfolioValue || totalMarketValue;
+  const {
+    totalValue,
+    totalCostBasis,
+    totalGainLoss,
+    totalGainLossPercent,
+    dailyChange,
+    dailyChangePercent,
+    isLoading,
+    hasIntegrations,
+  } = usePortfolio();
 
   const metrics = [
     {
       label: 'Total Portfolio Value',
-      value: isLoading ? '--' : formatCurrency(portfolioValue),
-      change: isLoading ? null : formatPercent(todayChangePercent),
-      positive: todayChangePercent >= 0,
+      value: isLoading ? '--' : formatCurrency(totalValue),
+      change: isLoading ? null : formatPercent(dailyChangePercent),
+      positive: dailyChangePercent >= 0,
     },
     {
       label: 'Total Cost Basis',
@@ -55,24 +34,24 @@ export default function PortfolioSummary() {
     },
     {
       label: 'Total P&L',
-      value: isLoading ? '--' : formatCurrency(totalUnrealizedPL),
-      change: isLoading ? null : formatPercent(totalUnrealizedPLPercent),
-      positive: totalUnrealizedPL >= 0,
+      value: isLoading ? '--' : formatCurrency(totalGainLoss),
+      change: isLoading ? null : formatPercent(totalGainLossPercent),
+      positive: totalGainLoss >= 0,
     },
     {
       label: "Today's Change",
-      value: isLoading ? '--' : formatCurrency(todayChange),
-      change: isLoading ? null : formatPercent(todayChangePercent),
-      positive: todayChange >= 0,
+      value: isLoading ? '--' : formatCurrency(dailyChange),
+      change: isLoading ? null : formatPercent(dailyChangePercent),
+      positive: dailyChange >= 0,
     },
   ];
 
-  if (!isConnected && !isLoading) {
+  if (!hasIntegrations && !isLoading) {
     return (
       <div className="portfolio-summary">
         <div className="not-connected">
-          <p>Connect to Alpaca to see your portfolio data</p>
-          <a href="/dashboard/trading" className="connect-link">
+          <p>Connect an account to see your portfolio data</p>
+          <a href="/dashboard/settings?tab=connections" className="connect-link">
             Connect Account
           </a>
         </div>

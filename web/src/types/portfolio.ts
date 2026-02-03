@@ -6,6 +6,7 @@
  */
 
 import type { Timestamp } from 'firebase/firestore';
+import type { DataSource } from './assets';
 
 // ============================================================================
 // Account Types
@@ -32,6 +33,11 @@ export type Currency = 'USD' | 'EUR' | 'GBP' | 'JPY' | 'CAD' | 'AUD' | 'CHF' | '
  * Account status
  */
 export type AccountStatus = 'active' | 'inactive' | 'closed';
+
+/**
+ * Sync status for accounts connected to external sources
+ */
+export type SyncStatus = 'synced' | 'syncing' | 'error' | 'stale';
 
 /**
  * Represents a financial account (brokerage, retirement, crypto, etc.)
@@ -73,6 +79,29 @@ export interface Account {
   /** Display order for sorting */
   sortOrder?: number;
 
+  // === Integration fields (for connected accounts) ===
+
+  /**
+   * Data source this account is synced from
+   * 'manual' for manually created accounts
+   */
+  source: DataSource;
+
+  /** Account ID at the source (for linked accounts) */
+  externalId?: string;
+
+  /** When data was last synced from the source */
+  lastSyncedAt?: Timestamp;
+
+  /** Current sync status */
+  syncStatus?: SyncStatus;
+
+  /** Sync error message (if syncStatus is 'error') */
+  syncError?: string;
+
+  /** Whether this account is paper/sandbox trading */
+  isPaper?: boolean;
+
   /** When the account was created */
   createdAt: Timestamp;
 
@@ -92,6 +121,9 @@ export interface AccountFormData {
   cashBalance?: number;
   notes?: string;
   isDefault?: boolean;
+  source?: DataSource;
+  externalId?: string;
+  isPaper?: boolean;
 }
 
 // ============================================================================
@@ -174,6 +206,20 @@ export interface Holding {
   /** When prices were last updated */
   priceUpdatedAt?: Timestamp;
 
+  // === Integration fields (for synced holdings) ===
+
+  /**
+   * Data source for price data
+   * Used to select the correct price provider
+   */
+  dataSource?: DataSource;
+
+  /** Position ID at the source (for synced positions) */
+  externalId?: string;
+
+  /** Symbol at the source (may differ from normalized symbol) */
+  sourceSymbol?: string;
+
   /** When the holding was created */
   createdAt: Timestamp;
 
@@ -194,6 +240,9 @@ export interface HoldingFormData {
   currency?: Currency;
   openDate?: Date;
   notes?: string;
+  dataSource?: DataSource;
+  externalId?: string;
+  sourceSymbol?: string;
 }
 
 // ============================================================================

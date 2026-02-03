@@ -15,7 +15,15 @@ test.describe('Landing Page', () => {
   test('should navigate to login page', async ({ page }) => {
     await page.goto('/');
 
-    await page.getByRole('link', { name: /log in/i }).click();
+    // Hide Astro dev toolbar if present (it can intercept clicks)
+    await page.evaluate(() => {
+      const toolbar = document.querySelector('astro-dev-toolbar');
+      if (toolbar) {
+        (toolbar as HTMLElement).style.display = 'none';
+      }
+    });
+
+    await page.getByRole('link', { name: /log in/i }).click({ force: true });
 
     await expect(page).toHaveURL('/auth/login');
     await expect(page.getByRole('heading', { name: /welcome back/i })).toBeVisible();

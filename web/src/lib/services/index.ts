@@ -45,6 +45,11 @@ export * from './market-data/cache';
 // Data Providers
 export * from './data-providers';
 
+// Source Adapters (Universal Asset Management)
+export * from './adapters';
+export * from './integrations';
+export * from './account-sync';
+
 // Watchlists
 export * from './watchlists';
 

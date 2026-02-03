@@ -1,16 +1,16 @@
 /**
  * PerformanceChart Component
  *
- * Displays portfolio performance over time using Alpaca portfolio history data.
+ * Displays portfolio performance over time using portfolio history data.
  */
 
 import { useEffect, useRef } from 'react';
-import { useAlpacaData } from '../../hooks/useAlpacaData';
+import { usePortfolio } from '../../hooks/usePortfolio';
 import { formatCurrency } from '../../lib/utils';
 
 export default function PerformanceChart() {
   const chartRef = useRef<HTMLDivElement>(null);
-  const { portfolioHistory, isLoading, isConnected } = useAlpacaData();
+  const { portfolioHistory, isLoading, hasIntegrations } = usePortfolio();
 
   useEffect(() => {
     if (!chartRef.current) return;
@@ -45,11 +45,11 @@ export default function PerformanceChart() {
     }
 
     // Show not connected state
-    if (!isConnected) {
+    if (!hasIntegrations) {
       chartRef.current.innerHTML = `
         <div class="empty-state">
-          <p>Connect to Alpaca to see your performance</p>
-          <a href="/dashboard/trading" class="connect-link">Connect Account</a>
+          <p>Connect an account to see your performance</p>
+          <a href="/dashboard/settings?tab=connections" class="connect-link">Connect Account</a>
         </div>
         <style>
           .empty-state {
@@ -164,7 +164,7 @@ export default function PerformanceChart() {
         </text>
       </svg>
     `;
-  }, [portfolioHistory, isLoading, isConnected]);
+  }, [portfolioHistory, isLoading, hasIntegrations]);
 
   return (
     <div className="performance-chart">

@@ -1,17 +1,18 @@
-import { useAlpacaData } from '../../hooks/useAlpacaData';
+import { usePortfolio } from '../../hooks/usePortfolio';
 import { formatPercent } from '../../lib/utils';
 
 export default function AllocationChart() {
-  const { positions, isLoading, isConnected } = useAlpacaData();
+  const { holdings, isLoading, hasIntegrations } = usePortfolio();
 
-  // Calculate allocation from Alpaca positions
-  const totalValue = positions.reduce((sum, pos) => sum + pos.marketValue, 0);
+  // Calculate allocation from all holdings
+  const totalValue = holdings.reduce((sum, h) => sum + (h.marketValue || 0), 0);
 
-  const allocations = positions
-    .map((pos) => ({
-      symbol: pos.symbol,
-      value: pos.marketValue,
-      percent: totalValue > 0 ? (pos.marketValue / totalValue) * 100 : 0,
+  const allocations = holdings
+    .map((holding) => ({
+      symbol: holding.symbol,
+      value: holding.marketValue || 0,
+      percent: totalValue > 0 ? ((holding.marketValue || 0) / totalValue) * 100 : 0,
+      source: holding.dataSource,
     }))
     .sort((a, b) => b.percent - a.percent);
 
@@ -76,12 +77,12 @@ export default function AllocationChart() {
     `;
   };
 
-  if (!isConnected && !isLoading) {
+  if (!hasIntegrations && !isLoading) {
     return (
       <div className="allocation-chart">
         <div className="empty-state">
-          <p>Connect to Alpaca to see your allocation</p>
-          <a href="/dashboard/trading" className="connect-link">Connect Account</a>
+          <p>Connect an account to see your allocation</p>
+          <a href="/dashboard/settings?tab=connections" className="connect-link">Connect Account</a>
         </div>
         <style>{`
           .allocation-chart {
