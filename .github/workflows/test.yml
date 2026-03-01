@@ -43,7 +43,7 @@ jobs:
 
       - name: Upload Python coverage report
         if: matrix.python-version == '3.11'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: python-coverage-report
           path: htmlcov/
@@ -80,7 +80,7 @@ jobs:
           name: web-coverage
 
       - name: Upload web coverage report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: web-coverage-report
           path: web/coverage/
@@ -123,7 +123,7 @@ jobs:
           CI: true
 
       - name: Upload Playwright report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: playwright-report
