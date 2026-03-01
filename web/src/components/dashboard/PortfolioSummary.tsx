@@ -4,20 +4,29 @@
  * Displays key portfolio metrics from all connected sources.
  */
 
-import { usePortfolio } from '../../hooks/usePortfolio';
 import { formatCurrency, formatPercent } from '../../lib/utils';
 
-export default function PortfolioSummary() {
-  const {
-    totalValue,
-    totalCostBasis,
-    totalGainLoss,
-    totalGainLossPercent,
-    dailyChange,
-    dailyChangePercent,
-    isLoading,
-    hasIntegrations,
-  } = usePortfolio();
+export interface PortfolioSummaryProps {
+  totalValue: number;
+  totalCostBasis: number;
+  totalGainLoss: number;
+  totalGainLossPercent: number;
+  dailyChange: number;
+  dailyChangePercent: number;
+  isLoading: boolean;
+  hasIntegrations: boolean;
+}
+
+export default function PortfolioSummary({
+  totalValue,
+  totalCostBasis,
+  totalGainLoss,
+  totalGainLossPercent,
+  dailyChange,
+  dailyChangePercent,
+  isLoading,
+  hasIntegrations,
+}: PortfolioSummaryProps) {
 
   const metrics = [
     {

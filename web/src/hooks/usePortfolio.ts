@@ -135,6 +135,14 @@ export function usePortfolio(options: UsePortfolioOptions = {}): PortfolioState 
   const [holdings, setHoldings] = useState<Holding[]>([]);
   const [integrations, setIntegrations] = useState<SourceIntegration[]>([]);
   const [portfolioHistory, setPortfolioHistory] = useState<PortfolioHistoryPoint[]>([]);
+
+  // Ref to access current integrations without causing dependency loops
+  const integrationsRef = useRef<SourceIntegration[]>([]);
+  // Keep ref in sync with state
+  useEffect(() => {
+    integrationsRef.current = integrations;
+  }, [integrations]);
+
   const [errors, setErrors] = useState<Map<DataSource, Error>>(new Map());
 
   // ─────────────────────────────────────────────────────────────────────────
@@ -215,8 +223,8 @@ export function usePortfolio(options: UsePortfolioOptions = {}): PortfolioState 
     if (!includeHistory) return;
 
     try {
-      // Get all active integrations
-      const activeIntegrations = integrations.filter(i => i.status === 'active');
+      // Get all active integrations (use ref to avoid dependency loop)
+      const activeIntegrations = integrationsRef.current.filter(i => i.status === 'active');
 
       // Prioritize Alpaca, then try others
       const prioritizedSources: DataSource[] = ['alpaca'];
@@ -251,7 +259,7 @@ export function usePortfolio(options: UsePortfolioOptions = {}): PortfolioState 
       console.error('Failed to load portfolio history:', err);
       setPortfolioHistory([]);
     }
-  }, [integrationService, includeHistory, historyPeriod, integrations]);
+  }, [integrationService, includeHistory, historyPeriod]);
 
   /**
    * Sync a specific source
@@ -392,6 +400,11 @@ export function usePortfolio(options: UsePortfolioOptions = {}): PortfolioState 
       setAccounts(accountData);
     }, (err) => {
       console.error('Accounts subscription error:', err);
+      console.error('Accounts subscription context:', { userId, path: `users/${userId}/accounts` });
+      // On permission error, clear accounts and stop retrying
+      if (err.code === 'permission-denied') {
+        setAccounts([]);
+      }
     });
 
     return () => unsubscribe();
@@ -427,6 +440,11 @@ export function usePortfolio(options: UsePortfolioOptions = {}): PortfolioState 
       setHoldings(holdingData);
     }, (err) => {
       console.error('Holdings subscription error:', err);
+      console.error('Holdings subscription context:', { userId, path: `users/${userId}/holdings` });
+      // On permission error, clear holdings and stop retrying
+      if (err.code === 'permission-denied') {
+        setHoldings([]);
+      }
     });
 
     return () => unsubscribe();

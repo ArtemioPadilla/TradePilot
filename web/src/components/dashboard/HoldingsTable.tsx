@@ -4,8 +4,8 @@
  * Displays user's current holdings from all connected sources.
  */
 
-import { usePortfolio } from '../../hooks/usePortfolio';
 import { formatCurrency, formatPercent } from '../../lib/utils';
+import type { Holding } from '../../types/portfolio';
 
 // Map common stock symbols to company names
 const SYMBOL_NAMES: Record<string, string> = {
@@ -34,8 +34,17 @@ const SYMBOL_NAMES: Record<string, string> = {
   BND: 'Vanguard Total Bond',
 };
 
-export default function HoldingsTable() {
-  const { holdings: portfolioHoldings, isLoading, hasIntegrations } = usePortfolio();
+export interface HoldingsTableProps {
+  holdings: Holding[];
+  isLoading: boolean;
+  hasIntegrations: boolean;
+}
+
+export default function HoldingsTable({
+  holdings: portfolioHoldings,
+  isLoading,
+  hasIntegrations,
+}: HoldingsTableProps) {
 
   // Transform holdings to table data
   const holdings = portfolioHoldings.map(holding => ({

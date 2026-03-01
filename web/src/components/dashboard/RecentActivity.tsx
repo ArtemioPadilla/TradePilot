@@ -5,11 +5,10 @@
  */
 
 import { useState, useEffect } from 'react';
-import { usePortfolio } from '../../hooks/usePortfolio';
 import { getIntegrationService } from '../../lib/services/integrations';
-import { adapterRegistry } from '../../lib/services/adapters';
 import { formatCurrency, formatRelativeTime } from '../../lib/utils';
 import type { ExternalOrder } from '../../lib/services/adapters/types';
+import type { SourceIntegration } from '../../types/integrations';
 
 interface Activity {
   id: string;
@@ -83,10 +82,28 @@ function ordersToActivities(orders: ExternalOrder[]): Activity[] {
     }));
 }
 
-export default function RecentActivity() {
-  const { isLoading, hasIntegrations, userId, integrations } = usePortfolio();
+export interface RecentActivityProps {
+  integrations: SourceIntegration[];
+  userId: string | null;
+  isLoading: boolean;
+  hasIntegrations: boolean;
+}
+
+export default function RecentActivity({
+  integrations,
+  userId,
+  isLoading,
+  hasIntegrations,
+}: RecentActivityProps) {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [ordersLoading, setOrdersLoading] = useState(false);
+
+  // Create stable key for active integrations to avoid infinite loop
+  const activeIntegrationKey = integrations
+    .filter(i => i.status === 'active')
+    .map(i => i.source)
+    .sort()
+    .join(',');
 
   // Load orders from connected adapters
   useEffect(() => {
@@ -146,7 +163,9 @@ export default function RecentActivity() {
       isMounted = false;
       abortController.abort();
     };
-  }, [userId, hasIntegrations, integrations]);
+    // Use activeIntegrationKey instead of integrations to avoid infinite loop
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId, hasIntegrations, activeIntegrationKey]);
 
   const loading = isLoading || ordersLoading;
 

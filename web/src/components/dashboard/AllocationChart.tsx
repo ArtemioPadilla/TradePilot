@@ -1,8 +1,17 @@
-import { usePortfolio } from '../../hooks/usePortfolio';
 import { formatPercent } from '../../lib/utils';
+import type { Holding } from '../../types/portfolio';
 
-export default function AllocationChart() {
-  const { holdings, isLoading, hasIntegrations } = usePortfolio();
+export interface AllocationChartProps {
+  holdings: Holding[];
+  isLoading: boolean;
+  hasIntegrations: boolean;
+}
+
+export default function AllocationChart({
+  holdings,
+  isLoading,
+  hasIntegrations,
+}: AllocationChartProps) {
 
   // Calculate allocation from all holdings
   const totalValue = holdings.reduce((sum, h) => sum + (h.marketValue || 0), 0);

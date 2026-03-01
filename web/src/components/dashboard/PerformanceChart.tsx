@@ -5,12 +5,21 @@
  */
 
 import { useEffect, useRef } from 'react';
-import { usePortfolio } from '../../hooks/usePortfolio';
 import { formatCurrency } from '../../lib/utils';
+import type { PortfolioHistoryPoint } from '../../lib/services/adapters/types';
 
-export default function PerformanceChart() {
+export interface PerformanceChartProps {
+  portfolioHistory: PortfolioHistoryPoint[];
+  isLoading: boolean;
+  hasIntegrations: boolean;
+}
+
+export default function PerformanceChart({
+  portfolioHistory,
+  isLoading,
+  hasIntegrations,
+}: PerformanceChartProps) {
   const chartRef = useRef<HTMLDivElement>(null);
-  const { portfolioHistory, isLoading, hasIntegrations } = usePortfolio();
 
   useEffect(() => {
     if (!chartRef.current) return;
