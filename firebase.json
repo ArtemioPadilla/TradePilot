@@ -26,6 +26,11 @@
     },
     "singleProjectMode": true
   },
+  "functions": {
+    "source": "functions",
+    "codebase": "default",
+    "predeploy": ["npm --prefix functions run build"]
+  },
   "hosting": {
     "public": "web/dist",
     "ignore": [
