@@ -20,6 +20,12 @@ Focused checklists for each development phase.
 | [11-PHASE-10-DOCS.md](11-PHASE-10-DOCS.md) | API docs, guides, tutorials |
 | [12-POST-LAUNCH.md](12-POST-LAUNCH.md) | Monitoring, security, maintenance |
 
+## Status (April 14, 2026)
+
+- **Phases 0-4**: Complete (web app compiles, 83/83 Python tests, 9 Firestore services, FastAPI bridge)
+- **Phases 5-10**: In progress (14 service stubs remaining, see individual checklists for notes)
+- **Service status summary**: See notes at top of each Phase 5-10 checklist
+
 ## Workflow
 
 1. Start with **00-DECISIONS.md** - resolve critical decisions before implementation

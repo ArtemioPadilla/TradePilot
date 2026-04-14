@@ -1,3 +1,6 @@
+> **Note:** This roadmap covers Python library improvements. For the web platform roadmap,
+> see `doc/checklists/` (Phases 0-10 + Post-Launch).
+
 ## 1. **Improve Error Handling and Robustness**
 
 ### A. Broker API Integration and Order Management  

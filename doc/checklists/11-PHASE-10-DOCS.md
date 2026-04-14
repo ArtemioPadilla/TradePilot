@@ -1,5 +1,9 @@
 # Phase 10: Documentation
 
+> **Remaining services:** cloud-functions.ts (stub, P3).
+> Sphinx is set up in `docs/`. Guides for backtesting, strategies, optimization, and live trading exist.
+> API reference auto-generation and deployment still needed.
+
 ## 10.1 Documentation Setup
 - [ ] Initialize docs project
 - [ ] Configure theme and styling

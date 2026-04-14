@@ -1,49 +1,75 @@
-Below is an overall assessment of the project, highlighting its strengths and potential areas for improvement:
+# TradePilot — Project Assessment
 
-### **Strengths**
+> Last updated: April 14, 2026
 
-1. **Modular and Organized Architecture**  
-   - **Separation of Concerns:** The project is divided into clear modules (simulation, live trading, backtesting, broker integration, strategies, etc.), which makes it easier to maintain, extend, and test individual components.
-   - **Extensibility:** With separate modules for different strategies (e.g., momentum, mean reversion), optimization methods, and data retrieval, it’s straightforward to add new strategies or swap out components without affecting the rest of the system.
+## Current State
 
-2. **Integrated Backtesting and Live Trading**  
-   - **Unified Approach:** By combining both a backtesting module and a live trading module, the framework allows users to first validate their strategies on historical data and then switch to live trading seamlessly.
-   - **Risk Management Baseline:** Although basic, the inclusion of a risk-free rate and optimization based on the Sharpe ratio indicates that risk management is considered from the start.
+### What Works
+- **Python backtesting core**: 83/83 tests passing
+  - Optimization: MSR, GMV, equal-weight
+  - Ranking: momentum, random
+  - Data fetching: yfinance, Treasury risk-free rates
+  - Simulation, backtest evaluation, portfolio metrics
+- **Web application**: compiles and runs (Astro + React, 27 pages, ~8s build)
+  - Firebase Authentication (login, register, invite system, admin approval)
+  - 3 themes (Bloomberg Terminal, Modern Fintech, Dashboard Dark)
+  - Dashboard with portfolio widgets
+  - Account and holdings management UI
+  - Trading interface (order form, order history)
+  - Backtesting UI (strategy selector, config wizard, results visualization)
+  - Alerts, notifications, leaderboard, strategy sharing pages
+- **FastAPI bridge** (`api/server.py`): connects Python backtesting to web app
+- **9 Firestore services** with real implementations:
+  - accounts, holdings, portfolio, networth, alpaca, profile, security, order-execution, offline-sync
+  - Market data service (Yahoo Finance API)
+- **CI/CD**: GitHub Actions for tests, deployment, Lighthouse audits
 
-3. **Documentation and Readability**  
-   - **Inline Comments and Docstrings:** The code is well-documented with comments and clear explanations, which is beneficial for new developers joining the project or for future maintenance.
-   - **Example Scripts:** The inclusion of example usage scripts for both backtesting and live trading helps illustrate how the library can be used in practice.
+### What Needs Work
+- **14 service stubs** remaining (see `doc/checklists/` Phase 5-10 items)
+- **Firebase Auth** not configured with real API key (placeholder)
+- **No production deploy** yet (local development only)
+- **PyScript integration** not implemented (backtest execution uses mock/FastAPI)
 
-4. **Industry-Relevant Integration**  
-   - **Broker API Integration:** Using a broker API (e.g., Alpaca) for live trading shows that the project is geared toward practical application. This is a significant strength if you want to eventually transition from simulation to real money trading.
-   - **Use of Popular Libraries:** Leveraging packages such as `pandas`, `numpy`, `scipy`, `yfinance`, and `requests` means that the project stands on reliable, well-supported foundations.
+## April 12-14, 2026 Sprint Summary
 
----
+### Phase 1 — Foundation
+- Created `web/src/lib/firebase.ts` (client configuration)
+- Created `web/src/lib/types.ts` (shared TypeScript interfaces)
+- Created `web/src/lib/utils/` (calculators, export, CSV parser)
+- Fixed all 83 Python tests (param naming, config, data format issues)
 
-### **Weaknesses and Areas for Improvement**
+### Phase 2 — Portfolio Core
+- Implemented Firestore services: accounts, holdings, portfolio, networth
+- All CRUD operations with real Firestore integration
 
-1. **Error Handling and Robustness**  
-   - **Broker API Limitations:** The current broker integration is quite basic. In a live trading environment, you’ll need robust error handling, retries, rate-limit management, and proper logging to handle network issues or API changes.
-   - **Order Management:** The system currently only supports basic “buy” orders. A more complete implementation would also manage order statuses, cancellations, and potentially even “sell” orders for rebalancing or stop-loss implementations.
+### Phase 3 — Alpaca Integration
+- Implemented Firestore services: alpaca, order-execution, market-data
+- WebSocket manager, position sync, credential management
 
-2. **Risk Management and Position Sizing**  
-   - **Advanced Risk Controls:** While the project considers a risk-free rate and uses optimization methods, it lacks more advanced risk management features (such as stop-loss orders, dynamic position sizing, or portfolio diversification checks).
-   - **Backtest Evaluation:** The evaluation metrics (annual return, Sharpe ratio, max drawdown) are a good start, but additional performance metrics (e.g., volatility, Calmar ratio, drawdown duration) could provide a more comprehensive picture of risk.
+### Phase 4 — Backtesting
+- Created FastAPI bridge (`api/server.py`) with endpoints for strategies, backtests
+- Implemented backtest execution and history services
+- Updated E2E tests (666 tests defined)
 
-3. **Real-Time Data and Asynchronous Execution**  
-   - **Data Feed Limitations:** The example uses Yahoo Finance for historical data, which is acceptable for backtesting but might not suffice for real-time trading where low-latency and reliable data feeds are critical.
-   - **Asynchronous Operations:** The live trading module currently uses a simple loop with a sleep interval. In a production environment, you’d likely need asynchronous handling, event-driven triggers, or integration with a real-time data stream to react promptly to market changes.
+## Strengths
+- Modular architecture with clear separation of concerns
+- Unified backtesting + live trading in Python core
+- Comprehensive UI with 27 pages covering full trading workflow
+- Well-documented with checklists tracking every feature
 
-4. **Scalability and Performance**  
-   - **Large Universes:** Processing a large universe of assets (especially in backtesting) could become computationally intensive. Optimizing performance, perhaps by vectorizing operations further or using specialized libraries, might be necessary as the scope grows.
-   - **Testing and Quality Assurance:** Although the structure includes a tests directory, comprehensive unit and integration tests are critical. Ensuring that every module behaves correctly under various market conditions is essential before deploying live.
+## Areas for Improvement
+- Error handling in broker API integration needs hardening
+- Risk management features are basic (no stop-loss/take-profit)
+- Real-time data relies on Yahoo Finance (adequate for dev, not production)
+- Live trading module uses simple polling loop (should be event-driven)
+- Need production deployment pipeline
 
----
-
-### **Overall Assessment**
-
-This project demonstrates a strong foundational design with clear separation of functionalities and a roadmap toward integrating both simulation and live trading. Its modular structure, extensive documentation, and example scripts make it a great starting point for a trading platform.
-
-However, moving from a prototype to a production-grade trading system will require significant enhancements in error handling, risk management, real-time data processing, and order management. Addressing these weaknesses will be key to making the project robust and reliable for live trading.
-
-In summary, it's a promising project with solid design choices, but it needs further development and rigorous testing to meet the demands of a live trading environment.
+## Remaining Work
+See `doc/checklists/` for detailed phase-by-phase tracking:
+- Phase 5: Strategy Builder (Monaco editor, sandbox execution)
+- Phase 6: Alerts & Notifications (backend integration)
+- Phase 7: Social Features (leaderboard Cloud Functions)
+- Phase 8: Reporting & Wealth (PDF generation, tax reports)
+- Phase 9: PWA & Polish (service worker, offline, performance)
+- Phase 10: Documentation (API docs, tutorials)
+- Post-Launch: Monitoring, security audit, maintenance

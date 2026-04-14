@@ -1,5 +1,9 @@
 # Phase 5: Strategy Builder
 
+> **Priority:** P1 for strategy-presets, backtest-execution, backtest-history services.
+> These connect the FastAPI bridge (`api/server.py`) to the web UI.
+> Prerequisite: Firebase Auth configured with real API key.
+
 ## 5.1 Monaco Editor Setup
 - [ ] Install Monaco Editor package
 - [ ] Configure Python language support

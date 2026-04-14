@@ -1,5 +1,8 @@
 # Post-Launch
 
+> **Estimated effort:** ~6 hours sequential for deploy pipeline (Firebase Hosting, Cloud Functions, FastAPI on Cloud Run).
+> Production security audit should cover Firestore rules, auth flow, and credential handling.
+
 ## Monitoring & Analytics
 - [ ] Set up error tracking (Sentry)
 - [ ] Configure performance monitoring

@@ -1,5 +1,8 @@
 # Phase 9: PWA & Polish
 
+> **Remaining services:** alpaca-websocket.ts (stub, P2), account-sync.ts (stub, P2), position-sync.ts (stub, P2).
+> PWA manifest and offline indicator exist. Service worker caching and full offline mode need implementation.
+
 ## 9.1 Service Worker
 - [ ] Create service worker file
 - [ ] Configure Workbox (if using)

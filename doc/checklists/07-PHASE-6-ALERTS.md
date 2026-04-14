@@ -1,5 +1,8 @@
 # Phase 6: Alerts & Notifications
 
+> **Remaining services:** alerts.ts (stub, P2), notifications.ts (stub, P3), push-notifications.ts (stub, P3).
+> UI and Cloud Function skeletons are in place; need real Firestore persistence and FCM integration.
+
 ## 6.0 E2E Tests (Required)
 - [x] Write E2E tests for alert creation form
 - [x] Write E2E tests for alerts list

@@ -1,5 +1,8 @@
 # Phase 8: Reporting & Wealth
 
+> **Remaining services:** risk-analytics.ts (stub, P2), tax-calculations.ts (has logic but no Firestore, P2), goals.ts (stub, P3).
+> Export utilities and calculator UI are in place. PDF generation and tax reports need backend work.
+
 ## 8.1 PDF Report Generation
 - [ ] Choose PDF library (puppeteer/reportlab)
 - [ ] Create `generateReport` Cloud Function

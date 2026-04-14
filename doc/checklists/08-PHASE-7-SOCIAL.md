@@ -1,5 +1,8 @@
 # Phase 7: Social Features
 
+> **Remaining services:** leaderboard.ts (stub, P3), integrations.ts (stub, P3).
+> Strategy sharing UI is complete. Leaderboard Cloud Function (updateLeaderboard) needs implementation.
+
 ## 7.1 Strategy Sharing
 - [x] Add `isPublic` flag to strategies
 - [x] Build share settings modal

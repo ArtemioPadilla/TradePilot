@@ -46,28 +46,29 @@ By offering a unified environment for both backtesting and live trading, TPT min
 
 ## Features
 
-- **Modular Architecture:**  
-  - Separate modules for simulation, live trading, data retrieval, optimization, and risk metrics.
-  - Easy-to-extend design for adding new strategies, data sources, and broker integrations.
+- **Python Backtesting Core** (83/83 tests passing):
+  - Simulation engine (TPS) with configurable rebalancing frequencies
+  - Performance evaluation: annualized return, Sharpe ratio, max drawdown, volatility
+  - Optimization: Maximum Sharpe Ratio, Global Minimum Variance, Equal Weight
+  - Ranking strategies: momentum, mean reversion, random
+  - Data: Yahoo Finance (yfinance), Treasury risk-free rates
 
-- **Backtesting Module (TPS & Backtest):**  
-  - Run simulations on historical data with configurable rebalancing frequencies.
-  - Evaluate performance using key metrics such as annualized return, Sharpe ratio, and max drawdown.
+- **Live Trading Module (TPT):**
+  - Broker API integration (Alpaca) for order execution
+  - Periodic rebalancing with portfolio management
 
-- **Live Trading Module (TPT):**  
-  - Integrates with broker APIs (e.g., Alpaca) to execute orders in a live environment.
-  - Supports periodic rebalancing and can be extended to include advanced order management.
+- **Web Application** (Astro + React):
+  - Firebase Authentication with invite system and admin approval
+  - Portfolio dashboard with account/holdings management
+  - Trading interface with order form and history
+  - Backtesting UI with strategy selector and results visualization
+  - 3 themes (Bloomberg Terminal, Modern Fintech, Dashboard Dark)
+  - 9 Firestore services with real implementations
+  - FastAPI bridge connecting Python backtesting to web UI
 
-- **Data Integration:**  
-  - Retrieve historical and live data using sources like Yahoo Finance (via `yfinance`) and other potential providers.
-  
-- **Risk Management (Baseline):**  
-  - Incorporates basic risk controls with portfolio optimization based on risk-free rate and Sharpe ratio.
-  - Easily extendable to include stop-loss, take-profit, and dynamic position sizing.
-
-- **Extensive Documentation and Examples:**  
-  - Clear inline comments, detailed docstrings, and example scripts to help you get started quickly.
-  - Contribution guidelines to help new contributors join the project.
+- **Data Integration:**
+  - Historical and live data via Yahoo Finance
+  - Alpaca market data streaming (WebSocket)
 
 ---
 
@@ -156,27 +157,33 @@ trader.run()
 
 ```
 TradePilot/
-├── tradepilot/
-│   ├── __init__.py        # Package initialization
-│   ├── simulator.py       # Backtesting/simulation module (TPS)
-│   ├── trader.py          # Live trading module (TPT)
-│   ├── backtest.py        # Wrapper for backtesting with evaluation
-│   ├── broker.py          # Broker API integration
-│   ├── ranking.py         # Asset ranking/selection functions
-│   ├── optimization.py    # Portfolio optimization functions
-│   ├── metrics.py         # Financial metrics calculations
-│   ├── data.py            # Data retrieval (historical & live)
-│   ├── config.py          # Global configuration (e.g., API keys)
-│   └── logging.py         # Logging functions for auditing
-├── strategies/
-│   ├── momentum.py        # Momentum-based strategy
-│   └── mean_reversion.py  # Mean reversion strategy
-├── tests/                 # Unit tests
-├── examples/              # Example usage scripts
-├── setup.py               # Package setup script
-├── README.md              # Project documentation (this file)
-├── requirements.txt       # Project dependencies
-└── .gitignore             # Files to ignore in Git
+├── tradepilot/            # Python backtesting library
+│   ├── simulator.py       # TPS — backtesting/simulation engine
+│   ├── trader.py          # TPT — live trading module
+│   ├── backtest.py        # High-level backtest wrapper
+│   ├── broker.py          # Alpaca broker API integration
+│   ├── ranking.py         # Asset ranking (momentum, random)
+│   ├── optimization.py    # Portfolio optimization (MSR, GMV, EW)
+│   ├── metrics.py         # Financial metrics (Sharpe, drawdown, etc.)
+│   ├── data.py            # Market data (yfinance, Treasury rates)
+│   └── config.py          # API credentials configuration
+├── web/                   # Web application (Astro + React)
+│   ├── src/
+│   │   ├── components/    # React island components
+│   │   ├── layouts/       # Astro layouts (Main, Dashboard, Admin)
+│   │   ├── pages/         # 27 pages (auth, dashboard, trading, etc.)
+│   │   └── lib/           # Services, utilities, Firebase config
+│   └── tests/e2e/         # Playwright E2E tests
+├── api/                   # FastAPI bridge (Python ↔ Web)
+│   └── server.py          # Backtest & strategy API endpoints
+├── strategies/            # Trading strategy implementations
+├── tests/                 # Python unit tests (83 tests)
+├── doc/                   # Project documentation
+│   ├── checklists/        # Phase 0-10 development checklists
+│   ├── PLATFORM_PLAN.md   # Web platform specification
+│   └── DATA_MODELS.md     # Firestore data models
+├── docs/                  # Technical guides (Sphinx)
+└── functions/             # Firebase Cloud Functions
 ```
 
 ---
@@ -217,25 +224,21 @@ For detailed guidelines, please see our [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
 ## Roadmap
 
-Here are some of the upcoming improvements and features planned for TradePilot:
+Development is tracked in `doc/checklists/` (Phases 0-10).
 
-- **Enhanced Broker API Integration:**  
-  Improved error handling, order management, and support for additional brokers.
+**Completed (Phases 0-4):**
+- Web app foundation, auth, portfolio management, Alpaca integration, backtesting UI
+- FastAPI bridge, 9 Firestore services, 83/83 Python tests
 
-- **Advanced Risk Management:**  
-  Implementation of stop-loss/take-profit orders, dynamic position sizing, and more comprehensive risk controls.
+**In Progress (Phases 5-10):**
+- Strategy builder with Monaco editor (Phase 5)
+- Alerts & notifications backend (Phase 6)
+- Social features — leaderboard, strategy sharing (Phase 7)
+- Reporting — PDF generation, tax reports (Phase 8)
+- PWA — offline mode, service worker (Phase 9)
+- Documentation — API docs, tutorials (Phase 10)
 
-- **Real-Time Data & Asynchronous Execution:**  
-  Integration of low-latency data providers and an asynchronous/event-driven trading engine.
-
-- **Performance Optimization:**  
-  Scalability enhancements to handle large universes and high-frequency data.
-
-- **Additional Strategies:**  
-  Incorporation of more trading strategies and machine learning-based approaches.
-
-- **Improved Documentation:**  
-  More examples, detailed API references, and tutorials to help new contributors.
+**Python Library Improvements:** See `doc/roadmap.md`
 
 ---
 
