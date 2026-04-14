@@ -23,6 +23,7 @@ import {
   ReferenceLine,
   ReferenceDot,
 } from 'recharts';
+import { getDrawdown as engineGetDrawdown, maxDrawdown as engineMaxDrawdown } from '../../lib/engine';
 
 interface DataPoint {
   date: string;

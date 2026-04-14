@@ -3,9 +3,11 @@ import { useMemo } from 'react';
 import {
   generateSamplePrices,
   generateSampleReturns,
-  calcVaRHistoric,
   STOCK_NAMES,
 } from '../../lib/utils/sampleData';
+import { varHistoric } from '../../lib/engine';
+
+const calcVaRHistoric = (r: number[], level = 5) => varHistoric(r, 0, level);
 
 const EXTENDED_STOCKS = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'NVDA', 'META', 'JPM', 'V', 'JNJ'];
 

@@ -24,6 +24,20 @@ import {
   ResponsiveContainer,
   Cell,
 } from 'recharts';
+import {
+  fetchMultiplePrices,
+  getReturns,
+  annualizeReturns,
+  annualizeVol,
+  varHistoric,
+  varGaussian,
+  cvarHistoric,
+  sharpeRatio as calcSharpe,
+  sortinoRatio as calcSortino,
+  maxDrawdown as calcMaxDD,
+  skewness as calcSkewness,
+  kurtosis as calcKurtosis,
+} from '../../lib/engine';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -327,26 +341,51 @@ export function RiskMetrics({ symbols: initialSymbols }: RiskMetricsProps) {
       const oneYearAgo = new Date(today);
       oneYearAgo.setFullYear(today.getFullYear() - 1);
 
-      const response = await fetch(appPath('/api/risk-metrics'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          symbols: syms,
-          start_date: oneYearAgo.toISOString().split('T')[0],
-          end_date: today.toISOString().split('T')[0],
-          risk_free: 0.04,
-        }),
-      });
+      const startDate = oneYearAgo.toISOString().split('T')[0];
+      const endDate = today.toISOString().split('T')[0];
+      const riskFree = 0.04;
 
-      if (!response.ok) {
-        throw new Error(`API returned ${response.status}`);
+      // Compute metrics client-side using the TS engine
+      const priceMap = await fetchMultiplePrices(syms, startDate, endDate);
+
+      const assets: AssetRiskMetrics[] = [];
+      const allReturns: number[][] = [];
+
+      for (const sym of syms) {
+        const pd = priceMap.get(sym);
+        if (!pd || pd.prices.length < 10) continue;
+
+        const returns = getReturns(pd.prices);
+        allReturns.push(returns);
+
+        assets.push({
+          symbol: sym,
+          annualized_return: annualizeReturns(returns),
+          volatility: annualizeVol(returns),
+          var_historic: -varHistoric(returns),
+          var_gaussian: -varGaussian(returns, 5),
+          var_cf: -varGaussian(returns, 5, true),
+          cvar: -cvarHistoric(returns),
+          sharpe: calcSharpe(returns, riskFree),
+          sortino: calcSortino(returns, riskFree),
+          max_drawdown: calcMaxDD(pd.prices),
+          skewness: calcSkewness(returns),
+          kurtosis: calcKurtosis(returns),
+        });
       }
 
-      const result: RiskMetricsResponse = await response.json();
-      setData(result);
+      // Simple portfolio-level: equal-weight average of per-asset metrics
+      const avgVarH = assets.length > 0 ? assets.reduce((a, m) => a + m.var_historic, 0) / assets.length : 0;
+      const avgCvar = assets.length > 0 ? assets.reduce((a, m) => a + m.cvar, 0) / assets.length : 0;
+      const avgSharpe = assets.length > 0 ? assets.reduce((a, m) => a + m.sharpe, 0) / assets.length : 0;
+      const avgSortino = assets.length > 0 ? assets.reduce((a, m) => a + m.sortino, 0) / assets.length : 0;
+
+      setData({
+        portfolio: { var_historic: avgVarH, cvar: avgCvar, sharpe: avgSharpe, sortino: avgSortino },
+        assets,
+      });
     } catch (err) {
-      console.warn('API unavailable, falling back to mock data:', err);
-      // Filter mock data to match requested symbols when possible
+      console.warn('Engine computation failed, falling back to mock data:', err);
       const mockAssets = MOCK_DATA.assets.filter((a) => syms.includes(a.symbol));
       if (mockAssets.length > 0) {
         setData({ portfolio: MOCK_DATA.portfolio, assets: mockAssets });

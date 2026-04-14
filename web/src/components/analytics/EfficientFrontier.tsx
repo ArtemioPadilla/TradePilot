@@ -20,6 +20,19 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
+import {
+  fetchMultiplePrices,
+  getReturns,
+  annualizeReturns,
+  covarianceMatrix,
+  getReturnsMatrix,
+  efficientFrontier,
+  msr as msrOptimize,
+  gmv as gmvOptimize,
+  equalWeight,
+  portfolioReturn as calcPortfolioReturn,
+  portfolioVol as calcPortfolioVol,
+} from '../../lib/engine';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -184,28 +197,59 @@ export function EfficientFrontier({
     setError(null);
 
     try {
-      const response = await fetch(appPath('/api/efficient-frontier'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          symbols,
-          start_date: startDate,
-          end_date: endDate,
-          risk_free: 0.04,
-          n_points: 50,
-        }),
-      });
+      // Fetch prices client-side via the TS engine
+      const priceMap = await fetchMultiplePrices(symbols, startDate, endDate);
+      if (priceMap.size < 2) throw new Error('Could not fetch data for enough symbols');
 
-      if (!response.ok) {
-        throw new Error(`API returned ${response.status}`);
+      const validSymbols = symbols.filter(s => priceMap.has(s));
+
+      // Align prices and compute returns
+      const priceArrays = validSymbols.map(s => priceMap.get(s)!.prices);
+      const minLen = Math.min(...priceArrays.map(p => p.length));
+      const aligned = priceArrays.map(p => p.slice(p.length - minLen));
+      const matrix: number[][] = [];
+      for (let row = 0; row < minLen; row++) {
+        matrix.push(aligned.map(p => p[row]));
       }
+      const returnsMatrix = getReturnsMatrix(matrix);
+      const cov = covarianceMatrix(returnsMatrix);
+      const er = validSymbols.map((_, i) => annualizeReturns(returnsMatrix.map(row => row[i])));
 
-      const result: EfficientFrontierData = await response.json();
-      setData(result);
+      // Efficient frontier
+      const ef = efficientFrontier(er, cov, 50);
+      const frontier: FrontierPoint[] = ef.returns.map((r, i) => ({
+        volatility: ef.vols[i] * Math.sqrt(252),
+        expectedReturn: r,
+      }));
+
+      // Special portfolios
+      const buildWeightsObj = (w: number[]) => Object.fromEntries(validSymbols.map((s, i) => [s, w[i]]));
+      const wMsr = msrOptimize(0.04, er, cov);
+      const wGmv = gmvOptimize(cov);
+      const n = validSymbols.length;
+      const wEw = equalWeight(n);
+
+      const msrPt: FrontierPoint = {
+        volatility: calcPortfolioVol(wMsr, cov) * Math.sqrt(252),
+        expectedReturn: calcPortfolioReturn(wMsr, er),
+        weights: buildWeightsObj(wMsr), label: 'Max Sharpe Ratio',
+      };
+      const gmvPt: FrontierPoint = {
+        volatility: calcPortfolioVol(wGmv, cov) * Math.sqrt(252),
+        expectedReturn: calcPortfolioReturn(wGmv, er),
+        weights: buildWeightsObj(wGmv), label: 'Global Min Variance',
+      };
+      const ewPt: FrontierPoint = {
+        volatility: calcPortfolioVol(wEw, cov) * Math.sqrt(252),
+        expectedReturn: calcPortfolioReturn(wEw, er),
+        weights: buildWeightsObj(wEw), label: 'Equal Weight',
+      };
+
+      setData({ frontier, msr: msrPt, gmv: gmvPt, ew: ewPt });
     } catch (err) {
-      console.error('Efficient frontier fetch failed, using mock data:', err);
-      setData(generateMockFrontier(symbols));
-      setError('Could not reach the API. Displaying mock data.');
+      console.error('Efficient frontier computation failed, using mock data:', err);
+      setData(generateMockFrontier(parseSymbols(symbolsInput)));
+      setError('Could not fetch market data. Displaying mock data.');
     } finally {
       setLoading(false);
     }

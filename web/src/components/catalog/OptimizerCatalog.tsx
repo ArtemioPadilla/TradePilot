@@ -6,10 +6,41 @@ import {
 } from 'recharts';
 import {
   generateSamplePrices, generateSampleReturns,
-  computeCovMatrix, annualizeReturns, annualizeVol,
-  generateEfficientFrontier, portfolioReturn, portfolioVol,
   SAMPLE_STOCKS, STOCK_NAMES,
 } from '../../lib/utils/sampleData';
+import {
+  annualizeReturns,
+  annualizeVol,
+  covarianceMatrix,
+  portfolioReturn,
+  portfolioVol,
+  efficientFrontier,
+} from '../../lib/engine';
+
+// Adapter: computeCovMatrix from record-based returns
+function computeCovMatrix(returns: Record<string, number[]>): { symbols: string[]; matrix: number[][] } {
+  const symbols = Object.keys(returns);
+  const T = returns[symbols[0]].length;
+  // Build matrix: rows=time, cols=assets
+  const matrix: number[][] = [];
+  for (let t = 0; t < T; t++) {
+    matrix.push(symbols.map(s => returns[s][t]));
+  }
+  return { symbols, matrix: covarianceMatrix(matrix) };
+}
+
+// Adapter: generateEfficientFrontier with the engine
+function generateEfficientFrontier(
+  expectedReturns: number[],
+  covMatrix: number[][],
+  nPoints = 50,
+): { volatility: number; expectedReturn: number }[] {
+  const ef = efficientFrontier(expectedReturns, covMatrix, nPoints);
+  return ef.returns.map((r, i) => ({
+    volatility: ef.vols[i] * Math.sqrt(252),
+    expectedReturn: r,
+  }));
+}
 
 interface OptimizerInfo {
   id: string;

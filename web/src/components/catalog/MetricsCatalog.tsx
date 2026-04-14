@@ -2,9 +2,20 @@ import { appPath } from '../../lib/utils/paths';
 import { useState, useMemo } from 'react';
 import {
   generateSamplePrices, generateSampleReturns, SAMPLE_STOCKS, STOCK_NAMES,
-  annualizeReturns, annualizeVol, calcVaRHistoric, calcVaRGaussian,
-  calcMaxDrawdown, calcSharpe, calcSortino, calcSkewness, calcKurtosis,
 } from '../../lib/utils/sampleData';
+import {
+  annualizeReturns, annualizeVol, varHistoric, varGaussian,
+  maxDrawdown, sharpeRatio, sortinoRatio, skewness, kurtosis,
+} from '../../lib/engine';
+
+// Adapter aliases matching old sampleData function signatures
+const calcVaRHistoric = (r: number[]) => varHistoric(r);
+const calcVaRGaussian = (r: number[]) => varGaussian(r);
+const calcMaxDrawdown = (p: number[]) => maxDrawdown(p);
+const calcSharpe = (r: number[], rf = 0.04) => sharpeRatio(r, rf);
+const calcSortino = (r: number[], rf = 0.04) => sortinoRatio(r, rf);
+const calcSkewness = (r: number[]) => skewness(r);
+const calcKurtosis = (r: number[]) => kurtosis(r);
 
 interface MetricDef {
   id: string;
