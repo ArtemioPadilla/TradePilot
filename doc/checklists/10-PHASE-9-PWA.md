@@ -1,81 +1,102 @@
 # Phase 9: PWA & Polish
 
-> **Remaining services:** alpaca-websocket.ts (stub, P2), account-sync.ts (stub, P2), position-sync.ts (stub, P2).
-> PWA manifest and offline indicator exist. Service worker caching and full offline mode need implementation.
+> **Status:** 50% complete. PWA manifest + offline indicator + skeletons done. Service worker + perf optimization pending.
+> **Services:** alpaca-websocket.ts (stub), account-sync.ts (stub), position-sync.ts (stub)
 
 ## 9.1 Service Worker
-- [ ] Create service worker file
-- [ ] Configure Workbox (if using)
-- [ ] Implement caching strategies
-  - [ ] Cache-first for static assets
-  - [ ] Network-first for API calls
-  - [ ] Stale-while-revalidate for prices
-- [ ] Handle cache versioning
-- [ ] Implement cache cleanup
+- [ ] Create service worker with Workbox
+- [ ] Cache-first for static assets, network-first for API, stale-while-revalidate for prices
+- [ ] Cache versioning + cleanup
+
+```
+subagent: S9.1-service-worker
+  input: web/public/manifest.json, web/astro.config.mjs
+  output: web/public/sw.js, web/src/lib/sw-register.ts
+  acceptance: npm run build passes, Lighthouse PWA score > 90
+  est: 45min
+  deps: none
+```
 
 ## 9.2 Offline Mode
-- [x] Detect online/offline status (OfflineIndicator component)
-- [x] Show offline indicator
-- [ ] Cache critical data for offline
-- [ ] Queue actions when offline
-- [ ] Sync queued actions on reconnect
-- [ ] Handle conflict resolution
+- [x] Online/offline detection + indicator done
+- [ ] Cache critical data (portfolio, holdings) in IndexedDB
+- [ ] Queue actions offline → sync on reconnect
+- [ ] Conflict resolution for stale data
 
-## 9.3 PWA Manifest
-- [x] Create `manifest.json`
-- [x] Configure app name and icons
-- [x] Set theme colors
-- [x] Configure display mode
-- [x] Add shortcuts
-- [x] Add screenshots for install prompt
-- [x] Generate PWA icons (72x72 to 512x512)
-- [ ] Test installation on devices
+```
+subagent: S9.2-offline-mode
+  input: web/src/components/common/OfflineIndicator.tsx, web/src/lib/services/
+  output: web/src/lib/offline/cache.ts, web/src/lib/offline/syncQueue.ts
+  acceptance: npm run build passes, app shows cached data when offline
+  est: 60min
+  deps: S9.1
+```
 
-## 9.4 Push Notification Handling
-- [ ] Handle notification permission request
-- [ ] Show install prompt at appropriate time
-- [ ] Handle notification clicks
-- [ ] Deep link to relevant content
-- [ ] Handle background notifications
+## 9.3 PWA Install — Remaining
+- [x] Manifest, icons, theme, shortcuts, screenshots done
+- [ ] Test installation on Android + iOS + desktop
 
-## 9.5 Responsive Design Refinement
-- [x] Audit all pages on mobile (via Lighthouse)
-- [x] Test on various screen sizes (E2E tests)
-- [ ] Fix layout issues (if any identified)
-- [ ] Optimize touch targets
-- [ ] Improve mobile navigation
+## 9.4 Real-time WebSocket
+- [ ] Implement alpaca-websocket.ts for live price streaming
+- [ ] Implement account-sync.ts for real-time position updates
+- [ ] Implement position-sync.ts for portfolio sync
+
+```
+subagent: S9.4-websocket
+  input: web/src/lib/services/alpaca-websocket.ts, web/src/lib/services/alpaca.ts
+  output: alpaca-websocket.ts (real impl), account-sync.ts (real impl), position-sync.ts (real impl)
+  acceptance: npm run build passes, live prices update in dashboard without refresh
+  est: 60min
+  deps: none
+```
+
+## 9.5 Responsive Design
+- [x] Mobile audit + E2E tests done
+- [ ] Fix remaining layout issues
+- [ ] Optimize touch targets (48px minimum)
 - [ ] Test landscape orientation
 
+```
+subagent: S9.5-responsive
+  input: web/src/components/, web/src/styles/
+  output: CSS fixes across components
+  acceptance: Lighthouse accessibility > 95, all touch targets ≥ 48px
+  est: 30min
+  deps: none
+```
+
 ## 9.6 Performance Optimization
-- [x] Audit with Lighthouse (88% accessibility, 96% best practices)
-- [ ] Optimize bundle size
-- [ ] Implement code splitting
+- [x] Lighthouse audit done (88% a11y, 96% best practices)
+- [ ] Bundle analysis + code splitting
 - [ ] Lazy load non-critical components
-- [ ] Optimize images
-- [x] Add loading states (throughout components)
-- [x] Add skeleton loading components (Skeleton, SkeletonCard, SkeletonTable)
-- [ ] Reduce Firestore reads
+- [ ] Optimize images (WebP, srcset)
+- [ ] Reduce Firestore reads (batch, cache)
 - [ ] Target: < 2s dashboard load
 
+```
+subagent: S9.6-performance
+  input: web/astro.config.mjs, web/src/pages/, web/src/components/
+  output: updated configs + lazy-loaded components
+  acceptance: Lighthouse performance > 90, bundle < 500KB
+  est: 45min
+  deps: none
+```
+
 ## 9.7 Accessibility
-- [x] Run accessibility audit (88% score)
-- [x] Add ARIA labels (components include proper ARIA)
-- [x] Ensure keyboard navigation (tab navigation works)
-- [ ] Check color contrast
-- [ ] Add screen reader support
-- [ ] Test with accessibility tools
+- [x] ARIA labels + keyboard nav done
+- [ ] Color contrast audit (WCAG 2.1 AA)
+- [ ] Screen reader testing
 - [ ] Fix identified issues
 
-## 9.8 Error Handling
-- [x] Create error boundary components
-- [x] Build user-friendly error pages (404.astro)
-- [ ] Implement error logging
-- [ ] Add retry mechanisms (in components)
-- [x] Show helpful error messages
-- [x] Handle network errors gracefully (OfflineIndicator)
+```
+subagent: S9.7-accessibility
+  input: web/src/components/, web/src/styles/
+  output: CSS + ARIA fixes
+  acceptance: Lighthouse accessibility ≥ 95, axe-core 0 violations
+  est: 30min
+  deps: none
+```
 
-## 9.9 User Feedback
-- [x] Create FeedbackWidget component (floating feedback button)
-- [x] Implement feedback form (bug, feature, general types)
-- [ ] Send feedback to backend
-- [ ] Show feedback confirmation
+## 9.8-9.9 Error Handling & Feedback ✅ MOSTLY DONE
+- [x] Error boundaries, 404 page, error messages, feedback widget
+- [ ] Wire feedback form to backend (deferred)

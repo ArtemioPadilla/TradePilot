@@ -1,79 +1,57 @@
 # Phase 6: Alerts & Notifications
 
-> **Remaining services:** alerts.ts (stub, P2), notifications.ts (stub, P3), push-notifications.ts (stub, P3).
-> UI and Cloud Function skeletons are in place; need real Firestore persistence and FCM integration.
+> **Status:** 80% complete. UI done. Backend stubs need real implementation.
+> **Services:** alerts.ts (stub→real), notifications.ts (stub→real), push-notifications.ts (stub→real)
 
-## 6.0 E2E Tests (Required)
-- [x] Write E2E tests for alert creation form
-- [x] Write E2E tests for alerts list
-- [x] Write E2E tests for notification center
-- [x] Write E2E tests for alert type configurations
-- [x] Write E2E tests for notification preferences form
-- [x] Ensure all tests pass (808 tests passing)
+## 6.0-6.3 UI & Data Model ✅ DONE
+- [x] E2E tests (808 passing)
+- [x] Alert types, Firestore schema, conditions
+- [x] Alert creation form, management page
+- [x] Cloud Function checkAlerts skeleton
 
-## 6.1 Alert Data Model
-- [x] Define alert types enum
-- [x] Create alert Firestore schema
-- [x] Define condition operators (>, <, =, crosses)
-- [x] Add enabled/disabled state
+## 6.4 Real Alert Monitoring
+- [ ] Wire checkAlerts Cloud Function to real Firestore reads
+- [ ] Evaluate price conditions against Alpaca API
+- [ ] Portfolio threshold evaluation (% change, value)
+- [ ] Update alert status + trigger count
 
-## 6.2 Alert Creation UI
-- [x] Build alert creation form
-  - [x] Alert type selector
-  - [x] Symbol search (for price alerts)
-  - [x] Condition builder
-  - [x] Threshold input
-  - [x] Notification channel checkboxes
-- [x] Save alert to Firestore
-- [x] Show confirmation
+```
+subagent: S6.4-alert-monitoring
+  input: functions/src/index.ts, web/src/lib/services/alerts.ts
+  output: functions/src/alerts/checkAlerts.ts (real impl)
+  acceptance: firebase emulators:exec passes, alert triggers on condition met
+  est: 45min
+  deps: none
+```
 
-## 6.3 Alert Management
-- [x] Build alerts list page (`/alerts`)
-- [x] Show alert status (active/triggered/disabled)
-- [x] Enable/disable toggle
-- [x] Edit alert
-- [x] Delete alert
-- [x] Show last triggered time
+## 6.5 Push Notifications Backend
+- [x] FCM config, permission request, service worker — all UI done
+- [ ] Test on multiple devices (requires VAPID key)
+- [ ] Wire push-notifications.ts to real FCM sends
 
-## 6.4 Cloud Function: Alert Monitoring
-- [x] Create `checkAlerts` Cloud Function
-- [x] Fetch active alerts
-- [x] Evaluate conditions against current data
-- [x] Identify triggered alerts
-- [x] Update alert status
-- [x] Schedule: every 1 minute
+```
+subagent: S6.5-push-backend
+  input: web/src/lib/services/push-notifications.ts, functions/src/
+  output: push-notifications.ts (real Firestore + FCM), functions/src/notifications/sendPush.ts
+  acceptance: npm run build passes, push notification received on test device
+  est: 30min
+  deps: S6.4
+```
 
-## 6.5 Push Notifications
-- [x] Configure Firebase Cloud Messaging (service worker + utilities)
-- [x] Request notification permission in app (PushNotificationSetup component)
-- [x] Store FCM token in user document (push-notifications.ts service)
-- [x] Create notification sender utility (Cloud Function sendPushNotification)
-- [x] Build notification payload structure
-- [x] Handle notification click (deep link) (firebase-messaging-sw.js)
-- [ ] Test on multiple devices (requires VAPID key configuration)
+## 6.6 Email Notifications Backend
+- [x] Email templates (alert, trade, daily digest, weekly summary)
+- [ ] Choose provider and integrate (Resend recommended — simple, cheap)
+- [ ] Wire processEmailQueue Cloud Function
+- [ ] Handle unsubscribe
 
-## 6.6 Email Notifications
-- [x] Set up email service integration (email queue infrastructure)
-- [x] Create email templates
-  - [x] Alert triggered
-  - [x] Trade executed
-  - [x] Daily digest (sendDailyDigest Cloud Function)
-  - [x] Weekly summary (sendWeeklySummary Cloud Function)
-- [x] Implement email sending in Cloud Functions (processEmailQueue)
-- [ ] Handle unsubscribe (requires email service integration)
+```
+subagent: S6.6-email-backend
+  input: functions/src/index.ts, web/src/lib/services/notifications.ts
+  output: functions/src/notifications/emailService.ts
+  acceptance: email sends on alert trigger (test with Resend sandbox)
+  est: 45min
+  deps: S6.4
+```
 
-## 6.7 Notification Center
-- [x] Create notifications collection
-- [x] Build notification bell icon with badge
-- [x] Build notification dropdown/panel
-- [x] Mark as read functionality
-- [x] Mark all as read
-- [x] Delete notifications
-- [x] Link to relevant page
-
-## 6.8 Notification Preferences
-- [x] Build preferences form in settings
-- [x] Toggle by notification type
-- [x] Toggle by channel (push/email/in-app)
-- [x] Set quiet hours
-- [x] Set digest frequency
+## 6.7-6.8 Notification Center & Preferences ✅ DONE
+- [x] Bell icon, dropdown, mark read, preferences form

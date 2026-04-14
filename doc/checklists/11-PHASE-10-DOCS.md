@@ -1,63 +1,76 @@
 # Phase 10: Documentation
 
-> **Remaining services:** cloud-functions.ts (stub, P3).
-> Sphinx is set up in `docs/`. Guides for backtesting, strategies, optimization, and live trading exist.
-> API reference auto-generation and deployment still needed.
+> **Status:** 20% complete. Sphinx setup + 4 guides exist. API reference + deployment pending.
+> **Existing:** docs/guides/backtesting.md, strategies.md, optimization.md, live-trading.md
 
-## 10.1 Documentation Setup
-- [ ] Initialize docs project
-- [ ] Configure theme and styling
-- [ ] Set up navigation structure
-- [ ] Configure search
-- [ ] Set up deployment pipeline
+## 10.1 Documentation Site
+- [ ] Configure Sphinx theme (furo or sphinx-book-theme)
+- [ ] Set up navigation + search
+- [ ] Deploy to GitHub Pages (`docs.tradepilot.app` or `/docs` path)
+
+```
+subagent: S10.1-docs-site
+  input: docs/conf.py, docs/index.rst
+  output: docs/ configured, .github/workflows/deploy-docs.yml
+  acceptance: sphinx-build passes, docs deploy to GitHub Pages
+  est: 30min
+  deps: none
+```
 
 ## 10.2 API Reference
-- [ ] Install Sphinx and autodoc
-- [ ] Configure docstring parsing
-- [ ] Generate API docs for:
-  - [ ] backtest module
-  - [ ] simulator module
-  - [ ] trader module
-  - [ ] data module
-  - [ ] metrics module
-  - [ ] optimization module
-  - [ ] ranking module
-- [ ] Review and enhance generated docs
-- [ ] Add code examples
+- [ ] Configure autodoc for all Python modules
+- [ ] Generate API docs with examples
+- [ ] Add code snippets for every public method
 
-## 10.3 Guides
-- [ ] Write Getting Started guide
-- [ ] Write First Backtest tutorial
-- [ ] Write Custom Strategies guide
-- [ ] Write Live Trading guide
-- [ ] Write Portfolio Optimization guide
-- [ ] Add screenshots and diagrams
+```
+subagent: S10.2-api-reference
+  input: tradepilot/**/*.py, docs/conf.py
+  output: docs/api/ (auto-generated), docs/conf.py (updated)
+  acceptance: sphinx-build generates complete API reference
+  est: 45min
+  deps: S10.1
+```
 
-## 10.4 Tutorials
-- [ ] Write Momentum Strategy tutorial
-- [ ] Write Mean Reversion tutorial
-- [ ] Write Portfolio Optimization tutorial
-- [ ] Add Jupyter notebook examples
-- [ ] Create video tutorials (optional)
+## 10.3 Getting Started + Tutorials
+- [ ] Quick start: install → first backtest in 5 minutes
+- [ ] Tutorial: build a momentum strategy step by step
+- [ ] Tutorial: optimize portfolio allocation
+- [ ] Tutorial: go live with Alpaca paper trading
 
-## 10.5 Reference Material
-- [ ] Create glossary of terms
-- [ ] Write FAQ section
-- [ ] Document configuration options
-- [ ] Document environment variables
-- [ ] Add troubleshooting guide
+```
+subagent: S10.3-tutorials
+  input: docs/guides/, tradepilot/examples/
+  output: docs/tutorials/ (4 tutorials), docs/getting-started.md (updated)
+  acceptance: all tutorials runnable as-is (copy-paste works)
+  est: 45min
+  deps: none
+```
 
-## 10.6 In-App Help
-- [x] Create contextual tooltip system (HelpTooltip component)
-- [x] Add "?" icons to complex features
-- [x] Link tooltips to documentation
-- [x] Build onboarding tour (OnboardingTour component)
-- [ ] Add feature discovery hints
-- [x] E2E tests for common components
+## 10.4 Plugin Development Guide
+- [ ] How to create a broker adapter
+- [ ] How to create a data provider
+- [ ] How to create a strategy
+- [ ] How to create a dashboard widget
+- [ ] Template repos or cookiecutter
 
-## 10.7 Deployment
-- [ ] Configure docs build in CI
-- [ ] Deploy to GitHub Pages (subdomain)
-- [ ] Add link in app header
-- [ ] Set up versioning (if needed)
-- [ ] Configure redirects for moved pages
+```
+subagent: S10.4-plugin-guide
+  input: tradepilot/plugins/, CONTRIBUTING.md, doc/PLUGIN_ARCHITECTURE.md
+  output: docs/plugins/ (4 guides), examples/plugins/
+  acceptance: example plugins load via registry
+  est: 30min
+  deps: S5.5.4
+```
+
+## 10.5 In-App Help — Remaining
+- [x] Tooltips, onboarding tour, help icons done
+- [ ] Feature discovery hints (new feature badges)
+
+```
+subagent: S10.5-feature-discovery
+  input: web/src/components/common/OnboardingTour.tsx
+  output: web/src/components/common/FeatureDiscovery.tsx
+  acceptance: npm run build passes, new features show "NEW" badge
+  est: 20min
+  deps: none
+```

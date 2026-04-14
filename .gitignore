@@ -221,3 +221,4 @@ service-account*.json
 
 
 .playwright-mcp/*
+functions/

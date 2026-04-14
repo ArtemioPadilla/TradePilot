@@ -1,60 +1,43 @@
 # Phase 7: Social Features
 
-> **Remaining services:** leaderboard.ts (stub, P3), integrations.ts (stub, P3).
-> Strategy sharing UI is complete. Leaderboard Cloud Function (updateLeaderboard) needs implementation.
+> **Status:** 85% complete. Sharing + browse + copy all done. Leaderboard backend missing.
+> **Services:** leaderboard.ts (stub→real), integrations.ts (stub, P3)
 
-## 7.1 Strategy Sharing
-- [x] Add `isPublic` flag to strategies
-- [x] Build share settings modal
-  - [x] Public/private toggle
-  - [x] Author visibility toggle
-  - [x] Allow copy toggle
-- [x] Create `strategies_public` collection (Firestore service ready)
-- [x] Sync public strategies on publish (publishStrategyToPublic function)
+## 7.1-7.3 Strategy Sharing ✅ DONE
+- [x] Public/private toggle, browse page, copy/fork, all UI
 
-## 7.2 Public Strategy Browser
-- [x] Build browse page (`/strategies/browse`)
-- [x] Display strategy cards
-  - [x] Strategy name
-  - [x] Author (if visible)
-  - [x] Description preview
-  - [x] Performance metrics
-  - [x] Copy count
-- [x] Implement search
-- [x] Add filters (type, performance)
-- [x] Add sorting options
-
-## 7.3 Copy/Fork Strategies
-- [x] Build copy button/action
-- [x] Create strategy copy in user's collection
-- [x] Link to original (`copiedFrom`)
-- [x] Increment copy count on original
-- [x] Allow modifications to copy
-- [x] Show "forked" tag on copied strategies
-
-## 7.4 Leaderboard Calculation
-- [x] Define ranking algorithm (types/leaderboard.ts)
+## 7.4 Leaderboard Cloud Function
 - [ ] Create `updateLeaderboard` Cloud Function
-- [ ] Calculate returns for opted-in users
-- [ ] Calculate Sharpe ratios
+- [ ] Calculate returns + Sharpe for opted-in users
 - [ ] Rank by selected metric
-- [ ] Store in `leaderboards` collection
-- [ ] Schedule: daily
+- [ ] Store in `leaderboards` Firestore collection
+- [ ] Schedule: daily at midnight UTC
 
-## 7.5 Leaderboard Display
-- [x] Build leaderboard page (`/leaderboard`)
-- [x] Show period tabs (weekly/monthly/all-time)
-- [x] Display ranking table
-  - [x] Rank
-  - [x] User (or anonymous)
-  - [x] Return %
-  - [x] Sharpe ratio
-- [x] Highlight current user
-- [x] Add opt-in prompt
+```
+subagent: S7.4-leaderboard-backend
+  input: functions/src/index.ts, web/src/types/leaderboard.ts, web/src/lib/services/leaderboard.ts
+  output: functions/src/social/updateLeaderboard.ts, web/src/lib/services/leaderboard.ts (real impl)
+  acceptance: firebase emulators:exec passes, leaderboard data populates
+  est: 45min
+  deps: none
+```
 
-## 7.6 Privacy Controls
-- [x] Build privacy settings section
-- [x] Leaderboard opt-in/out
-- [x] Display name vs anonymous
-- [x] Portfolio visibility
-- [x] Strategy sharing defaults
+## 7.5 Leaderboard Display ✅ DONE (UI)
+- [x] Leaderboard page, period tabs, ranking table, user highlight
+
+## 7.6 Privacy Controls ✅ DONE
+- [x] All privacy settings implemented
+
+## 7.7 Social Integrations (P3 — post-launch)
+- [ ] Twitter/X share button for strategies
+- [ ] Discord webhook for new public strategies
+- [ ] RSS feed for public strategies
+
+```
+subagent: S7.7-social-integrations
+  input: web/src/components/strategies/, web/src/lib/services/integrations.ts
+  output: integrations.ts (real impl), web/src/components/social/ShareButtons.tsx
+  acceptance: npm run build passes, share button generates correct URL
+  est: 30min
+  deps: none
+```
