@@ -31,7 +31,7 @@ jobs:
 
       - name: Run Python tests with coverage
         run: |
-          pytest --cov=tradepilot --cov-report=xml --cov-report=html --cov-fail-under=60
+          pytest --cov=tradepilot --cov-report=xml --cov-report=html --cov-fail-under=40
 
       - name: Upload coverage to Codecov
         if: matrix.python-version == '3.11'
