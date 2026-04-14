@@ -1,66 +1,15 @@
 /* TradePilot Documentation Custom Styles */
 
-/* Override RTD theme colors for TradePilot branding */
-:root {
-  --tp-primary: #00d4aa;
-  --tp-secondary: #1a1a2e;
-  --tp-accent: #00ff88;
-  --tp-background: #0a0a1a;
-}
-
-/* Navigation improvements */
-.wy-nav-side {
-  background: var(--tp-secondary);
-}
-
-.wy-side-nav-search {
-  background: var(--tp-background);
-}
-
-.wy-side-nav-search input[type="text"] {
-  border-color: var(--tp-primary);
-}
-
-.wy-menu-vertical a:hover {
-  background: rgba(0, 212, 170, 0.1);
-}
-
-.wy-menu-vertical li.current a {
-  border-left-color: var(--tp-primary);
-}
-
 /* Code blocks */
-.highlight {
-  background: #1a1a2e !important;
-}
-
 .highlight pre {
-  background: #1a1a2e !important;
   border-radius: 8px;
   padding: 1rem;
 }
 
 /* Inline code */
 code.literal {
-  background: rgba(0, 212, 170, 0.1);
-  color: var(--tp-primary);
-  border: none;
   padding: 2px 6px;
   border-radius: 4px;
-}
-
-/* Tables */
-table.docutils {
-  border: 1px solid #333;
-}
-
-table.docutils th {
-  background: var(--tp-secondary);
-  color: var(--tp-primary);
-}
-
-table.docutils td {
-  border-color: #333;
 }
 
 /* Admonitions */
@@ -68,43 +17,17 @@ table.docutils td {
   border-radius: 8px;
 }
 
-.admonition.warning {
-  background: rgba(255, 170, 0, 0.1);
-  border-left-color: #ffaa00;
-}
-
-.admonition.note {
-  background: rgba(0, 212, 170, 0.1);
-  border-left-color: var(--tp-primary);
-}
-
 /* API documentation */
 dl.py.class > dt,
 dl.py.function > dt,
 dl.py.method > dt {
-  background: var(--tp-secondary);
   padding: 0.5rem 1rem;
   border-radius: 4px;
-  border-left: 3px solid var(--tp-primary);
 }
 
 /* Responsive improvements */
 @media screen and (max-width: 768px) {
-  .wy-nav-content {
-    padding: 1rem;
-  }
-
   .highlight pre {
     font-size: 0.85em;
   }
-}
-
-/* Footer branding */
-.rst-footer-buttons {
-  border-top-color: var(--tp-primary);
-}
-
-/* Version badge */
-.wy-side-nav-search > a {
-  color: var(--tp-primary);
 }

@@ -4,12 +4,29 @@ TradePilot Documentation
 **TradePilot** is an open-source Python library that integrates both backtesting (simulation)
 and live trading modules into a unified framework for algorithmic trading.
 
+Quick Links
+-----------
+
+* :doc:`getting-started` -- Install TradePilot and run your first backtest
+* :doc:`tutorials/quickstart` -- 5-minute quickstart tutorial
+* :doc:`guides/backtesting` -- In-depth backtesting guide
+* :doc:`api/modules` -- Full API reference
+
 .. toctree::
    :maxdepth: 2
    :caption: Getting Started
 
    getting-started
    installation
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Tutorials
+
+   tutorials/quickstart
+   tutorials/custom-strategy
+   tutorials/optimization
+   tutorials/paper-trading
 
 .. toctree::
    :maxdepth: 2
@@ -46,10 +63,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
-Quick Links
------------
-
-* :doc:`getting-started` - Get up and running with TradePilot
-* :doc:`api/modules` - Full API reference documentation
-* `GitHub Repository <https://github.com/aspadillar/TradePilot>`_ - Source code and issues

@@ -22,6 +22,7 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
     'sphinx.ext.intersphinx',
+    'sphinx_autodoc_typehints',
     'myst_parser',
 ]
 
@@ -76,22 +77,26 @@ source_suffix = {
 }
 
 # -- Options for HTML output -------------------------------------------------
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'furo'
 html_static_path = ['_static']
 
 html_theme_options = {
-    'navigation_depth': 4,
-    'collapse_navigation': False,
-    'sticky_navigation': True,
-    'includehidden': True,
-    'titles_only': False,
-    'logo_only': False,
-    'display_version': True,
-    'prev_next_buttons_location': 'bottom',
-    'style_external_links': True,
+    'light_css_variables': {
+        'color-brand-primary': '#00d4aa',
+        'color-brand-content': '#00d4aa',
+    },
+    'dark_css_variables': {
+        'color-brand-primary': '#00ff88',
+        'color-brand-content': '#00ff88',
+    },
+    'sidebar_hide_name': False,
+    'navigation_with_keys': True,
 }
 
 # Custom CSS
 html_css_files = [
     'custom.css',
 ]
+
+# -- Search configuration ---------------------------------------------------
+html_search_language = 'en'
