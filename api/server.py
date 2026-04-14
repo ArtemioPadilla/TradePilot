@@ -11,9 +11,12 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import Response
 from pydantic import BaseModel
 import pandas as pd
 import numpy as np
+
+from api.reports import REPORT_GENERATORS
 
 from tradepilot.backtest import Backtest
 from tradepilot.data import MarketData
@@ -209,6 +212,35 @@ async def search_assets(q: str = ""):
         return COMMON_ASSETS
     q_lower = q.lower()
     return [a for a in COMMON_ASSETS if q_lower in a.symbol.lower() or q_lower in a.name.lower()]
+
+
+class ReportRequest(BaseModel):
+    report_type: str  # portfolio_summary, performance, holdings_detail
+    date_range: dict | None = None
+    account_ids: list[str] | None = None
+
+
+@app.post("/api/reports/generate")
+async def generate_report(req: ReportRequest):
+    """Generate a PDF report and return it as a downloadable file."""
+    generator = REPORT_GENERATORS.get(req.report_type)
+    if not generator:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unknown report type: {req.report_type}. "
+                   f"Available: {', '.join(REPORT_GENERATORS.keys())}",
+        )
+
+    try:
+        pdf_bytes = generator(date_range=req.date_range)
+        filename = f"tradepilot_{req.report_type}_{pd.Timestamp.now().strftime('%Y%m%d')}.pdf"
+        return Response(
+            content=pdf_bytes,
+            media_type="application/pdf",
+            headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 if __name__ == "__main__":
