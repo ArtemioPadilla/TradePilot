@@ -21,6 +21,8 @@ const { title, description = 'TradePilot Dashboard' } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content={description} />
     <meta name="theme-color" content="#0a0a1a" />
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin />
+    <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -47,41 +49,11 @@ const { title, description = 'TradePilot Dashboard' } = Astro.props;
       <MobileNav />
     </div>
     <script>
-      // Initialize theme from localStorage with system preference support
       import { initTheme } from '../stores/theme';
       import { initDensity } from '../stores/density';
+      import '../lib/sw-register';
       initTheme();
       initDensity();
-
-      // Register service worker
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', async () => {
-          try {
-            const registration = await navigator.serviceWorker.register('/sw.js', {
-              scope: '/',
-            });
-
-            // Check for updates periodically
-            registration.addEventListener('updatefound', () => {
-              const newWorker = registration.installing;
-              if (newWorker) {
-                newWorker.addEventListener('statechange', () => {
-                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                    // New version available, notify user
-                    console.log('[App] New version available');
-                    // Dispatch custom event for UI to handle
-                    window.dispatchEvent(new CustomEvent('sw-update-available', { detail: { registration } }));
-                  }
-                });
-              }
-            });
-
-            console.log('[App] Service worker registered successfully');
-          } catch (error) {
-            console.error('[App] Service worker registration failed:', error);
-          }
-        });
-      }
     </script>
   </body>
 </html>

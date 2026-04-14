@@ -79,11 +79,10 @@ const currentPath = Astro.url.pathname;
       </main>
     </div>
 
-    <!-- Theme and density initialization -->
     <script>
       import { initTheme } from '../stores/theme';
       import { initDensity } from '../stores/density';
-      // Initialize theme from store (handles 'system' preference and media query listener)
+      import '../lib/sw-register';
       initTheme();
       initDensity();
     </script>

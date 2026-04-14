@@ -7,10 +7,11 @@
  * - Stale-while-revalidate: HTML pages
  */
 
-const CACHE_VERSION = 'v1.0.0';
+const CACHE_VERSION = 'v1.1.0';
 const STATIC_CACHE = `tradepilot-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `tradepilot-dynamic-${CACHE_VERSION}`;
 const DATA_CACHE = `tradepilot-data-${CACHE_VERSION}`;
+const PRICE_CACHE = `tradepilot-prices-${CACHE_VERSION}`;
 
 // Static assets to precache (app shell)
 const PRECACHE_ASSETS = [
@@ -34,6 +35,7 @@ const CACHE_DURATIONS = {
 const PATTERNS = {
   static: /\.(js|css|woff2?|ttf|eot|svg|png|jpg|jpeg|gif|webp|ico)$/,
   api: /\/api\//,
+  price: /\/api\/prices|\/api\/quotes|\/api\/market-data|query\.yahooapis|finance\.yahoo/,
   firebase: /firestore\.googleapis\.com|firebase/,
   page: /^https?:\/\/[^/]+\/[^.]*$/,
 };
@@ -82,7 +84,8 @@ self.addEventListener('activate', (event) => {
                 name.startsWith('tradepilot-') &&
                 name !== STATIC_CACHE &&
                 name !== DYNAMIC_CACHE &&
-                name !== DATA_CACHE
+                name !== DATA_CACHE &&
+                name !== PRICE_CACHE
               );
             })
             .map((name) => {
@@ -125,6 +128,9 @@ self.addEventListener('fetch', (event) => {
   if (PATTERNS.static.test(url.pathname)) {
     // Static assets: Cache-first
     event.respondWith(cacheFirst(request, STATIC_CACHE));
+  } else if (PATTERNS.price.test(url.pathname) || PATTERNS.price.test(url.href)) {
+    // Price/market data: Stale-while-revalidate (show cached prices fast, refresh in background)
+    event.respondWith(staleWhileRevalidate(request, PRICE_CACHE));
   } else if (PATTERNS.api.test(url.pathname) || PATTERNS.firebase.test(url.href)) {
     // API calls: Network-first with cache fallback
     event.respondWith(networkFirst(request, DATA_CACHE));

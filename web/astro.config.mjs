@@ -15,6 +15,15 @@ const analyze = process.env.ANALYZE === 'true';
 export default defineConfig({
   integrations: [react()],
 
+  // Prefetch links on hover for faster navigation
+  prefetch: {
+    prefetchAll: false,
+    defaultStrategy: 'hover',
+  },
+
+  // Compress HTML output
+  compressHTML: true,
+
   vite: {
     plugins: [
       tailwindcss(),
@@ -39,10 +48,11 @@ export default defineConfig({
       },
     },
     build: {
-      // Enable source maps for better debugging
       sourcemap: process.env.NODE_ENV === 'development',
-      // Note: Don't manually split React chunks - Astro handles this automatically
-      // Manual splitting causes duplicate React instances and "jsxDEV is not a function" errors
+      // Inline small assets to reduce HTTP requests
+      assetsInlineLimit: 4096,
+      cssMinify: true,
+      minify: 'esbuild',
     },
     server: {
       headers: {

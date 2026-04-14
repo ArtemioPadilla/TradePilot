@@ -27,6 +27,10 @@ const { title, description = 'TradePilot - Integrated Backtesting and Live Tradi
     <meta name="msapplication-TileColor" content="#6366f1" />
     <meta name="msapplication-tap-highlight" content="no" />
 
+    <!-- Preconnect to external origins -->
+    <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin />
+    <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
+
     <!-- Favicons -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
@@ -43,39 +47,9 @@ const { title, description = 'TradePilot - Integrated Backtesting and Live Tradi
     <script>
       import { initTheme } from '../stores/theme';
       import { initDensity } from '../stores/density';
-      // Initialize theme from store (handles 'system' preference and media query listener)
+      import '../lib/sw-register';
       initTheme();
       initDensity();
-
-      // Register service worker
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', async () => {
-          try {
-            const registration = await navigator.serviceWorker.register('/sw.js', {
-              scope: '/',
-            });
-
-            // Check for updates periodically
-            registration.addEventListener('updatefound', () => {
-              const newWorker = registration.installing;
-              if (newWorker) {
-                newWorker.addEventListener('statechange', () => {
-                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                    // New version available, notify user
-                    console.log('[App] New version available');
-                    // Dispatch custom event for UI to handle
-                    window.dispatchEvent(new CustomEvent('sw-update-available', { detail: { registration } }));
-                  }
-                });
-              }
-            });
-
-            console.log('[App] Service worker registered successfully');
-          } catch (error) {
-            console.error('[App] Service worker registration failed:', error);
-          }
-        });
-      }
     </script>
   </body>
 </html>
