@@ -1,5 +1,6 @@
 ---
 import MainLayout from '../../layouts/MainLayout.astro';
+const base = import.meta.env.BASE_URL;
 ---
 
 <MainLayout title="Pending Approval">
@@ -30,7 +31,7 @@ import MainLayout from '../../layouts/MainLayout.astro';
         </div>
 
         <div class="actions">
-          <a href="/" class="btn btn-secondary">Return to Home</a>
+          <a href={base} class="btn btn-secondary">Return to Home</a>
           <button id="logout-btn" class="btn btn-ghost">Sign Out</button>
         </div>
       </div>
@@ -44,7 +45,7 @@ import MainLayout from '../../layouts/MainLayout.astro';
   const logoutBtn = document.getElementById('logout-btn');
   logoutBtn?.addEventListener('click', async () => {
     await signOut();
-    window.location.href = '/';
+    window.location.href = import.meta.env.BASE_URL;
   });
 </script>
 

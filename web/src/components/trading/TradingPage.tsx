@@ -1,3 +1,4 @@
+import { appPath } from '../../lib/utils/paths';
 /**
  * TradingPage Component
  *
@@ -236,7 +237,7 @@ function TradingPageInner() {
           </div>
           <h2>Authentication Required</h2>
           <p>Please sign in to access the trading interface.</p>
-          <a href="/auth/login" className="btn btn-primary">Sign In</a>
+          <a href={appPath("/auth/login")} className="btn btn-primary">Sign In</a>
         </div>
         <style>{styles}</style>
       </div>

@@ -3,6 +3,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
 import { getFirebaseAuth, getFirebaseDb } from '../../lib/firebase';
 import { setUser, clearAuth, checkCachedAuth, getCachedAuth, $user, type User } from '../../stores/auth';
+import { appPath } from '../../lib/utils/paths';
 
 /**
  * AuthInitializer sets up the Firebase auth listener and populates the auth store.
@@ -106,12 +107,12 @@ export function AuthInitializer() {
             console.log('[AuthInit] Current path:', currentPath);
             console.log('[AuthInit] User status:', userStatus);
 
-            if (currentPath.startsWith('/auth/login') || currentPath.startsWith('/auth/register')) {
-              let targetUrl = '/dashboard';
+            if (currentPath.startsWith(appPath('/auth/login')) || currentPath.startsWith(appPath('/auth/register'))) {
+              let targetUrl = appPath('/dashboard');
               if (userStatus === 'pending') {
-                targetUrl = '/auth/pending';
+                targetUrl = appPath('/auth/pending');
               } else if (userStatus === 'suspended') {
-                targetUrl = '/auth/suspended';
+                targetUrl = appPath('/auth/suspended');
               }
               console.log('[AuthInit] Redirecting to:', targetUrl);
               window.location.href = targetUrl;
@@ -151,9 +152,9 @@ export function AuthInitializer() {
 
             // Redirect new users to pending page
             const currentPath = window.location.pathname;
-            if (currentPath.startsWith('/auth/login') || currentPath.startsWith('/auth/register')) {
+            if (currentPath.startsWith(appPath('/auth/login')) || currentPath.startsWith(appPath('/auth/register'))) {
               console.log('[AuthInit] New user, redirecting to /auth/pending');
-              window.location.href = '/auth/pending';
+              window.location.href = appPath('/auth/pending');
               return;
             }
           }
@@ -162,9 +163,9 @@ export function AuthInitializer() {
           // Keep basic user info - don't block on Firestore errors
           // Still redirect to dashboard (with optimistic 'active' status)
           const currentPath = window.location.pathname;
-          if (currentPath.startsWith('/auth/login') || currentPath.startsWith('/auth/register')) {
+          if (currentPath.startsWith(appPath('/auth/login')) || currentPath.startsWith(appPath('/auth/register'))) {
             console.log('[AuthInit] Firestore error, redirecting to /dashboard');
-            window.location.href = '/dashboard';
+            window.location.href = appPath('/dashboard');
           }
         }
       } else {

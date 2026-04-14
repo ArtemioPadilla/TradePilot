@@ -32,11 +32,11 @@ const { title, description = 'TradePilot - Integrated Backtesting and Live Tradi
     <link rel="dns-prefetch" href="https://firestore.googleapis.com" />
 
     <!-- Favicons -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+    <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
+    <link rel="apple-touch-icon" href={`${import.meta.env.BASE_URL}icons/icon-192x192.png`} />
 
     <!-- PWA Manifest -->
-    <link rel="manifest" href="/manifest.json" />
+    <link rel="manifest" href={`${import.meta.env.BASE_URL}manifest.json`} />
 
     <title>{title} | TradePilot</title>
   </head>

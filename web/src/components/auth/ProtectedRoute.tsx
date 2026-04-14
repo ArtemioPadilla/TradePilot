@@ -1,6 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { useStore } from '@nanostores/react';
 import { $user, $authLoading, $isAuthenticated, $isActive, $isPending, $isAdmin } from '../../stores/auth';
+import { appPath } from '../../lib/utils/paths';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -13,7 +14,7 @@ export function ProtectedRoute({
   children,
   requireActive = true,
   requireAdmin = false,
-  fallbackUrl = '/auth/login'
+  fallbackUrl = ''
 }: ProtectedRouteProps) {
   const user = useStore($user);
   const authLoading = useStore($authLoading);
@@ -32,25 +33,25 @@ export function ProtectedRoute({
 
     // Not authenticated - redirect to login
     if (!isAuthenticated) {
-      window.location.href = fallbackUrl;
+      window.location.href = fallbackUrl || appPath('/auth/login');
       return;
     }
 
     // Require active status
     if (requireActive && isPending) {
-      window.location.href = '/auth/pending';
+      window.location.href = appPath('/auth/pending');
       return;
     }
 
     // Require admin role
     if (requireAdmin && !isAdmin) {
-      window.location.href = '/dashboard';
+      window.location.href = appPath('/dashboard');
       return;
     }
 
     // User is suspended
     if (user?.status === 'suspended') {
-      window.location.href = '/auth/suspended';
+      window.location.href = appPath('/auth/suspended');
       return;
     }
   }, [mounted, authLoading, isAuthenticated, isActive, isPending, isAdmin, requireActive, requireAdmin, user, fallbackUrl]);

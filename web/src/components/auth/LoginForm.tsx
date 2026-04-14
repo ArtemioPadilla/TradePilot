@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { signInWithEmail, signInWithGoogle } from '../../lib/firebase';
 import { setAuthError } from '../../stores/auth';
+import { appPath } from '../../lib/utils/paths';
 
 export function LoginForm() {
   const [email, setEmail] = useState('');
@@ -43,7 +44,7 @@ export function LoginForm() {
     try {
       await signInWithEmail(email, password);
       // Redirect will happen via auth state change
-      window.location.href = '/dashboard';
+      window.location.href = appPath('/dashboard');
     } catch (err: any) {
       const errorMessage = getErrorMessage(err.code);
       setError(errorMessage);
@@ -105,7 +106,7 @@ export function LoginForm() {
         <div className="form-group">
           <div className="label-row">
             <label className="label" htmlFor="password">Password</label>
-            <a href="/auth/forgot-password" className="forgot-link">Forgot password?</a>
+            <a href={appPath('/auth/forgot-password')} className="forgot-link">Forgot password?</a>
           </div>
           <input
             type="password"

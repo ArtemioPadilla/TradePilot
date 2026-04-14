@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { sendPasswordReset } from '../../lib/firebase';
+import { appPath } from '../../lib/utils/paths';
 
 export function ForgotPasswordForm() {
   const [email, setEmail] = useState('');
@@ -86,7 +87,7 @@ export function ForgotPasswordForm() {
       </button>
 
       <div className="auth-footer-link">
-        <a href="/auth/login">← Back to login</a>
+        <a href={appPath('/auth/login')}>← Back to login</a>
       </div>
     </form>
   );

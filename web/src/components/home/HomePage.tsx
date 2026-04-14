@@ -1,6 +1,7 @@
 import { useStore } from '@nanostores/react';
 import { $user } from '../../stores/auth';
 import { LayoutDashboard, TrendingUp, FlaskConical, Building2 } from 'lucide-react';
+import { appPath } from '../../lib/utils/paths';
 
 export function HomePage() {
   const user = useStore($user);
@@ -13,28 +14,28 @@ export function HomePage() {
       <p className="home-subtitle">What would you like to do today?</p>
 
       <div className="quick-actions">
-        <a href="/dashboard" className="action-card">
+        <a href={appPath('/dashboard')} className="action-card">
           <span className="action-icon">
             <LayoutDashboard size={32} strokeWidth={1.5} />
           </span>
           <span className="action-label">Dashboard</span>
           <span className="action-description">View your portfolio overview</span>
         </a>
-        <a href="/dashboard/trading" className="action-card">
+        <a href={appPath('/dashboard/trading')} className="action-card">
           <span className="action-icon">
             <TrendingUp size={32} strokeWidth={1.5} />
           </span>
           <span className="action-label">Trading</span>
           <span className="action-description">Execute trades and manage orders</span>
         </a>
-        <a href="/dashboard/backtest" className="action-card">
+        <a href={appPath('/dashboard/backtest')} className="action-card">
           <span className="action-icon">
             <FlaskConical size={32} strokeWidth={1.5} />
           </span>
           <span className="action-label">Backtesting</span>
           <span className="action-description">Test your trading strategies</span>
         </a>
-        <a href="/dashboard/accounts" className="action-card">
+        <a href={appPath('/dashboard/accounts')} className="action-card">
           <span className="action-icon">
             <Building2 size={32} strokeWidth={1.5} />
           </span>

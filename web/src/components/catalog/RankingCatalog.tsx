@@ -1,3 +1,4 @@
+import { appPath } from '../../lib/utils/paths';
 import { useMemo } from 'react';
 import {
   generateSamplePrices,
@@ -128,7 +129,7 @@ export function RankingCatalog() {
   return (
     <div className="ranking-catalog">
       <nav className="breadcrumb">
-        <a href="/catalog">Catalog</a><span className="sep">/</span><span>Ranking Functions</span>
+        <a href={appPath("/catalog")}>Catalog</a><span className="sep">/</span><span>Ranking Functions</span>
       </nav>
 
       <div className="rc-header">

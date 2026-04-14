@@ -1,3 +1,4 @@
+import { appPath } from '../../lib/utils/paths';
 import { useMemo } from 'react';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import {
@@ -182,7 +183,7 @@ export function StrategyCatalog() {
   return (
     <div className="strategy-catalog">
       <nav className="breadcrumb">
-        <a href="/catalog">Catalog</a>
+        <a href={appPath("/catalog")}>Catalog</a>
         <span className="sep">/</span>
         <span>Strategies</span>
       </nav>

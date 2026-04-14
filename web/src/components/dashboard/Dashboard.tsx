@@ -9,6 +9,7 @@
  */
 
 import { useState } from 'react';
+import { appPath } from '../../lib/utils/paths';
 import { usePortfolio } from '../../hooks/usePortfolio';
 import type { UsePortfolioOptions } from '../../hooks/usePortfolio';
 import PortfolioSummary from './PortfolioSummary';
@@ -87,7 +88,7 @@ export default function Dashboard() {
       <div className="widget widget-holdings">
         <div className="widget-header">
           <h3>Holdings</h3>
-          <a href="/dashboard/accounts" className="btn btn-ghost btn-sm">View All</a>
+          <a href={appPath('/dashboard/accounts')} className="btn btn-ghost btn-sm">View All</a>
         </div>
         <HoldingsTable
           holdings={portfolio.holdings}

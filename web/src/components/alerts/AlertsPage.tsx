@@ -1,3 +1,4 @@
+import { appPath } from '../../lib/utils/paths';
 /**
  * Alerts Page Component
  *
@@ -219,7 +220,7 @@ export function AlertsPage() {
           </div>
           <h2>Authentication Required</h2>
           <p>Please sign in to manage your alerts.</p>
-          <a href="/auth/login" className="btn btn-primary">Sign In</a>
+          <a href={appPath("/auth/login")} className="btn btn-primary">Sign In</a>
         </div>
         <style>{styles}</style>
       </div>

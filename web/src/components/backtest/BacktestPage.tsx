@@ -1,3 +1,4 @@
+import { appPath } from '../../lib/utils/paths';
 /**
  * Backtest Page Component
  *
@@ -176,7 +177,7 @@ export function BacktestPage() {
           </div>
           <h2>Authentication Required</h2>
           <p>Please sign in to run backtests.</p>
-          <a href="/auth/login" className="btn btn-primary">Sign In</a>
+          <a href={appPath("/auth/login")} className="btn btn-primary">Sign In</a>
         </div>
         <style>{styles}</style>
       </div>

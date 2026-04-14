@@ -1,3 +1,4 @@
+import { appPath } from '../../lib/utils/paths';
 import { useMemo } from 'react';
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer,
@@ -283,7 +284,7 @@ export function VisualizationCatalog() {
   return (
     <div className="viz-catalog">
       <nav className="breadcrumb">
-        <a href="/catalog">Catalog</a><span className="sep">/</span><span>Visualizations</span>
+        <a href={appPath("/catalog")}>Catalog</a><span className="sep">/</span><span>Visualizations</span>
       </nav>
 
       <div className="vc-header">

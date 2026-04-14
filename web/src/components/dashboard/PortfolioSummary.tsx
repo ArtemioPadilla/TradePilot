@@ -1,3 +1,4 @@
+import { appPath } from '../../lib/utils/paths';
 /**
  * PortfolioSummary Component
  *
@@ -60,7 +61,7 @@ export default function PortfolioSummary({
       <div className="portfolio-summary">
         <div className="not-connected">
           <p>Connect an account to see your portfolio data</p>
-          <a href="/dashboard/settings?tab=connections" className="connect-link">
+          <a href={appPath("/dashboard/settings?tab=connections")} className="connect-link">
             Connect Account
           </a>
         </div>

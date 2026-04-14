@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useStore } from '@nanostores/react';
 import { signUpWithEmail, createUserProfile, signInWithGoogle } from '../../lib/firebase';
 import { setAuthError, $isAuthenticated, $authLoading, $user } from '../../stores/auth';
+import { appPath } from '../../lib/utils/paths';
 
 interface RegisterFormProps {
   inviteCode?: string;
@@ -28,11 +29,11 @@ export function RegisterForm({ inviteCode }: RegisterFormProps) {
     if (isAuthenticated && user) {
       // Redirect based on user status
       if (user.status === 'pending') {
-        window.location.href = '/auth/pending';
+        window.location.href = appPath('/auth/pending');
       } else if (user.status === 'suspended') {
-        window.location.href = '/auth/suspended';
+        window.location.href = appPath('/auth/suspended');
       } else {
-        window.location.href = '/dashboard';
+        window.location.href = appPath('/dashboard');
       }
     }
   }, [isAuthenticated, authLoading, user]);
@@ -90,7 +91,7 @@ export function RegisterForm({ inviteCode }: RegisterFormProps) {
       });
 
       // Redirect to pending approval page or dashboard
-      window.location.href = '/auth/pending';
+      window.location.href = appPath('/auth/pending');
     } catch (err: any) {
       const errorMessage = getErrorMessage(err.code);
       setError(errorMessage);
@@ -222,8 +223,8 @@ export function RegisterForm({ inviteCode }: RegisterFormProps) {
 
         <p className="terms-text">
           By creating an account, you agree to our{' '}
-          <a href="/terms">Terms of Service</a> and{' '}
-          <a href="/privacy">Privacy Policy</a>.
+          <a href={appPath('/terms')}>Terms of Service</a> and{' '}
+          <a href={appPath('/privacy')}>Privacy Policy</a>.
         </p>
       </form>
     </div>

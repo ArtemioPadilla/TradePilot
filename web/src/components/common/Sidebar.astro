@@ -1,28 +1,29 @@
 ---
 const currentPath = Astro.url.pathname;
+const base = import.meta.env.BASE_URL;
 
 const navItems = [
-  { href: '/dashboard', label: 'Dashboard', icon: 'layout-dashboard' },
-  { href: '/dashboard/accounts', label: 'Accounts', icon: 'wallet' },
-  { href: '/dashboard/trading', label: 'Trading', icon: 'trending-up' },
-  { href: '/dashboard/markets', label: 'Markets', icon: 'chart-candlestick' },
-  { href: '/dashboard/strategies', label: 'Strategies', icon: 'brain' },
-  { href: '/dashboard/backtest', label: 'Backtest', icon: 'flask-conical' },
-  { href: '/dashboard/analytics', label: 'Analytics', icon: 'chart-bar' },
-  { href: '/catalog', label: 'Catalog', icon: 'book-open' },
-  { href: '/dashboard/alerts', label: 'Alerts', icon: 'bell' },
-  { href: '/dashboard/reports', label: 'Reports', icon: 'file-text' },
+  { href: `${base}dashboard`, label: 'Dashboard', icon: 'layout-dashboard' },
+  { href: `${base}dashboard/accounts`, label: 'Accounts', icon: 'wallet' },
+  { href: `${base}dashboard/trading`, label: 'Trading', icon: 'trending-up' },
+  { href: `${base}dashboard/markets`, label: 'Markets', icon: 'chart-candlestick' },
+  { href: `${base}dashboard/strategies`, label: 'Strategies', icon: 'brain' },
+  { href: `${base}dashboard/backtest`, label: 'Backtest', icon: 'flask-conical' },
+  { href: `${base}dashboard/analytics`, label: 'Analytics', icon: 'chart-bar' },
+  { href: `${base}catalog`, label: 'Catalog', icon: 'book-open' },
+  { href: `${base}dashboard/alerts`, label: 'Alerts', icon: 'bell' },
+  { href: `${base}dashboard/reports`, label: 'Reports', icon: 'file-text' },
 ];
 
 const bottomNavItems = [
-  { href: '/dashboard/settings', label: 'Settings', icon: 'settings' },
-  { href: '/admin', label: 'Admin', icon: 'shield' },
+  { href: `${base}dashboard/settings`, label: 'Settings', icon: 'settings' },
+  { href: `${base}admin`, label: 'Admin', icon: 'shield' },
 ];
 ---
 
 <aside class="sidebar">
   <div class="sidebar-header">
-    <a href="/dashboard" class="logo">
+    <a href={`${base}dashboard`} class="logo">
       <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect width="32" height="32" rx="8" fill="var(--accent)"/>
         <path d="M8 20L12 12L18 16L24 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>

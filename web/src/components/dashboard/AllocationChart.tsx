@@ -1,3 +1,4 @@
+import { appPath } from '../../lib/utils/paths';
 import { formatPercent } from '../../lib/utils';
 import type { Holding } from '../../types/portfolio';
 
@@ -91,7 +92,7 @@ export default function AllocationChart({
       <div className="allocation-chart">
         <div className="empty-state">
           <p>Connect an account to see your allocation</p>
-          <a href="/dashboard/settings?tab=connections" className="connect-link">Connect Account</a>
+          <a href={appPath("/dashboard/settings?tab=connections")} className="connect-link">Connect Account</a>
         </div>
         <style>{`
           .allocation-chart {

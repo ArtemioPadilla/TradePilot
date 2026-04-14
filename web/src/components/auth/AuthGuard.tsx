@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, type ReactNode } from 'react';
 import { useStore } from '@nanostores/react';
 import { $user, $authLoading, $isAuthenticated, $isActive, $isPending, $isAdmin, $hasCachedAuth } from '../../stores/auth';
+import { appPath } from '../../lib/utils/paths';
 
 interface AuthGuardProps {
   children: ReactNode;
@@ -64,28 +65,28 @@ export function AuthGuard({ children, requireAdmin = false }: AuthGuardProps) {
     // Not authenticated - redirect to login
     if (!isAuthenticated) {
       hasRedirectedRef.current = true;
-      window.location.href = '/auth/login';
+      window.location.href = appPath('/auth/login');
       return;
     }
 
     // User is pending approval
     if (isPending) {
       hasRedirectedRef.current = true;
-      window.location.href = '/auth/pending';
+      window.location.href = appPath('/auth/pending');
       return;
     }
 
     // User is suspended
     if (user?.status === 'suspended') {
       hasRedirectedRef.current = true;
-      window.location.href = '/auth/suspended';
+      window.location.href = appPath('/auth/suspended');
       return;
     }
 
     // Require admin but user is not admin
     if (requireAdmin && !isAdmin) {
       hasRedirectedRef.current = true;
-      window.location.href = '/dashboard';
+      window.location.href = appPath('/dashboard');
       return;
     }
 
@@ -121,7 +122,7 @@ export function AuthGuard({ children, requireAdmin = false }: AuthGuardProps) {
             <button onClick={() => window.location.reload()} className="btn btn-primary">
               Try Again
             </button>
-            <button onClick={() => window.location.href = '/auth/login'} className="btn btn-ghost">
+            <button onClick={() => window.location.href = appPath('/auth/login')} className="btn btn-ghost">
               Back to Login
             </button>
           </div>

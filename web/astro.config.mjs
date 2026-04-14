@@ -13,6 +13,8 @@ const analyze = process.env.ANALYZE === 'true';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://artemiop.com',
+  base: '/TradePilot',
   integrations: [react()],
 
   // Prefetch links on hover for faster navigation

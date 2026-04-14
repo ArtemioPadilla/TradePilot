@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { appPath } from '../../lib/utils/paths';
 
 interface Notification {
   id: string;
@@ -83,7 +84,7 @@ export function NotificationBell() {
               ))
             )}
           </div>
-          <a href="/dashboard/alerts" className="notification-footer">
+          <a href={appPath('/dashboard/alerts')} className="notification-footer">
             View all alerts
           </a>
         </div>

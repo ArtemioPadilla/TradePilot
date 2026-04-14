@@ -33,7 +33,7 @@ import { AccountDetail } from '../../components/accounts';
       <div class="error-state" data-testid="no-account-error">
         <h2>No Account Selected</h2>
         <p>Please select an account from the accounts list.</p>
-        <a href="/dashboard/accounts" class="btn btn-primary">View Accounts</a>
+        <a href="${import.meta.env.BASE_URL}dashboard/accounts" class="btn btn-primary">View Accounts</a>
       </div>
     `;
   }

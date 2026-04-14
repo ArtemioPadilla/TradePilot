@@ -1,3 +1,4 @@
+import { appPath } from '../../lib/utils/paths';
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { getFirebaseAuth } from '../../lib/firebase';
@@ -113,7 +114,7 @@ export function PortfolioOverview({ baseCurrency = 'USD' }: PortfolioOverviewPro
     return (
       <div className="portfolio-overview empty">
         <p>No portfolio data available</p>
-        <a href="/dashboard/accounts">Add an account to get started</a>
+        <a href={appPath("/dashboard/accounts")}>Add an account to get started</a>
       </div>
     );
   }

@@ -1,3 +1,4 @@
+import { appPath } from '../../lib/utils/paths';
 import { useState, useMemo } from 'react';
 import {
   generateSamplePrices, generateSampleReturns, SAMPLE_STOCKS, STOCK_NAMES,
@@ -226,7 +227,7 @@ export function MetricsCatalog() {
   return (
     <div className="metrics-catalog">
       <nav className="breadcrumb">
-        <a href="/catalog">Catalog</a><span className="sep">/</span><span>Metrics</span>
+        <a href={appPath("/catalog")}>Catalog</a><span className="sep">/</span><span>Metrics</span>
       </nav>
 
       <div className="mc-header">

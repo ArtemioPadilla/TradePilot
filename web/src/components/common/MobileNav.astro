@@ -1,10 +1,11 @@
 ---
+const base = import.meta.env.BASE_URL;
 const navItems = [
-  { href: '/dashboard', label: 'Home', icon: 'home' },
-  { href: '/dashboard/accounts', label: 'Accounts', icon: 'wallet' },
-  { href: '/dashboard/trading', label: 'Trade', icon: 'chart' },
-  { href: '/dashboard/strategies', label: 'Strategies', icon: 'brain' },
-  { href: '/dashboard/settings', label: 'Settings', icon: 'settings' },
+  { href: `${base}dashboard`, label: 'Home', icon: 'home' },
+  { href: `${base}dashboard/accounts`, label: 'Accounts', icon: 'wallet' },
+  { href: `${base}dashboard/trading`, label: 'Trade', icon: 'chart' },
+  { href: `${base}dashboard/strategies`, label: 'Strategies', icon: 'brain' },
+  { href: `${base}dashboard/settings`, label: 'Settings', icon: 'settings' },
 ];
 
 const currentPath = Astro.url.pathname;

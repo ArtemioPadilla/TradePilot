@@ -1,5 +1,6 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
+const base = import.meta.env.BASE_URL;
 ---
 
 <MainLayout title="Unsubscribe" description="Manage your email notification preferences">
@@ -23,8 +24,8 @@ import MainLayout from '../layouts/MainLayout.astro';
           <h1>You've Been Unsubscribed</h1>
           <p id="success-message">You will no longer receive email notifications.</p>
           <div class="actions">
-            <a href="/dashboard/settings" class="btn btn-primary">Manage Preferences</a>
-            <a href="/" class="btn btn-secondary">Go to Homepage</a>
+            <a href={`${base}dashboard/settings`} class="btn btn-primary">Manage Preferences</a>
+            <a href={base} class="btn btn-secondary">Go to Homepage</a>
           </div>
         </div>
 
@@ -41,7 +42,7 @@ import MainLayout from '../layouts/MainLayout.astro';
           <p id="error-message">We couldn't process your unsubscribe request.</p>
           <div class="actions">
             <button id="retry-button" class="btn btn-primary">Try Again</button>
-            <a href="/dashboard/settings" class="btn btn-secondary">Manage Manually</a>
+            <a href={`${base}dashboard/settings`} class="btn btn-secondary">Manage Manually</a>
           </div>
         </div>
 
@@ -57,8 +58,8 @@ import MainLayout from '../layouts/MainLayout.astro';
           <h1>Missing Unsubscribe Link</h1>
           <p>This page requires a valid unsubscribe link from your email.</p>
           <div class="actions">
-            <a href="/dashboard/settings" class="btn btn-primary">Manage Preferences</a>
-            <a href="/" class="btn btn-secondary">Go to Homepage</a>
+            <a href={`${base}dashboard/settings`} class="btn btn-primary">Manage Preferences</a>
+            <a href={base} class="btn btn-secondary">Go to Homepage</a>
           </div>
         </div>
 
@@ -106,7 +107,7 @@ import MainLayout from '../layouts/MainLayout.astro';
 
     try {
       // Call Cloud Function to process unsubscribe
-      const response = await fetch('/api/unsubscribe', {
+      const response = await fetch(import.meta.env.BASE_URL + 'api/unsubscribe', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -147,7 +148,7 @@ import MainLayout from '../layouts/MainLayout.astro';
     resubscribeButton!.setAttribute('disabled', 'true');
 
     try {
-      const response = await fetch('/api/resubscribe', {
+      const response = await fetch(import.meta.env.BASE_URL + 'api/resubscribe', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

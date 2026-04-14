@@ -1,3 +1,4 @@
+import { appPath } from '../../lib/utils/paths';
 /**
  * StrategyUniverseCard Component
  *
@@ -144,7 +145,7 @@ export default function StrategyUniverseCard({
             <p className="empty-description">
               Create a strategy to see which assets it would select
             </p>
-            <a href="/dashboard/strategies" className="create-link">
+            <a href={appPath("/dashboard/strategies")} className="create-link">
               Create Strategy
             </a>
           </div>

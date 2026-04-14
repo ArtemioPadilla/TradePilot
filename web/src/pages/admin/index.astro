@@ -1,5 +1,6 @@
 ---
 import AdminLayout from '../../layouts/AdminLayout.astro';
+const base = import.meta.env.BASE_URL;
 ---
 
 <AdminLayout title="Dashboard">
@@ -43,11 +44,11 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
     <div class="section">
       <h2>Quick Actions</h2>
       <div class="actions-grid">
-        <a href="/admin/users?status=pending" class="action-card">
+        <a href={`${base}admin/users?status=pending`} class="action-card">
           <span class="action-icon">👤</span>
           <span class="action-label">Review Pending Users</span>
         </a>
-        <a href="/admin/invites" class="action-card">
+        <a href={`${base}admin/invites`} class="action-card">
           <span class="action-icon">✉️</span>
           <span class="action-label">Manage Invites</span>
         </a>
@@ -62,7 +63,7 @@ import AdminLayout from '../../layouts/AdminLayout.astro';
     <div class="section">
       <div class="section-header">
         <h2>Pending Users</h2>
-        <a href="/admin/users?status=pending" class="view-all">View All →</a>
+        <a href={`${base}admin/users?status=pending`} class="view-all">View All →</a>
       </div>
       <div class="users-list" id="pending-users">
         <div class="loading">Loading...</div>

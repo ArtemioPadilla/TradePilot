@@ -1,3 +1,4 @@
+import { appPath } from '../../lib/utils/paths';
 /**
  * LoginPromptOverlay Component
  *
@@ -52,7 +53,7 @@ export default function LoginPromptOverlay({
 
         <div className="prompt-actions">
           <a
-            href="/auth/login"
+            href={appPath("/auth/login")}
             className="btn-primary"
             onClick={e => {
               if (onLogin) {
@@ -65,7 +66,7 @@ export default function LoginPromptOverlay({
             Sign In
           </a>
           <a
-            href="/auth/register"
+            href={appPath("/auth/register")}
             className="btn-secondary"
             onClick={e => {
               if (onRegister) {

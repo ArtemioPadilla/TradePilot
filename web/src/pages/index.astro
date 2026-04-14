@@ -1,12 +1,13 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
 import LandingNav from '../components/landing/LandingNav';
+const base = import.meta.env.BASE_URL;
 ---
 
 <MainLayout title="Welcome">
   <div class="landing">
     <nav class="landing-nav">
-      <a href="/" class="logo">
+      <a href={base} class="logo">
         <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect width="32" height="32" rx="8" fill="var(--accent)"/>
           <path d="M8 20L12 12L18 16L24 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -28,8 +29,8 @@ import LandingNav from '../components/landing/LandingNav';
           advanced analytics, and seamless broker integration.
         </p>
         <div class="hero-cta">
-          <a href="/auth/register" class="btn btn-primary btn-lg">Start Trading</a>
-          <a href="/dashboard" class="btn btn-secondary btn-lg">View Demo</a>
+          <a href={`${base}auth/register`} class="btn btn-primary btn-lg">Start Trading</a>
+          <a href={`${base}dashboard`} class="btn btn-secondary btn-lg">View Demo</a>
         </div>
       </div>
 

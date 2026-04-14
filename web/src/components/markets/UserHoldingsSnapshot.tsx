@@ -1,3 +1,4 @@
+import { appPath } from '../../lib/utils/paths';
 /**
  * UserHoldingsSnapshot Component
  *
@@ -61,7 +62,7 @@ export default function UserHoldingsSnapshot({
             <p className="empty-description">
               Connect your brokerage or add holdings manually
             </p>
-            <a href="/dashboard/accounts" className="action-link">
+            <a href={appPath("/dashboard/accounts")} className="action-link">
               Add Holdings
             </a>
           </div>

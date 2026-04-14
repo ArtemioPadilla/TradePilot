@@ -1,3 +1,4 @@
+import { appPath } from '../../lib/utils/paths';
 /**
  * PerformanceChart Component
  *
@@ -58,7 +59,7 @@ export default function PerformanceChart({
       chartRef.current.innerHTML = `
         <div class="empty-state">
           <p>Connect an account to see your performance</p>
-          <a href="/dashboard/settings?tab=connections" class="connect-link">Connect Account</a>
+          <a href={appPath("/dashboard/settings?tab=connections")} class="connect-link">Connect Account</a>
         </div>
         <style>
           .empty-state {

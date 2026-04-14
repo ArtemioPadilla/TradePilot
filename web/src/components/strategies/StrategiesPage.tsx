@@ -1,3 +1,4 @@
+import { appPath } from '../../lib/utils/paths';
 /**
  * Strategies Page Component
  *
@@ -236,7 +237,7 @@ export function StrategiesPage() {
           </div>
           <h2>Authentication Required</h2>
           <p>Please sign in to manage your strategies.</p>
-          <a href="/auth/login" className="btn btn-primary">Sign In</a>
+          <a href={appPath("/auth/login")} className="btn btn-primary">Sign In</a>
         </div>
         <style>{styles}</style>
       </div>

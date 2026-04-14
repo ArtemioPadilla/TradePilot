@@ -1,3 +1,4 @@
+import { appPath } from '../../lib/utils/paths';
 import { useState, useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { getFirebaseAuth } from '../../lib/firebase';
@@ -203,7 +204,7 @@ export function AccountDetail({ accountId }: AccountDetailProps) {
       <div className="account-detail-error">
         <h2>Error</h2>
         <p>{error || 'Account not found'}</p>
-        <a href="/dashboard/accounts" className="btn btn-primary" data-testid="back-to-accounts">
+        <a href={appPath("/dashboard/accounts")} className="btn btn-primary" data-testid="back-to-accounts">
           Back to Accounts
         </a>
       </div>
@@ -221,7 +222,7 @@ export function AccountDetail({ accountId }: AccountDetailProps) {
       {/* Header */}
       <div className="account-header">
         <div className="header-left">
-          <a href="/dashboard/accounts" className="back-link">
+          <a href={appPath("/dashboard/accounts")} className="back-link">
             ← Back to Accounts
           </a>
           <h1>{account.name}</h1>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useStore } from '@nanostores/react';
 import { $user, $isAuthenticated } from '../../stores/auth';
+import { appPath } from '../../lib/utils/paths';
 
 export function LandingNav() {
   const user = useStore($user);
@@ -14,7 +15,7 @@ export function LandingNav() {
   // Redirect logged-in users to /home
   useEffect(() => {
     if (mounted && isAuthenticated && user) {
-      window.location.href = '/home';
+      window.location.href = appPath('/home');
     }
   }, [mounted, isAuthenticated, user]);
 
@@ -27,8 +28,8 @@ export function LandingNav() {
   // If user becomes authenticated, the redirect effect will kick in
   return (
     <div className="nav-links">
-      <a href="/auth/login" className="btn btn-ghost">Log in</a>
-      <a href="/auth/register" className="btn btn-primary">Get Started</a>
+      <a href={appPath('/auth/login')} className="btn btn-ghost">Log in</a>
+      <a href={appPath('/auth/register')} className="btn btn-primary">Get Started</a>
     </div>
   );
 }

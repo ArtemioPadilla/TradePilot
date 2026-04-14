@@ -5,6 +5,7 @@
  */
 
 import { formatCurrency, formatPercent } from '../../lib/utils';
+import { appPath } from '../../lib/utils/paths';
 import type { Holding } from '../../types/portfolio';
 
 // Map common stock symbols to company names
@@ -69,7 +70,7 @@ export default function HoldingsTable({
       <div className="holdings-table-container">
         <div className="empty-state">
           <p>Connect an account to see your holdings</p>
-          <a href="/dashboard/settings?tab=connections" className="connect-link">Connect Account</a>
+          <a href={appPath('/dashboard/settings?tab=connections')} className="connect-link">Connect Account</a>
         </div>
         <style>{`
           .holdings-table-container {

@@ -1,3 +1,4 @@
+import { appPath } from '../../lib/utils/paths';
 import { useMemo } from 'react';
 import {
   ScatterChart, Scatter, XAxis, YAxis, Tooltip, Legend,
@@ -148,7 +149,7 @@ export function OptimizerCatalog() {
   return (
     <div className="optimizer-catalog">
       <nav className="breadcrumb">
-        <a href="/catalog">Catalog</a><span className="sep">/</span><span>Optimization Methods</span>
+        <a href={appPath("/catalog")}>Catalog</a><span className="sep">/</span><span>Optimization Methods</span>
       </nav>
 
       <div className="oc-header">
