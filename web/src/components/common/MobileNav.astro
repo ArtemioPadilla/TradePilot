@@ -15,7 +15,7 @@ const currentPath = Astro.url.pathname;
   {navItems.map((item) => (
     <a
       href={item.href}
-      class:list={['mobile-nav-item', { active: currentPath === item.href || (item.href !== '/dashboard' && currentPath.startsWith(item.href)) }]}
+      class:list={['mobile-nav-item', { active: currentPath === item.href || (item.href !== `${base}dashboard` && currentPath.startsWith(item.href)) }]}
     >
       <span class="nav-icon">
         {item.icon === 'home' && (

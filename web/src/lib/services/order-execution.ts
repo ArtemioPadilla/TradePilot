@@ -6,6 +6,7 @@
  * for security. This service provides the client-side interface.
  */
 
+import { appPath } from '../utils/paths';
 import {
   collection,
   doc,
@@ -163,7 +164,7 @@ async function sendTradeConfirmation(
       title,
       message,
       severity: 'success',
-      link: '/dashboard/trading?tab=orders',
+      link: appPath('/dashboard/trading?tab=orders'),
       metadata: {
         orderId: order.id,
         symbol: order.symbol,
@@ -182,11 +183,11 @@ async function sendTradeConfirmation(
     await sendPushNotification({
       title,
       body: message,
-      icon: '/icons/icon-192x192.png',
-      badge: '/icons/icon-72x72.png',
+      icon: appPath('/icons/icon-192x192.png'),
+      badge: appPath('/icons/icon-72x72.png'),
       tag: `order-${order.id}`,
       data: {
-        url: '/dashboard/trading?tab=orders',
+        url: appPath('/dashboard/trading?tab=orders'),
         orderId: order.id,
       },
     });

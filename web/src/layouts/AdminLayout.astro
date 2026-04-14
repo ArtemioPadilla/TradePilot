@@ -50,7 +50,7 @@ const currentPath = Astro.url.pathname;
           {navItems.map((item) => (
             <a
               href={item.href}
-              class:list={['nav-item', { active: currentPath === item.href || (item.href !== '/admin' && currentPath.startsWith(item.href)) }]}
+              class:list={['nav-item', { active: currentPath === item.href || (item.href !== `${base}admin` && currentPath.startsWith(item.href)) }]}
             >
               <span class="nav-icon">{item.icon === 'layout-dashboard' ? '📊' : item.icon === 'users' ? '👥' : item.icon === 'mail' ? '✉️' : '⚙️'}</span>
               <span class="nav-label">{item.label}</span>

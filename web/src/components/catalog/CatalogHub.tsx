@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { appPath } from '../../lib/utils/paths';
 
 const CATALOG_SECTIONS = [
   {
@@ -7,7 +8,7 @@ const CATALOG_SECTIONS = [
     description: 'Momentum, Mean Reversion, and Smart Beta — explore how each strategy selects assets and generates signals.',
     count: 3,
     icon: '🎯',
-    href: '/catalog/strategies',
+    href: appPath('/catalog/strategies'),
     color: '#3b82f6',
   },
   {
@@ -16,7 +17,7 @@ const CATALOG_SECTIONS = [
     description: 'Max Sharpe Ratio, Global Min Variance, and Equal Weight — portfolio weight allocation techniques.',
     count: 3,
     icon: '⚖️',
-    href: '/catalog/optimizers',
+    href: appPath('/catalog/optimizers'),
     color: '#8b5cf6',
   },
   {
@@ -25,7 +26,7 @@ const CATALOG_SECTIONS = [
     description: 'Momentum, VaR, and Random ranking — how assets are scored and selected for portfolios.',
     count: 3,
     icon: '📊',
-    href: '/catalog/rankings',
+    href: appPath('/catalog/rankings'),
     color: '#06b6d4',
   },
   {
@@ -34,7 +35,7 @@ const CATALOG_SECTIONS = [
     description: 'Sharpe, Sortino, VaR, CVaR, drawdown, skewness, kurtosis, and more — understand every metric.',
     count: 14,
     icon: '📐',
-    href: '/catalog/metrics',
+    href: appPath('/catalog/metrics'),
     color: '#f59e0b',
   },
   {
@@ -43,7 +44,7 @@ const CATALOG_SECTIONS = [
     description: 'Efficient frontier, drawdown charts, returns distribution, risk metrics, and portfolio allocation charts.',
     count: 8,
     icon: '📈',
-    href: '/catalog/visualizations',
+    href: appPath('/catalog/visualizations'),
     color: '#22c55e',
   },
 ];

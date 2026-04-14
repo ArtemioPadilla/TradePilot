@@ -14,14 +14,15 @@ const DATA_CACHE = `tradepilot-data-${CACHE_VERSION}`;
 const PRICE_CACHE = `tradepilot-prices-${CACHE_VERSION}`;
 
 // Static assets to precache (app shell)
+const BASE_PATH = '/TradePilot/';
 const PRECACHE_ASSETS = [
-  '/',
-  '/offline.html',
-  '/favicon.svg',
-  '/favicon.png',
-  '/manifest.json',
-  '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png',
+  BASE_PATH,
+  BASE_PATH + 'offline.html',
+  BASE_PATH + 'favicon.svg',
+  BASE_PATH + 'favicon.png',
+  BASE_PATH + 'manifest.json',
+  BASE_PATH + 'icons/icon-192x192.png',
+  BASE_PATH + 'icons/icon-512x512.png',
 ];
 
 // Cache duration for different resource types (in seconds)
@@ -120,7 +121,7 @@ self.addEventListener('fetch', (event) => {
 
   // Skip auth pages - they need fresh content for OAuth redirect handling
   // Caching auth pages can cause issues with OAuth state and redirects
-  if (url.pathname.startsWith('/auth/')) {
+  if (url.pathname.startsWith(BASE_PATH + 'auth/')) {
     return;
   }
 
@@ -223,7 +224,7 @@ async function staleWhileRevalidate(request, cacheName) {
     })
     .catch(async () => {
       // If network fails and no cache, return offline page
-      const offlineResponse = await cache.match('/offline.html');
+      const offlineResponse = await cache.match(BASE_PATH + 'offline.html');
       return offlineResponse || new Response('Offline', { status: 503 });
     });
 
@@ -329,8 +330,8 @@ self.addEventListener('push', (event) => {
   console.log('[SW] Push notification received');
 
   const defaultOptions = {
-    icon: '/icons/icon-192x192.png',
-    badge: '/icons/icon-72x72.png',
+    icon: BASE_PATH + 'icons/icon-192x192.png',
+    badge: BASE_PATH + 'icons/icon-72x72.png',
     vibrate: [100, 50, 100],
     data: {
       dateOfArrival: Date.now(),
@@ -356,7 +357,7 @@ self.addEventListener('notificationclick', (event) => {
 
   event.notification.close();
 
-  const urlToOpen = event.notification.data?.url || '/dashboard';
+  const urlToOpen = event.notification.data?.url || (BASE_PATH + 'dashboard');
 
   event.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {
