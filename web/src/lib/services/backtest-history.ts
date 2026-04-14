@@ -1,4 +1,4 @@
-// TODO: implement backtest history service
+const API_BASE = 'http://localhost:8000';
 
 export interface BacktestHistoryEntry {
   id: string;
@@ -12,8 +12,12 @@ export interface BacktestHistoryEntry {
 }
 
 export async function getBacktestHistory(userId: string): Promise<BacktestHistoryEntry[]> {
-  // TODO: implement backtest history query from Firestore
-  return [];
+  try {
+    const response = await fetch(`${API_BASE}/backtest/history?userId=${encodeURIComponent(userId)}`);
+    return await response.json();
+  } catch {
+    return [];
+  }
 }
 
 export async function deleteBacktestEntry(userId: string, entryId: string): Promise<void> {

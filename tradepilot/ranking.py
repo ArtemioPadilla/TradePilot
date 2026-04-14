@@ -18,8 +18,8 @@ def momentum_ranking(prices, t=10):
     if len(prices) < t:
         raise ValueError("Not enough data to calculate momentum.")
     m = momentum(prices, t)
-    # Return symbols ordered by highest momentum first
-    return m.sort_values(ascending=False).index
+    # Return momentum values as a Series (simulator handles sorting)
+    return m
 
 def random_ranking(prices, seed = None):
     """

@@ -2,7 +2,7 @@
 import logging
 import requests
 from requests.exceptions import RequestException, Timeout, ConnectionError
-from .config import API_KEYS
+from . import config
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +48,7 @@ class BrokerAPI:
         self.broker = broker
         self.timeout = timeout
         self.use_paper = use_paper
-        self.api_key = API_KEYS.get(broker)
+        self.api_key = config.API_KEYS.get(broker)
 
         if self.api_key is None:
             raise ValueError(f"No configuration found for broker '{broker}'")

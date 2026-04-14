@@ -232,12 +232,16 @@ class TPS:
         stock_prices_to_rank = self.universe.loc[:self.day].iloc[-self.t-1:].dropna(axis=1)
         rankeable_and_studiable = set(stock_prices_window.columns).intersection(set(stock_prices_to_rank.columns))
         stock_prices_to_rank = stock_prices_to_rank.loc[:, list(rankeable_and_studiable)] # Only studiable stocks
-        stock_metrics = self.criteria(stock_prices_to_rank, self.t)# stock_prices_to_rank.apply(lambda prices: , axis = 0)
+        stock_metrics = self.criteria(stock_prices_to_rank, self.t)
         # Get top N stocks from computed metrics
-        sorted_stocks = stock_metrics.sort_values(ascending = not self.highest_better)
-        print(f"Top stocks for {self.day}:\n{sorted_stocks}")
-        top_N_stocks = sorted_stocks[:self.N]
-        return stock_prices_window.loc[:, top_N_stocks.index]
+        if isinstance(stock_metrics, pd.Index):
+            # Criteria returned pre-sorted symbols (e.g. momentum_ranking)
+            top_symbols = stock_metrics[:self.N]
+        else:
+            sorted_stocks = stock_metrics.sort_values(ascending=not self.highest_better)
+            top_symbols = sorted_stocks[:self.N].index
+        print(f"Top stocks for {self.day}:\n{top_symbols}")
+        return stock_prices_window.loc[:, top_symbols]
         
     def get_expected_returns(self, returns):
         return self.expected_returns_func(returns)
