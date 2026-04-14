@@ -1,60 +1,110 @@
-// TODO: implement with real Firebase/API calls
+import {
+  collection,
+  doc,
+  addDoc,
+  getDoc,
+  getDocs,
+  updateDoc,
+  deleteDoc,
+  query,
+  where,
+  orderBy,
+  onSnapshot,
+  serverTimestamp,
+  type Unsubscribe,
+} from 'firebase/firestore';
+import { getFirebaseDb } from '../firebase';
+import type { Account, AccountStatus } from '../../types/portfolio';
 
-import type { Account } from '../../types/portfolio';
+function accountsCollection(userId: string) {
+  const db = getFirebaseDb();
+  if (!db) throw new Error('Firestore not initialized');
+  return collection(db, 'users', userId, 'accounts');
+}
 
-/**
- * Create a new account for a user.
- * Returns the generated account ID.
- */
+function accountDoc(userId: string, accountId: string) {
+  const db = getFirebaseDb();
+  if (!db) throw new Error('Firestore not initialized');
+  return doc(db, 'users', userId, 'accounts', accountId);
+}
+
 export async function createAccount(
   userId: string,
   data: { name: string; type: string; institution?: string }
 ): Promise<string> {
-  // TODO: write to Firestore users/{userId}/accounts collection
-  console.warn('[accounts] createAccount is a stub');
-  return 'mock-account-id';
+  const col = accountsCollection(userId);
+  const docRef = await addDoc(col, {
+    userId,
+    name: data.name,
+    type: data.type,
+    institution: data.institution || null,
+    currency: 'USD',
+    cashBalance: 0,
+    status: 'active',
+    source: 'manual',
+    isDefault: false,
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  });
+  console.log('[accounts] created account:', docRef.id);
+  return docRef.id;
 }
 
-/**
- * Retrieve all accounts for a user.
- */
 export async function getAccounts(userId: string): Promise<Account[]> {
-  // TODO: query Firestore users/{userId}/accounts
-  console.warn('[accounts] getAccounts is a stub');
-  return [];
+  const col = accountsCollection(userId);
+  const q = query(col, orderBy('createdAt', 'desc'));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Account));
 }
 
-/**
- * Retrieve a single account by ID.
- */
 export async function getAccount(
   userId: string,
   accountId: string
 ): Promise<Account | null> {
-  // TODO: read Firestore users/{userId}/accounts/{accountId}
-  console.warn('[accounts] getAccount is a stub');
-  return null;
+  const ref = accountDoc(userId, accountId);
+  const snap = await getDoc(ref);
+  if (!snap.exists()) return null;
+  return { id: snap.id, ...snap.data() } as Account;
 }
 
-/**
- * Delete an account and its associated holdings.
- */
 export async function deleteAccount(
   userId: string,
   accountId: string
 ): Promise<void> {
-  // TODO: delete Firestore document and subcollections
-  console.warn('[accounts] deleteAccount is a stub');
+  const ref = accountDoc(userId, accountId);
+  await deleteDoc(ref);
+  console.log('[accounts] deleted account:', accountId);
 }
 
-/**
- * Update the status of an account (active, inactive, closed).
- */
 export async function updateAccountStatus(
   userId: string,
   accountId: string,
   status: string
 ): Promise<void> {
-  // TODO: update Firestore document status field
-  console.warn('[accounts] updateAccountStatus is a stub');
+  const ref = accountDoc(userId, accountId);
+  await updateDoc(ref, {
+    status,
+    updatedAt: serverTimestamp(),
+  });
+  console.log('[accounts] updated account status:', accountId, status);
+}
+
+export function subscribeToAccounts(
+  userId: string,
+  callback: (accounts: Account[]) => void
+): Unsubscribe {
+  try {
+    const col = accountsCollection(userId);
+    const q = query(col, orderBy('createdAt', 'desc'));
+    return onSnapshot(q, (snapshot) => {
+      const accounts = snapshot.docs.map((d) => ({ id: d.id, ...d.data() } as Account));
+      callback(accounts);
+    }, (error) => {
+      console.error('[accounts] subscription error:', error);
+      callback([]);
+    });
+  } catch {
+    console.error('[accounts] failed to subscribe');
+    return () => {};
+  }
 }

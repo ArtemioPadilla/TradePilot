@@ -1,35 +1,78 @@
-// TODO: implement with real Firebase/API calls
+import {
+  doc,
+  getDoc,
+  setDoc,
+  deleteDoc,
+  serverTimestamp,
+} from 'firebase/firestore';
+import { getFirebaseDb } from '../firebase';
 
 const PAPER_BASE_URL = 'https://paper-api.alpaca.markets';
 const LIVE_BASE_URL = 'https://api.alpaca.markets';
 
-/**
- * Retrieve stored Alpaca API credentials for a user.
- */
+export function getAlpacaBaseUrl(environment: string): string {
+  return environment === 'live' ? LIVE_BASE_URL : PAPER_BASE_URL;
+}
+
+async function alpacaFetch(
+  endpoint: string,
+  apiKey: string,
+  apiSecret: string,
+  environment: string,
+  options: RequestInit = {}
+): Promise<Response> {
+  const baseUrl = getAlpacaBaseUrl(environment);
+  return fetch(`${baseUrl}${endpoint}`, {
+    ...options,
+    headers: {
+      'APCA-API-KEY-ID': apiKey,
+      'APCA-API-SECRET-KEY': apiSecret,
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+}
+
 export async function getAlpacaCredentials(
   userId: string
 ): Promise<{ apiKey: string; apiSecret: string; environment: 'paper' | 'live' } | null> {
-  // TODO: read from Firestore users/{userId}/integrations/alpaca
-  console.warn('[alpaca] getAlpacaCredentials is a stub');
-  return null;
+  const db = getFirebaseDb();
+  if (!db) return null;
+
+  const ref = doc(db, 'users', userId, 'integrations', 'alpaca');
+  const snap = await getDoc(ref);
+  if (!snap.exists()) return null;
+
+  const data = snap.data();
+  return {
+    apiKey: data.apiKey,
+    apiSecret: data.apiSecret,
+    environment: data.environment || 'paper',
+  };
 }
 
-/**
- * Verify that the provided Alpaca credentials are valid.
- */
 export async function testAlpacaConnection(
   apiKey: string,
   apiSecret: string,
   environment: string
 ): Promise<{ success: boolean; error?: string }> {
-  // TODO: call Alpaca /v2/account endpoint to verify
-  console.warn('[alpaca] testAlpacaConnection is a stub');
-  return { success: false, error: 'Not implemented' };
+  try {
+    const response = await alpacaFetch('/v2/account', apiKey, apiSecret, environment);
+    if (response.ok) {
+      const account = await response.json();
+      console.log('[alpaca] connection successful, account:', account.account_number);
+      return { success: true };
+    }
+
+    const error = await response.text();
+    console.error('[alpaca] connection failed:', response.status, error);
+    return { success: false, error: `API returned ${response.status}: ${error}` };
+  } catch (error) {
+    console.error('[alpaca] connection error:', error);
+    return { success: false, error: String(error) };
+  }
 }
 
-/**
- * Fetch orders from Alpaca.
- */
 export async function fetchAlpacaOrders(
   apiKey: string,
   apiSecret: string,
@@ -37,70 +80,139 @@ export async function fetchAlpacaOrders(
   status?: string,
   limit?: number
 ): Promise<any[]> {
-  // TODO: call Alpaca /v2/orders endpoint
-  console.warn('[alpaca] fetchAlpacaOrders is a stub');
-  return [];
+  try {
+    const params = new URLSearchParams();
+    if (status) params.set('status', status);
+    if (limit) params.set('limit', String(limit));
+
+    const endpoint = `/v2/orders${params.toString() ? '?' + params.toString() : ''}`;
+    const response = await alpacaFetch(endpoint, apiKey, apiSecret, environment);
+    if (!response.ok) {
+      console.error('[alpaca] fetch orders failed:', response.status);
+      return [];
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('[alpaca] error fetching orders:', error);
+    return [];
+  }
 }
 
-/**
- * Fetch current positions from Alpaca.
- */
 export async function fetchAlpacaPositions(
   apiKey: string,
   apiSecret: string,
   environment: string
 ): Promise<any[]> {
-  // TODO: call Alpaca /v2/positions endpoint
-  console.warn('[alpaca] fetchAlpacaPositions is a stub');
-  return [];
+  try {
+    const response = await alpacaFetch('/v2/positions', apiKey, apiSecret, environment);
+    if (!response.ok) {
+      console.error('[alpaca] fetch positions failed:', response.status);
+      return [];
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('[alpaca] error fetching positions:', error);
+    return [];
+  }
 }
 
-/**
- * Submit a new order through Alpaca.
- */
 export async function submitOrder(
   userId: string,
   order: any
 ): Promise<any> {
-  // TODO: call Alpaca /v2/orders POST endpoint
-  console.warn('[alpaca] submitOrder is a stub');
-  return { success: false, error: 'Not implemented' };
+  const creds = await getAlpacaCredentials(userId);
+  if (!creds) return { success: false, error: 'No Alpaca credentials configured' };
+
+  try {
+    const response = await alpacaFetch(
+      '/v2/orders',
+      creds.apiKey,
+      creds.apiSecret,
+      creds.environment,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          symbol: order.symbol,
+          qty: order.qty,
+          side: order.side,
+          type: order.type || 'market',
+          time_in_force: order.timeInForce || 'day',
+          limit_price: order.limitPrice,
+          stop_price: order.stopPrice,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.text();
+      console.error('[alpaca] submit order failed:', response.status, error);
+      return { success: false, error };
+    }
+
+    const result = await response.json();
+    console.log('[alpaca] order submitted:', result.id);
+    return { success: true, order: result };
+  } catch (error) {
+    console.error('[alpaca] error submitting order:', error);
+    return { success: false, error: String(error) };
+  }
 }
 
-/**
- * Cancel an existing order.
- */
 export async function cancelOrder(
   userId: string,
   orderId: string
 ): Promise<any> {
-  // TODO: call Alpaca /v2/orders/{orderId} DELETE endpoint
-  console.warn('[alpaca] cancelOrder is a stub');
-  return { success: false, error: 'Not implemented' };
+  const creds = await getAlpacaCredentials(userId);
+  if (!creds) return { success: false, error: 'No Alpaca credentials configured' };
+
+  try {
+    const response = await alpacaFetch(
+      `/v2/orders/${orderId}`,
+      creds.apiKey,
+      creds.apiSecret,
+      creds.environment,
+      { method: 'DELETE' }
+    );
+
+    if (!response.ok) {
+      const error = await response.text();
+      return { success: false, error };
+    }
+
+    console.log('[alpaca] order cancelled:', orderId);
+    return { success: true };
+  } catch (error) {
+    console.error('[alpaca] error cancelling order:', error);
+    return { success: false, error: String(error) };
+  }
 }
 
-/**
- * Persist Alpaca credentials to Firestore (encrypted at rest).
- */
 export async function saveAlpacaCredentials(
   userId: string,
   credentials: any
 ): Promise<void> {
-  // TODO: write to Firestore users/{userId}/integrations/alpaca
-  console.warn('[alpaca] saveAlpacaCredentials is a stub');
+  const db = getFirebaseDb();
+  if (!db) throw new Error('Firestore not initialized');
+
+  const ref = doc(db, 'users', userId, 'integrations', 'alpaca');
+  await setDoc(ref, {
+    apiKey: credentials.apiKey,
+    apiSecret: credentials.apiSecret,
+    environment: credentials.environment || 'paper',
+    savedAt: serverTimestamp(),
+    updatedAt: serverTimestamp(),
+  });
+
+  console.log('[alpaca] credentials saved for user:', userId);
 }
 
-/**
- * Remove stored Alpaca credentials.
- */
 export async function deleteAlpacaCredentials(userId: string): Promise<void> {
-  // TODO: delete Firestore document
-  console.warn('[alpaca] deleteAlpacaCredentials is a stub');
-}
+  const db = getFirebaseDb();
+  if (!db) throw new Error('Firestore not initialized');
 
-/**
- * Return the base URL for the given Alpaca environment.
- */
-export function getAlpacaBaseUrl(environment: string): string {
-  return environment === 'live' ? LIVE_BASE_URL : PAPER_BASE_URL;
+  const ref = doc(db, 'users', userId, 'integrations', 'alpaca');
+  await deleteDoc(ref);
+  console.log('[alpaca] credentials deleted for user:', userId);
 }
