@@ -12,7 +12,7 @@ import {
   serverTimestamp,
   Timestamp,
 } from 'firebase/firestore';
-import { getFirebaseDb } from '../firebase';
+import { getFirebaseDb, getFirebaseAuth } from '../firebase';
 import type {
   LeaderboardEntry,
   LeaderboardPeriod,
@@ -195,12 +195,15 @@ export async function getLeaderboardStats(): Promise<{
 
 /**
  * Get privacy settings for a user.
+ * If no userId is provided, uses the currently authenticated user.
  */
 export async function getPrivacySettings(
-  userId: string
+  userId?: string
 ): Promise<{ optedIn: boolean; displayAnonymously: boolean }> {
   try {
-    const ref = userPrefsDoc(userId);
+    const uid = userId || getFirebaseAuth()?.currentUser?.uid;
+    if (!uid) return { optedIn: false, displayAnonymously: true };
+    const ref = userPrefsDoc(uid);
     const snap = await getDoc(ref);
 
     if (!snap.exists()) {
