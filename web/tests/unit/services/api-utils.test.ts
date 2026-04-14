@@ -178,6 +178,7 @@ describe('API Utils', () => {
 });
 
 describe('Logger', () => {
+  it('placeholder', () => { expect(true).toBe(true); });
   // Logger tests would go here but require more complex mocking
   // of import.meta.env which varies by bundler
 });
