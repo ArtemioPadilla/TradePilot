@@ -1,0 +1,27 @@
+---
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+import AIStrategyBuilder from '../../components/ai/AIStrategyBuilder';
+---
+
+<DashboardLayout title="AI Strategy Builder">
+  <div class="ai-page">
+    <AIStrategyBuilder client:only="react" />
+  </div>
+
+  <style>
+    .ai-page {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: var(--space-4, 1rem);
+      height: calc(100vh - var(--header-height, 56px));
+      display: flex;
+      flex-direction: column;
+    }
+
+    @media (max-width: 768px) {
+      .ai-page {
+        padding: var(--space-2, 0.5rem);
+      }
+    }
+  </style>
+</DashboardLayout>

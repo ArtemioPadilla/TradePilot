@@ -66,6 +66,7 @@ export default defineConfig({
         '**/pwa.spec.ts',
         '**/offline-mode.spec.ts',
         '**/markets.spec.ts',
+        '**/ai-builder.spec.ts',
       ],
       use: {
         ...devices['Desktop Chrome'],
