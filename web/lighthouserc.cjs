@@ -10,10 +10,10 @@ module.exports = {
       startServerReadyPattern: 'Local',
       startServerReadyTimeout: 30000,
       url: [
-        'http://localhost:4321/',
-        'http://localhost:4321/auth/login',
-        'http://localhost:4321/auth/register',
-        'http://localhost:4321/dashboard',
+        'http://localhost:4321/TradePilot/',
+        'http://localhost:4321/TradePilot/auth/login',
+        'http://localhost:4321/TradePilot/auth/register',
+        'http://localhost:4321/TradePilot/dashboard',
       ],
       numberOfRuns: 3,
       settings: {
