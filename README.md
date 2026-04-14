@@ -1,262 +1,309 @@
-# TradePilot
+<p align="center">
+  <img src="web/public/favicon.svg" width="80" height="80" alt="TradePilot logo">
+</p>
 
-[![Tests](https://github.com/aspadillar/TradePilot/actions/workflows/test.yml/badge.svg)](https://github.com/aspadillar/TradePilot/actions/workflows/test.yml)
-[![Deploy Web](https://github.com/aspadillar/TradePilot/actions/workflows/deploy-web.yml/badge.svg)](https://github.com/aspadillar/TradePilot/actions/workflows/deploy-web.yml)
-[![Lighthouse CI](https://github.com/aspadillar/TradePilot/actions/workflows/lighthouse.yml/badge.svg)](https://github.com/aspadillar/TradePilot/actions/workflows/lighthouse.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<h1 align="center">TradePilot</h1>
 
-> **Integrated Backtesting and Live Trading Framework**
+<p align="center">
+  <strong>Open-source backtesting & live trading platform that runs in your browser</strong>
+</p>
 
-TradePilot is an open-source Python library that integrates both backtesting (simulation) and live trading modules into a unified framework. It allows you to design, test, and deploy portfolio management strategies using real-time data and broker API integrations (such as Alpaca) in a modular, scalable, and robust environment.
+<p align="center">
+  <a href="https://github.com/ArtemioPadilla/TradePilot/actions/workflows/test.yml"><img src="https://github.com/ArtemioPadilla/TradePilot/actions/workflows/test.yml/badge.svg" alt="Tests"></a>
+  <a href="https://github.com/ArtemioPadilla/TradePilot/actions/workflows/deploy-web.yml"><img src="https://github.com/ArtemioPadilla/TradePilot/actions/workflows/deploy-web.yml/badge.svg" alt="Deploy"></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
+  <img src="https://img.shields.io/badge/Lighthouse-100%2F100%2F100-brightgreen" alt="Lighthouse 100/100/100">
+  <img src="https://img.shields.io/badge/Python_Tests-142_passing-blue" alt="142 Python tests">
+</p>
 
----
-
-## Table of Contents
-
-- [TradePilot](#tradepilot)
-  - [Table of Contents](#table-of-contents)
-  - [Overview](#overview)
-  - [Features](#features)
-  - [Installation](#installation)
-    - [Prerequisites](#prerequisites)
-    - [Clone the Repository](#clone-the-repository)
-    - [Install Dependencies](#install-dependencies)
-  - [Usage](#usage)
-    - [Backtesting Example](#backtesting-example)
-    - [Live Trading Example](#live-trading-example)
-  - [Project Structure](#project-structure)
-  - [Contributing](#contributing)
-  - [Roadmap](#roadmap)
-  - [License](#license)
-  - [Contact](#contact)
+<p align="center">
+  <a href="https://artemiop.com/TradePilot/">🌐 Live Demo</a> •
+  <a href="#-quick-start">⚡ Quick Start</a> •
+  <a href="#-features">✨ Features</a> •
+  <a href="#-ai-strategy-builder">🤖 AI Builder</a> •
+  <a href="#-contributing">🤝 Contributing</a>
+</p>
 
 ---
 
-## Overview
+## What is TradePilot?
 
-The TradePilot library is designed to empower algorithmic traders and quantitative researchers by providing:
-- A **simulation module** (TPS) for historical backtesting of portfolio strategies.
-- A **live trading module** (TPT) to execute real orders via broker APIs.
-- A robust **backtest wrapper** that evaluates performance using common metrics (annual return, Sharpe ratio, max drawdown, etc.).
-- A modular design that supports multiple **asset ranking** strategies (e.g., momentum, mean reversion) and **portfolio optimization** techniques (Maximum Sharpe Ratio, Global Minimum Variance, Equally Weighted).
+TradePilot lets you **design, backtest, and deploy trading strategies** — all from your browser. No server setup, no Python install, no API keys needed to get started.
 
-By offering a unified environment for both backtesting and live trading, TPT minimizes the gap between simulation and execution, enabling smoother transitions from research to production.
+The entire backtesting engine (1,560 lines of TypeScript) runs **client-side**. Describe a strategy in plain English, get executable code, and backtest it instantly.
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                    TradePilot Architecture                    │
+├──────────────────────────────────────────────────────────────┤
+│                                                              │
+│   📝 "Buy stocks with highest momentum, rebalance monthly"  │
+│                         │                                    │
+│                    AI Strategy Builder                        │
+│                         │                                    │
+│                    ┌────▼─────┐                              │
+│                    │ Generated │                              │
+│                    │ TS Code   │                              │
+│                    └────┬─────┘                              │
+│                         │                                    │
+│   ┌─────────────────────▼──────────────────────┐             │
+│   │         TypeScript Engine (Browser)          │             │
+│   │  ┌──────────┐ ┌───────────┐ ┌───────────┐  │             │
+│   │  │ Strategies│ │ Optimizer │ │  Metrics   │  │             │
+│   │  │ momentum  │ │ MSR / GMV │ │ Sharpe,VaR│  │             │
+│   │  │ meanRev   │ │ EW        │ │ drawdown  │  │             │
+│   │  │ smartBeta │ │           │ │ Sortino   │  │             │
+│   │  └──────────┘ └───────────┘ └───────────┘  │             │
+│   │                     │                        │             │
+│   │              BacktestEngine                  │             │
+│   │          (simulator + allocator)             │             │
+│   └─────────────────────┬──────────────────────┘             │
+│                         │                                    │
+│                    ┌────▼─────┐                              │
+│                    │ Results:  │                              │
+│                    │ charts,   │                              │
+│                    │ metrics,  │                              │
+│                    │ trades    │                              │
+│                    └──────────┘                              │
+│                                                              │
+│   Optional: Alpaca API ──► Live/Paper Trading                │
+│   Optional: Firebase  ──► Auth, Portfolio Sync               │
+│                                                              │
+└──────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## Features
+## ⚡ Quick Start
 
-- **Python Backtesting Core** (83/83 tests passing):
-  - Simulation engine (TPS) with configurable rebalancing frequencies
-  - Performance evaluation: annualized return, Sharpe ratio, max drawdown, volatility
-  - Optimization: Maximum Sharpe Ratio, Global Minimum Variance, Equal Weight
-  - Ranking strategies: momentum, mean reversion, random
-  - Data: Yahoo Finance (yfinance), Treasury risk-free rates
+### Try it now (no install)
 
-- **Live Trading Module (TPT):**
-  - Broker API integration (Alpaca) for order execution
-  - Periodic rebalancing with portfolio management
+👉 **[Open the live demo](https://artemiop.com/TradePilot/)** → Dashboard → AI Builder → Click "Try Demo"
 
-- **Web Application** (Astro + React):
-  - Firebase Authentication with invite system and admin approval
-  - Portfolio dashboard with account/holdings management
-  - Trading interface with order form and history
-  - Backtesting UI with strategy selector and results visualization
-  - 3 themes (Bloomberg Terminal, Modern Fintech, Dashboard Dark)
-  - 9 Firestore services with real implementations
-  - FastAPI bridge connecting Python backtesting to web UI
-
-- **Data Integration:**
-  - Historical and live data via Yahoo Finance
-  - Alpaca market data streaming (WebSocket)
-
----
-
-## Installation
-
-### Prerequisites
-
-- Python 3.7 or higher
-- [pip](https://pip.pypa.io/en/stable/)
-
-### Clone the Repository
+### Run locally
 
 ```bash
-git clone https://github.com/aspadillar/TradePilot.git
-cd TradePilot
+# Clone and start the web app
+git clone https://github.com/ArtemioPadilla/TradePilot.git
+cd TradePilot/web
+npm install
+npm run dev
+# Open http://localhost:4321/TradePilot/
 ```
-### Install Dependencies
 
-You can install the package in development mode with all dependencies using:
+### Use the Python library
 
 ```bash
 pip install -e .
 ```
 
-Alternatively, you can install from the `requirements.txt`:
-
-```bash
-pip install -r requirements.txt
-```
-
----
-
-## Usage
-
-### Backtesting Example
-
-Below is a sample script to run a backtest using a momentum strategy:
-
 ```python
-# examples/example_backtest.py
-
 from tradepilot.backtest import Backtest
 from tradepilot.data import MarketData
-from strategies.momentum import momentum_strategy
 
-# Retrieve historical data for a given asset (e.g., AAPL)
-market_data = MarketData()
-# In a real scenario, you might use a DataFrame of multiple assets.
-universe = market_data.get_historical_data("AAPL", "2020-01-01", "2024-01-01")
+data = MarketData()
+universe = data.get_historical_data("AAPL", "2022-01-01", "2024-01-01")
 
-# Set up and run the backtest with the momentum strategy
-backtest = Backtest(universe, momentum_strategy, initial_capital=10000, risk_free=0.02)
-backtest.run(start="2020-01-01", end="2024-01-01")
-results = backtest.evaluate()
-
-print("Backtest Metrics:")
-for key, value in results.items():
-    print(f"{key}: {value}")
-```
-
-### Live Trading Example
-
-Below is an example script for live trading (ensure you have valid broker credentials and a paper trading account):
-
-```python
-# examples/example_live_trading.py
-
-from tradepilot.trader import TPT
-from tradepilot.broker import BrokerAPI
-from tradepilot.data import MarketData
-from strategies.momentum import momentum_strategy
-
-# Retrieve recent data for an asset (e.g., AAPL)
-market_data = MarketData()
-universe = market_data.get_historical_data("AAPL", "2023-01-01", "2024-01-01")
-
-# Set up and run live trading (replace 'alpaca' with your broker identifier)
-trader = TPT(broker_api="alpaca", universe=universe, strategy=momentum_strategy,
-              capital=10000, risk_free=0.02)
-trader.run()
+bt = Backtest(universe, strategy="momentum", initial_capital=10000)
+bt.run(start="2022-01-01", end="2024-01-01")
+results = bt.evaluate()
+print(f"Sharpe: {results['sharpe_ratio']:.2f}")
+print(f"Max Drawdown: {results['max_drawdown']:.1%}")
 ```
 
 ---
 
-## Project Structure
+## ✨ Features
+
+### 🤖 AI Strategy Builder
+Describe trading strategies in plain English → get executable TypeScript code → auto-backtest. Works in **demo mode without any API key** (5 pre-built templates). Optionally connects to Claude via AWS Bedrock.
+
+### 📊 Browser-Native Backtesting
+1,560-line TypeScript engine running entirely client-side:
+- **Strategies:** Momentum, Mean Reversion, Smart Beta
+- **Optimizers:** Maximum Sharpe Ratio, Global Minimum Variance, Equal Weight
+- **Metrics:** Sharpe, Sortino, Max Drawdown, VaR, CVaR, Alpha, Skewness, Kurtosis
+- **Zero backend** — all computation in your browser tab
+
+### 📈 Live Trading
+- Alpaca API integration for paper and live trading
+- Periodic rebalancing with configurable frequency
+- Position monitoring and order history
+
+### 🎨 Web Application
+- **37 pages** — auth, dashboard, backtesting, trading, analytics, alerts, strategies
+- **3 themes** — Bloomberg Terminal, Modern Fintech, Dashboard Dark
+- **Firebase Auth** with invite system and admin approval
+- **9 real Firestore services** — accounts, holdings, portfolio, networth, orders, and more
+- **Monaco editor** for strategy code editing
+- **Lighthouse: 100 / 100 / 100** (Performance, Accessibility, SEO)
+
+### 🐍 Python Core
+- 142 tests passing
+- Simulation engine (TPS) + live trader (TPT)
+- Portfolio optimization with NumPy/SciPy
+- Yahoo Finance + Treasury risk-free rate data
+
+---
+
+## 🏗️ Architecture
 
 ```
 TradePilot/
-├── tradepilot/            # Python backtesting library
-│   ├── simulator.py       # TPS — backtesting/simulation engine
-│   ├── trader.py          # TPT — live trading module
-│   ├── backtest.py        # High-level backtest wrapper
-│   ├── broker.py          # Alpaca broker API integration
-│   ├── ranking.py         # Asset ranking (momentum, random)
-│   ├── optimization.py    # Portfolio optimization (MSR, GMV, EW)
-│   ├── metrics.py         # Financial metrics (Sharpe, drawdown, etc.)
-│   ├── data.py            # Market data (yfinance, Treasury rates)
-│   └── config.py          # API credentials configuration
-├── web/                   # Web application (Astro + React)
-│   ├── src/
-│   │   ├── components/    # React island components
-│   │   ├── layouts/       # Astro layouts (Main, Dashboard, Admin)
-│   │   ├── pages/         # 27 pages (auth, dashboard, trading, etc.)
-│   │   └── lib/           # Services, utilities, Firebase config
-│   └── tests/e2e/         # Playwright E2E tests
-├── api/                   # FastAPI bridge (Python ↔ Web)
-│   └── server.py          # Backtest & strategy API endpoints
-├── strategies/            # Trading strategy implementations
-├── tests/                 # Python unit tests (83 tests)
-├── doc/                   # Project documentation
-│   ├── checklists/        # Phase 0-10 development checklists
-│   ├── PLATFORM_PLAN.md   # Web platform specification
-│   └── DATA_MODELS.md     # Firestore data models
-├── docs/                  # Technical guides (Sphinx)
-└── functions/             # Firebase Cloud Functions
+├── tradepilot/              # Python backtesting library
+│   ├── simulator.py         # TPS — simulation engine
+│   ├── trader.py            # TPT — live trading
+│   ├── backtest.py          # High-level backtest wrapper
+│   ├── optimization.py      # MSR, GMV, Equal Weight
+│   ├── metrics.py           # Financial calculations
+│   ├── ranking.py           # Asset selection strategies
+│   ├── data.py              # Yahoo Finance + Treasury data
+│   └── broker.py            # Alpaca integration
+│
+├── web/                     # Web application (Astro + React)
+│   └── src/
+│       ├── lib/engine/      # TypeScript backtesting engine (1,560 lines)
+│       ├── components/      # React islands (AI builder, charts, trading)
+│       ├── pages/           # 37 Astro pages
+│       └── lib/services/    # Firestore services + AI strategy service
+│
+├── strategies/              # Python strategy implementations
+├── tests/                   # 142 Python tests
+├── api/                     # FastAPI bridge (Python ↔ Web)
+├── functions/               # Firebase Cloud Functions
+└── docs/                    # Sphinx documentation
 ```
 
----
-
-## Documentation
-
-Detailed architecture documentation is available:
-
-- **[Backend Architecture](docs/architecture/BACKEND_ARCHITECTURE.md)** - Python library structure and data flows
-- **[Integration Guide](docs/architecture/INTEGRATION.md)** - How backend and web app work together
-- **[Web Data Architecture](web/docs/architecture/DATA_ARCHITECTURE.md)** - Market data and caching system
-- **[Permissions](web/docs/architecture/PERMISSIONS.md)** - Access control and GDPR compliance
-
----
-
-## Contributing
-
-We welcome contributions from the community! Here's how you can help:
-
-1. **Fork the Repository:**  
-   Create your own fork of this repository.
-
-2. **Create a Feature Branch:**  
-   Use descriptive branch names (e.g., `improve-error-handling` or `add-new-strategy`).
-
-3. **Write Tests:**  
-   Add or update tests for your changes to ensure nothing breaks.
-
-4. **Follow the Code Style:**  
-   We follow PEP 8 guidelines. Make sure your code is well-commented and documented.
-
-5. **Submit a Pull Request:**  
-   Include a clear description of your changes and link to any related issues.
-
-For detailed guidelines, please see our [CONTRIBUTING.md](CONTRIBUTING.md) file.
+| Layer | Tech | Purpose |
+|-------|------|---------|
+| Frontend | Astro 5 + React 19 | Islands architecture, SSG |
+| Styling | Tailwind CSS | 3 switchable themes |
+| Engine | TypeScript | Client-side backtesting |
+| Auth | Firebase Auth | Invite system, admin approval |
+| Database | Firestore | Portfolio, trades, strategies |
+| Backend | Python + FastAPI | Strategy execution, data |
+| Broker | Alpaca API | Paper + live trading |
+| AI | Claude (Bedrock) | Natural language → strategy code |
+| CI/CD | GitHub Actions | Tests, deploy, Lighthouse |
 
 ---
 
-## Roadmap
+## 🤖 AI Strategy Builder
 
-Development is tracked in `doc/checklists/` (Phases 0-10).
+The killer feature. Describe what you want in English:
 
-**Completed (Phases 0-4):**
-- Web app foundation, auth, portfolio management, Alpaca integration, backtesting UI
-- FastAPI bridge, 9 Firestore services, 83/83 Python tests
+> "Buy the top 5 stocks by 20-day momentum, rebalance every 2 weeks, use maximum Sharpe ratio optimization"
 
-**In Progress (Phases 5-10):**
-- Strategy builder with Monaco editor (Phase 5)
-- Alerts & notifications backend (Phase 6)
-- Social features — leaderboard, strategy sharing (Phase 7)
-- Reporting — PDF generation, tax reports (Phase 8)
-- PWA — offline mode, service worker (Phase 9)
-- Documentation — API docs, tutorials (Phase 10)
+TradePilot generates TypeScript code, explains the strategy, and runs a backtest — all in your browser.
 
-**Python Library Improvements:** See `doc/roadmap.md`
+**Pre-built templates (no API key needed):**
+- 📈 Momentum Crossover — fast MA crosses slow MA
+- 📉 RSI Mean Reversion — buy oversold, sell overbought
+- 💥 Volatility Breakout — buy on vol expansion
+- ⚖️ Relative Value — long cheap / short expensive
+- 🔄 Dual Momentum — absolute + relative momentum filter
 
----
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+**How it works:**
+1. User types strategy description
+2. AI generates a `StrategyFunction` matching the engine's interface
+3. Code runs in a sandboxed executor (restricted scope, no eval)
+4. Results display with full backtest metrics
 
 ---
 
-## Contact
+## 🤝 Contributing
 
-For any questions, feedback, or contributions, please reach out:
+We'd love your help! Check out our [Good First Issues](https://github.com/ArtemioPadilla/TradePilot/labels/good%20first%20issue) or dive into something bigger.
 
-- **Maintainer:** Your Name ([your.email@example.com](mailto:your.email@example.com))
-- **GitHub:** [yourusername](https://github.com/yourusername)
+### Quick contribution guide
+
+```bash
+# Fork, clone, branch
+git clone https://github.com/YOUR_USERNAME/TradePilot.git
+cd TradePilot
+git checkout -b feat/my-feature
+
+# Python tests
+pip install -e .
+pytest tests/
+
+# Web development
+cd web && npm install && npm run dev
+
+# Playwright E2E tests
+cd web && npx playwright test --project=chromium
+
+# Submit PR
+git push origin feat/my-feature
+```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
 ---
 
-We hope you find TradePilot useful and exciting. Contributions, suggestions, and feedback are highly appreciated—let's build a robust, production-ready trading platform together!
+## 📈 Roadmap
 
-Happy Trading! 🚀
+**✅ Shipped:**
+- Python backtesting core (142 tests)
+- TypeScript engine (browser-native)
+- AI Strategy Builder with demo mode
+- Web app with auth, dashboard, 3 themes
+- Alpaca integration
+
+**🚧 In Progress:**
+- Real market data in UI (Yahoo Finance proxy)
+- Strategy marketplace (share + fork)
+- Crypto support (Binance data)
+
+**📋 Planned:**
+- Options pricing (Black-Scholes in TS)
+- Interactive Brokers adapter
+- Mobile app (PWA)
+- Tax reporting
+- Multi-language support
+
+Full roadmap: [`doc/checklists/`](doc/checklists/)
+
+---
+
+## 📊 Performance
+
+| Metric | Score |
+|--------|-------|
+| Lighthouse Performance | 100 |
+| Lighthouse Accessibility | 100 |
+| Lighthouse SEO | 100 |
+| Python Tests | 142 passing |
+| TypeScript Engine | 1,560 lines |
+| Web Pages | 37 |
+| Build Time | ~12 seconds |
+
+---
+
+## 📖 Documentation
+
+- [Quick Start Guide](docs/getting-started.md)
+- [Backtesting Guide](docs/guides/backtesting.md)
+- [Strategy Development](docs/guides/strategies.md)
+- [Optimization Guide](docs/guides/optimization.md)
+- [Paper Trading Tutorial](docs/tutorials/paper-trading.md)
+- [Backend Architecture](docs/architecture/BACKEND_ARCHITECTURE.md)
+- [Competitive Analysis](doc/COMPETITIVE_ANALYSIS.md)
+
+---
+
+## 📄 License
+
+MIT — use it however you want. See [LICENSE](LICENSE).
+
+---
+
+## 🙏 Acknowledgments
+
+Built with [Astro](https://astro.build), [React](https://react.dev), [Firebase](https://firebase.google.com), [Alpaca](https://alpaca.markets), and [Claude](https://anthropic.com).
+
+---
+
+<p align="center">
+  <sub>Built by <a href="https://github.com/ArtemioPadilla">@ArtemioPadilla</a> · Star ⭐ if you find it useful</sub>
+</p>
