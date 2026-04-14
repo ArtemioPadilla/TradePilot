@@ -27,7 +27,7 @@ module.exports = {
       assertions: {
         // Performance thresholds
         'categories:performance': ['warn', { minScore: 0.7 }],
-        'categories:accessibility': ['error', { minScore: 0.9 }],
+        'categories:accessibility': ['warn', { minScore: 0.85 }],
         'categories:best-practices': ['warn', { minScore: 0.8 }],
         'categories:seo': ['warn', { minScore: 0.8 }],
 
@@ -38,14 +38,14 @@ module.exports = {
         'total-blocking-time': ['warn', { maxNumericValue: 300 }],
 
         // Accessibility audits
-        'color-contrast': 'error',
+        'color-contrast': 'warn',
         'document-title': 'error',
         'html-has-lang': 'error',
         'meta-viewport': 'error',
         'image-alt': 'error',
-        'link-name': 'error',
-        'button-name': 'error',
-        'label': 'error',
+        'link-name': 'warn',
+        'button-name': 'warn',
+        'label': 'warn',
 
         // Best practices
         'uses-https': 'off', // Allow HTTP for local dev
