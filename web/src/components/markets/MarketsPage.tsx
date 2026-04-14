@@ -10,6 +10,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useStore } from '@nanostores/react';
 import { Search, RefreshCw } from 'lucide-react';
+import { appPath } from '../../lib/utils/paths';
 
 import {
   $marketAssets,
@@ -180,7 +181,7 @@ export function MarketsPage() {
 
   const handleCreateAlert = (symbol: string) => {
     // Navigate to alerts page with symbol pre-filled
-    window.location.href = `/dashboard/alerts?symbol=${symbol}`;
+    window.location.href = appPath(`/dashboard/alerts?symbol=${symbol}`);
   };
 
   // Categories for tabs

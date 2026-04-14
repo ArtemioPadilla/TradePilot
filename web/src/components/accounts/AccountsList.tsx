@@ -4,6 +4,7 @@ import { getFirebaseAuth } from '../../lib/firebase';
 import { getAccounts } from '../../lib/services/accounts';
 import type { Account, AccountType } from '../../types/portfolio';
 import { AddAccountModal } from './AddAccountModal';
+import { appPath } from '../../lib/utils/paths';
 import {
   TrendingUp,
   Building,
@@ -161,7 +162,7 @@ export function AccountsList() {
           {accounts.map((account) => (
             <a
               key={account.id}
-              href={`/dashboard/account?id=${account.id}`}
+              href={appPath(`/dashboard/account?id=${account.id}`)}
               className="account-card"
               data-testid={`account-card-${account.id}`}
             >

@@ -213,8 +213,8 @@ export default function UserMarketsSection({
             watchlistSymbols={watchlistSymbols}
             selectedStrategyId={selectedStrategyId}
             onStrategySelect={setSelectedStrategyId}
-            onViewStrategy={id => window.location.href = `/dashboard/strategies?id=${id}`}
-            onRunBacktest={id => window.location.href = `/dashboard/backtest?strategy=${id}`}
+            onViewStrategy={id => window.location.href = appPath(`/dashboard/strategies?id=${id}`)}
+            onRunBacktest={id => window.location.href = appPath(`/dashboard/backtest?strategy=${id}`)}
             onAssetClick={onAssetClick}
           />
 

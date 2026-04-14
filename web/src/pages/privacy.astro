@@ -1,0 +1,145 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+const base = import.meta.env.BASE_URL;
+---
+
+<MainLayout title="Privacy Policy">
+  <div class="legal-page">
+    <nav class="legal-nav">
+      <a href={base} class="logo">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="8" fill="var(--accent)"/>
+          <path d="M8 20L12 12L18 16L24 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="24" cy="8" r="2" fill="white"/>
+        </svg>
+        <span>TradePilot</span>
+      </a>
+    </nav>
+
+    <main class="legal-content">
+      <h1>Privacy Policy</h1>
+      <p class="last-updated">Last updated: April 14, 2026</p>
+
+      <section>
+        <h2>1. Information We Collect</h2>
+        <p>When you create an account, we collect your email address and display name. We also collect usage data such as pages visited and features used to improve the platform.</p>
+      </section>
+
+      <section>
+        <h2>2. How We Use Your Information</h2>
+        <p>We use your information to provide and maintain the TradePilot service, authenticate your identity, and communicate important updates about your account or the platform.</p>
+      </section>
+
+      <section>
+        <h2>3. Data Storage</h2>
+        <p>Your data is stored securely using Firebase/Firestore infrastructure provided by Google Cloud Platform. We implement industry-standard security measures to protect your information.</p>
+      </section>
+
+      <section>
+        <h2>4. Third-Party Services</h2>
+        <p>TradePilot integrates with third-party services including Firebase Authentication, market data providers, and brokerage APIs (such as Alpaca). Each third-party service has its own privacy policy governing the use of your data.</p>
+      </section>
+
+      <section>
+        <h2>5. Portfolio &amp; Trading Data</h2>
+        <p>Your portfolio holdings, account balances, and trading history are stored to provide the core functionality of the platform. We do not share your financial data with third parties for marketing purposes.</p>
+      </section>
+
+      <section>
+        <h2>6. Cookies &amp; Local Storage</h2>
+        <p>We use browser local storage and cookies to maintain your session, remember your preferences (such as theme selection), and improve your experience.</p>
+      </section>
+
+      <section>
+        <h2>7. Your Rights</h2>
+        <p>You may request access to, correction of, or deletion of your personal data at any time through your account settings or by contacting us directly.</p>
+      </section>
+
+      <section>
+        <h2>8. Changes to This Policy</h2>
+        <p>We may update this privacy policy from time to time. We will notify you of any material changes by posting the new policy on this page.</p>
+      </section>
+
+      <div class="back-link">
+        <a href={base}>Back to Home</a>
+      </div>
+    </main>
+  </div>
+</MainLayout>
+
+<style>
+  .legal-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .legal-nav {
+    display: flex;
+    align-items: center;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.125rem;
+    color: var(--text-primary);
+  }
+
+  .legal-content {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+  }
+
+  .last-updated {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin-bottom: 2rem;
+  }
+
+  section {
+    margin-bottom: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .back-link {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .back-link a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .back-link a:hover {
+    text-decoration: underline;
+  }
+</style>

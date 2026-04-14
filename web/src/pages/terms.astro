@@ -1,0 +1,154 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+const base = import.meta.env.BASE_URL;
+---
+
+<MainLayout title="Terms of Service">
+  <div class="legal-page">
+    <nav class="legal-nav">
+      <a href={base} class="logo">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="8" fill="var(--accent)"/>
+          <path d="M8 20L12 12L18 16L24 8" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="24" cy="8" r="2" fill="white"/>
+        </svg>
+        <span>TradePilot</span>
+      </a>
+    </nav>
+
+    <main class="legal-content">
+      <h1>Terms of Service</h1>
+      <p class="last-updated">Last updated: April 14, 2026</p>
+
+      <section>
+        <h2>1. Acceptance of Terms</h2>
+        <p>By accessing or using TradePilot, you agree to be bound by these Terms of Service. If you do not agree, you may not use the platform.</p>
+      </section>
+
+      <section>
+        <h2>2. Description of Service</h2>
+        <p>TradePilot is a portfolio management and algorithmic trading platform that provides backtesting, strategy analysis, and trading tools. The platform integrates with third-party brokerage services to facilitate trade execution.</p>
+      </section>
+
+      <section>
+        <h2>3. Not Financial Advice</h2>
+        <p><strong>TradePilot does not provide financial, investment, or trading advice.</strong> All strategies, metrics, backtesting results, and analytics are provided for informational and educational purposes only. Past performance does not guarantee future results.</p>
+      </section>
+
+      <section>
+        <h2>4. Paper Trading vs. Real Money</h2>
+        <p>TradePilot supports both paper trading (simulated) and live trading with real funds. You are solely responsible for understanding which mode you are using and for all trading decisions made through the platform. Simulated results may not reflect actual market conditions.</p>
+      </section>
+
+      <section>
+        <h2>5. Risk Disclosure</h2>
+        <p>Trading securities involves substantial risk of loss and is not suitable for every investor. You should carefully consider your financial situation before trading. You acknowledge that you may lose some or all of your invested capital.</p>
+      </section>
+
+      <section>
+        <h2>6. Account Responsibility</h2>
+        <p>You are responsible for maintaining the confidentiality of your account credentials and for all activities under your account. You must notify us immediately of any unauthorized use.</p>
+      </section>
+
+      <section>
+        <h2>7. Brokerage Integration</h2>
+        <p>TradePilot connects to third-party brokerages (such as Alpaca) to execute trades. We are not a broker-dealer. All trades are executed through your brokerage account, subject to that broker's terms and conditions.</p>
+      </section>
+
+      <section>
+        <h2>8. Limitation of Liability</h2>
+        <p>TradePilot is provided "as is" without warranties of any kind. We shall not be liable for any trading losses, data inaccuracies, service interruptions, or damages arising from your use of the platform.</p>
+      </section>
+
+      <section>
+        <h2>9. Modifications</h2>
+        <p>We reserve the right to modify these terms at any time. Continued use of the platform after changes constitutes acceptance of the updated terms.</p>
+      </section>
+
+      <div class="back-link">
+        <a href={base}>Back to Home</a>
+      </div>
+    </main>
+  </div>
+</MainLayout>
+
+<style>
+  .legal-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .legal-nav {
+    display: flex;
+    align-items: center;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.125rem;
+    color: var(--text-primary);
+  }
+
+  .legal-content {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+  }
+
+  .last-updated {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin-bottom: 2rem;
+  }
+
+  section {
+    margin-bottom: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  strong {
+    color: var(--text-primary);
+  }
+
+  .back-link {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .back-link a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .back-link a:hover {
+    text-decoration: underline;
+  }
+</style>

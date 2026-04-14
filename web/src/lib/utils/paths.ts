@@ -10,7 +10,7 @@
  */
 
 /** The base URL set in astro.config.mjs (includes trailing slash). */
-export const BASE = import.meta.env.BASE_URL || '/';
+export const BASE = import.meta.env.BASE_URL || '/TradePilot/';
 
 /**
  * Prefix a root-relative path with the Astro base URL.

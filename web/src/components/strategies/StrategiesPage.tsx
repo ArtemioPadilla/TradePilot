@@ -222,7 +222,7 @@ export function StrategiesPage() {
 
   const handleRunBacktest = useCallback((strategy: Strategy) => {
     // Navigate to backtest page with strategy pre-selected
-    window.location.href = `/dashboard/backtest?strategy=${strategy.id}`;
+    window.location.href = appPath(`/dashboard/backtest?strategy=${strategy.id}`);
   }, []);
 
   // Render not authenticated state
