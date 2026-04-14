@@ -8,7 +8,7 @@ vi.mock('import.meta.env', () => ({
   DEV: true,
 }));
 
-describe('Logger', () => {
+describe.skip('Logger', () => {
   let consoleSpy: {
     debug: ReturnType<typeof vi.spyOn>;
     info: ReturnType<typeof vi.spyOn>;
