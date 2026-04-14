@@ -27,6 +27,9 @@ const { title, description = 'TradePilot Dashboard' } = Astro.props;
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
     <title>{title} | TradePilot</title>
+
+    <!-- Analytics (privacy-respecting, no cookies) -->
+    <script defer data-domain="artemiop.com" src="https://plausible.io/js/script.js"></script>
     <style>
       /* Hide content until auth is verified */
       .app-container { visibility: hidden; }
