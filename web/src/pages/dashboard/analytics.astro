@@ -1,8 +1,164 @@
 ---
 import DashboardLayout from '../../layouts/DashboardLayout.astro';
 import RiskDashboard from '../../components/analytics/RiskDashboard';
+import EfficientFrontier from '../../components/analytics/EfficientFrontier';
+import RiskMetrics from '../../components/analytics/RiskMetrics';
+import StrategyComparison from '../../components/analytics/StrategyComparison';
+import AllocationTimeline from '../../components/analytics/AllocationTimeline';
+import DrawdownChart from '../../components/analytics/DrawdownChart';
+import ReturnsDistribution from '../../components/analytics/ReturnsDistribution';
+import PortfolioValuation from '../../components/analytics/PortfolioValuation';
+import MomentumChart from '../../components/analytics/MomentumChart';
 ---
 
 <DashboardLayout title="Analytics">
-  <RiskDashboard client:only="react" />
+  <div class="analytics-hub">
+    <div class="analytics-tabs" id="analytics-tabs">
+      <button class="tab active" data-tab="overview">Overview</button>
+      <button class="tab" data-tab="risk">Risk</button>
+      <button class="tab" data-tab="comparison">Comparison</button>
+      <button class="tab" data-tab="allocation">Allocation</button>
+      <button class="tab" data-tab="charts">Charts</button>
+    </div>
+
+    <div class="tab-panels">
+      <!-- Overview: Efficient Frontier + Portfolio Valuation + Risk Dashboard -->
+      <div class="tab-panel active" id="panel-overview">
+        <div class="panel-section">
+          <EfficientFrontier client:only="react" />
+        </div>
+        <div class="panel-section">
+          <PortfolioValuation client:only="react" />
+        </div>
+        <div class="panel-section">
+          <RiskDashboard client:only="react" />
+        </div>
+      </div>
+
+      <!-- Risk: RiskMetrics + ReturnsDistribution + DrawdownChart -->
+      <div class="tab-panel" id="panel-risk">
+        <div class="panel-section">
+          <RiskMetrics client:only="react" />
+        </div>
+        <div class="panel-section">
+          <ReturnsDistribution client:only="react" />
+        </div>
+        <div class="panel-section">
+          <DrawdownChart client:only="react" />
+        </div>
+      </div>
+
+      <!-- Comparison: StrategyComparison -->
+      <div class="tab-panel" id="panel-comparison">
+        <div class="panel-section">
+          <StrategyComparison client:only="react" />
+        </div>
+      </div>
+
+      <!-- Allocation: AllocationTimeline -->
+      <div class="tab-panel" id="panel-allocation">
+        <div class="panel-section">
+          <AllocationTimeline client:only="react" />
+        </div>
+      </div>
+
+      <!-- Charts: MomentumChart + PortfolioValuation + DrawdownChart -->
+      <div class="tab-panel" id="panel-charts">
+        <div class="panel-section">
+          <MomentumChart client:only="react" />
+        </div>
+        <div class="panel-section">
+          <PortfolioValuation client:only="react" />
+        </div>
+        <div class="panel-section">
+          <DrawdownChart client:only="react" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .analytics-hub {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: var(--space-4, 1rem);
+    }
+
+    .analytics-tabs {
+      display: flex;
+      gap: var(--space-2, 0.5rem);
+      background: var(--bg-secondary);
+      padding: var(--space-1, 0.25rem);
+      border-radius: var(--radius-xl, 16px);
+      width: fit-content;
+      margin-bottom: var(--space-6, 1.5rem);
+    }
+
+    .tab {
+      padding: var(--space-3, 0.75rem) var(--space-5, 1.25rem);
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-lg, 12px);
+      color: var(--text-muted);
+      font-size: var(--text-sm, 0.875rem);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab:hover {
+      color: var(--text-primary);
+      background: var(--bg-hover);
+    }
+
+    .tab.active {
+      background: var(--accent);
+      color: white;
+    }
+
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    .panel-section {
+      margin-bottom: var(--space-8, 2rem);
+    }
+
+    @media (max-width: 768px) {
+      .analytics-tabs {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .tab {
+        white-space: nowrap;
+        padding: var(--space-2, 0.5rem) var(--space-4, 1rem);
+      }
+    }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const tabs = document.querySelectorAll('.analytics-tabs .tab');
+      const panels = document.querySelectorAll('.tab-panel');
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const target = tab.getAttribute('data-tab');
+
+          tabs.forEach(t => t.classList.remove('active'));
+          panels.forEach(p => p.classList.remove('active'));
+
+          tab.classList.add('active');
+          const panel = document.getElementById(`panel-${target}`);
+          if (panel) panel.classList.add('active');
+        });
+      });
+    });
+  </script>
 </DashboardLayout>
