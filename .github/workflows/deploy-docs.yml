@@ -1,5 +1,8 @@
 name: Deploy Documentation
 
+# DISABLED: GitHub Pages not enabled yet. Enable at repo Settings > Pages first.
+# Uncomment jobs when ready.
+
 on:
   push:
     branches: [main]
