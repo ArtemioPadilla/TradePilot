@@ -237,7 +237,7 @@ class TPS:
         sorted_stocks = stock_metrics.sort_values(ascending = not self.highest_better)
         print(f"Top stocks for {self.day}:\n{sorted_stocks}")
         top_N_stocks = sorted_stocks[:self.N]
-        return stock_prices_window.loc[:, top_N_stocks]
+        return stock_prices_window.loc[:, top_N_stocks.index]
         
     def get_expected_returns(self, returns):
         return self.expected_returns_func(returns)

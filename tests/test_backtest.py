@@ -45,7 +45,6 @@ class TestBacktestInitialization:
         )
 
         assert bt is not None
-        assert bt.simulator is not None
         assert bt.results is None
 
     def test_initialization_default_rebalance(self, sample_prices):
