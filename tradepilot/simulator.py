@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 from .optimization import msr, gmv, eq_weighted
+from .metrics import portfolio_return, portfolio_vol
 from .metrics import get_returns, annualize_returns
 from .portfolios import eval_portfolio
 
