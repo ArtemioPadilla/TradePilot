@@ -19,7 +19,7 @@
   --bg-elevated: #1e293b;
   --text-primary: #f1f5f9;
   --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
+  --text-muted: #a1b1c7;
   --text-inverse: #0f172a;
   --accent: #3b82f6;
   --accent-hover: #2563eb;
@@ -216,11 +216,11 @@ a:hover {
 }
 
 /* Focus states - Accessibility */
-:focus {
+:focus:not(:focus-visible) {
   outline: none;
 }
 
-:focus-visible {
+*:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
   border-radius: var(--radius-sm);
@@ -228,13 +228,17 @@ a:hover {
 
 /* Skip link for keyboard navigation */
 .skip-link {
-  position: absolute;
-  top: -40px;
-  left: 0;
+  position: fixed;
+  top: -100%;
+  left: var(--space-4);
   background: var(--accent);
   color: white;
   padding: var(--space-2) var(--space-4);
-  z-index: var(--z-tooltip);
+  z-index: calc(var(--z-tooltip) + 1);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  text-decoration: none;
   transition: top var(--transition-fast);
 }
 
@@ -856,4 +860,129 @@ textarea.input {
 
 .inline-lg {
   gap: calc(1rem * var(--spacing-density));
+}
+
+/* ============================================
+   ACCESSIBILITY: Touch targets
+   Ensure minimum 44x44px touch targets on mobile
+   ============================================ */
+
+@media (pointer: coarse) {
+  button,
+  a,
+  input[type="checkbox"],
+  input[type="radio"],
+  select,
+  .btn,
+  .nav-item,
+  .mobile-nav-item {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* ============================================
+   RESPONSIVE: Table horizontal scroll on mobile
+   ============================================ */
+
+.table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  .table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    max-width: 100%;
+  }
+}
+
+/* ============================================
+   RESPONSIVE: Prevent horizontal overflow
+   ============================================ */
+
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+.card,
+.widget,
+.dashboard-card,
+.metric-card-container,
+.page-content {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+p,
+span,
+td,
+th,
+li,
+label,
+.display-value,
+.display-value-sm {
+  word-break: break-word;
+}
+
+/* ============================================
+   RESPONSIVE: Small mobile (375px and below)
+   ============================================ */
+
+@media (max-width: 375px) {
+  h1 {
+    font-size: var(--text-2xl);
+  }
+
+  h2 {
+    font-size: var(--text-xl);
+  }
+
+  h3 {
+    font-size: var(--text-lg);
+  }
+
+  h4 {
+    font-size: var(--text-base);
+  }
+
+  .display-value {
+    font-size: var(--text-3xl);
+  }
+
+  .display-value-sm {
+    font-size: var(--text-2xl);
+  }
+
+  .card,
+  .widget,
+  .dashboard-card {
+    padding: calc(var(--space-4) * var(--spacing-density));
+  }
+
+  .page-content {
+    padding: calc(var(--space-3) * var(--spacing-density));
+  }
+
+  .input,
+  select,
+  textarea {
+    width: 100%;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn-icon,
+  .btn-icon-sm,
+  .btn-icon-lg {
+    width: auto;
+  }
 }

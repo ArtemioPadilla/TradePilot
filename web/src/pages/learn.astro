@@ -1,0 +1,8 @@
+---
+import DashboardLayout from '../layouts/DashboardLayout.astro';
+import LearnPage from '../components/education/LearnPage';
+---
+
+<DashboardLayout title="Learn">
+  <LearnPage client:only="react" />
+</DashboardLayout>
