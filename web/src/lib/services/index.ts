@@ -24,6 +24,9 @@ export * from './backtest-execution';
 export * from './backtest-history';
 export * from './strategy-presets';
 
+// Leaderboard
+export * from './leaderboard';
+
 // Alerts & Notifications
 export * from './alerts';
 export * from './notifications';

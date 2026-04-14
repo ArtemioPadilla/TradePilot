@@ -16,3 +16,4 @@ export * from './credentials';
 export * from './orders';
 export * from './health';
 export * from './positions';
+export * from './social/updateLeaderboard';
