@@ -13,6 +13,7 @@
  */
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
+import { appPath } from '../../lib/utils/paths';
 import {
   BarChart,
   Bar,
@@ -326,7 +327,7 @@ export function RiskMetrics({ symbols: initialSymbols }: RiskMetricsProps) {
       const oneYearAgo = new Date(today);
       oneYearAgo.setFullYear(today.getFullYear() - 1);
 
-      const response = await fetch('/api/risk-metrics', {
+      const response = await fetch(appPath('/api/risk-metrics'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

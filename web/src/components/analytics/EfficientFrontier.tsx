@@ -10,6 +10,7 @@
  */
 
 import { useState, useCallback } from 'react';
+import { appPath } from '../../lib/utils/paths';
 import {
   ScatterChart,
   Scatter,
@@ -183,7 +184,7 @@ export function EfficientFrontier({
     setError(null);
 
     try {
-      const response = await fetch('/api/efficient-frontier', {
+      const response = await fetch(appPath('/api/efficient-frontier'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

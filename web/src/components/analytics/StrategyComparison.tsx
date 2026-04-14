@@ -16,6 +16,7 @@
  */
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
+import { appPath } from '../../lib/utils/paths';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -337,7 +338,7 @@ export function StrategyComparison({ strategies }: StrategyComparisonProps) {
       setError(null);
 
       try {
-        const response = await fetch('/api/strategy-comparison', { method: 'POST' });
+        const response = await fetch(appPath('/api/strategy-comparison'), { method: 'POST' });
 
         if (!response.ok) {
           throw new Error(`API returned ${response.status}`);

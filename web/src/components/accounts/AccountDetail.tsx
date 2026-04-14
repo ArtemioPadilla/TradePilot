@@ -88,7 +88,7 @@ export function AccountDetail({ accountId }: AccountDetailProps) {
     try {
       setDeleting(true);
       await deleteAccount(userId, account.id);
-      window.location.href = '/dashboard/accounts';
+      window.location.href = appPath('/dashboard/accounts');
     } catch (err) {
       console.error('Failed to delete account:', err);
       setError('Failed to delete account. Please try again.');

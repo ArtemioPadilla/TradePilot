@@ -16,6 +16,7 @@ import StrategyUniverseCard from './StrategyUniverseCard';
 import StrategySignalsCard from './StrategySignalsCard';
 import UserHoldingsSnapshot from './UserHoldingsSnapshot';
 import LoginPromptOverlay from './LoginPromptOverlay';
+import { appPath } from '../../lib/utils/paths';
 
 interface Strategy {
   id: string;
@@ -200,7 +201,7 @@ export default function UserMarketsSection({
             totalValue={totalValue}
             totalDayChange={totalDayChange}
             totalDayChangePercent={totalDayChangePercent}
-            onViewAll={() => window.location.href = '/dashboard/accounts'}
+            onViewAll={() => window.location.href = appPath('/dashboard/accounts')}
             onAssetClick={onAssetClick}
           />
         </div>

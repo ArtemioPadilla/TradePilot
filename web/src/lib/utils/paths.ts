@@ -21,5 +21,6 @@ export const BASE = import.meta.env.BASE_URL || '/';
  *   appPath('/auth/login')     // '/TradePilot/auth/login'
  */
 export function appPath(path: string): string {
-  return BASE + path.replace(/^\//, '');
+  const base = BASE.endsWith('/') ? BASE : BASE + '/';
+  return base + path.replace(/^\//, '');
 }
