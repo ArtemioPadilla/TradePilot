@@ -202,3 +202,80 @@ Before completing any phase:
 ## Security
 
 Run Snyk security scans for new code. Fix any issues found before completing changes.
+
+## CyberEco Hub Integration
+
+### Status: Phase 0 — Architecture Ready, Not Yet Implemented
+
+TradePilot is designed to integrate with CyberEco Hub as an ecosystem app. Architecture docs already include CyberEco compatibility (Hub Gateway detection, privacy model, data portability). Implementation starts after PatrimonioMX integration is complete (see `cybereco-hub/docs/specs/financial-apps-integration.md`).
+
+### Integration Architecture
+
+Both apps stay independent. CyberEco Hub provides shared backend packages:
+
+- `@cybereco/types` — shared persistence types (trading types added when integration starts)
+- `@cybereco/auth` — SSO authentication
+- `@cybereco/services` — domain services via StorageAdapter (zero Firebase coupling)
+
+Hub repo: `/Users/artemiopadilla/Documents/repos/GitHub/cybereco/cybereco-hub/`
+
+### Hub Gateway Detection (Already Implemented)
+
+```typescript
+// web/docs/architecture/PERMISSIONS.md
+function isRunningBehindHub(request: Request): boolean {
+  return request.headers.get('x-hub-proxy') === 'true';
+}
+```
+
+### Data Source Compatibility (Already Implemented)
+
+```typescript
+// 'cybereco' is already a valid DataSource in web/src/types/
+type DataSource = 'alpaca' | 'coingecko' | ... | 'cybereco';
+```
+
+### Key Architectural Decision: Persistence vs. Computation Types
+
+Following the pattern established by PatrimonioMX integration:
+
+- **`@cybereco/types/trading.ts`** will contain only **persistence types** — what Firestore stores (`InvestmentAccount`, `Holding`, `TradingTransaction`, `Strategy`, etc.)
+- **TradePilot's `web/src/types/`** keeps all **app-specific types** — runtime schemas, cache configs, UI state types
+- **Runtime values** (`DEFAULT_STRATEGY_PRESETS`, `ALERT_TYPE_INFO`, `DEFAULT_CACHE_CONFIG`) go into `@cybereco/types` with `export { }` (not `export type { }`) — precedent: `ROLE_HIERARCHY`, `COLLECTIONS`
+
+### Future Integration Phases
+
+1. **Phase 1 (separate PR):** Extract trading persistence types to `@cybereco/types/trading.ts`
+   - 9 collections: `investmentAccounts`, `holdings`, `tradingTransactions`, `strategies`, `backtests`, `watchlists`, `tradingAlerts`, `orders`, `brokerConnections`
+   - Runtime constants exported alongside types
+2. **Phase 2:** Create `TradingService`, `BacktestService` in `@cybereco/services`
+   - Constructor injection of `IDataLayerService`, zero Firebase imports
+   - Follows `ExpenseService` pattern from Hub
+3. **Phase 3:** TradePilot installs `@cybereco/*` packages, optionally replaces direct Firebase
+4. **Phase 4:** Cross-app features with PatrimonioMX
+   - Unified net worth (property values + portfolio value)
+   - Combined cash flow (mortgage + dividends + trading P&L)
+   - Tax projection (ISR engine + capital gains + dividends)
+   - Holistic risk profile (debt-to-income + portfolio beta)
+
+### Integration Constraints (from CyberEco Tenets)
+
+1. **Tenet #1 (Sovereignty):** Users own trading data. No admin override on financial PII.
+2. **Tenet #2 (Storage Agnosticism):** Services use StorageAdapter, zero Firebase imports.
+3. **Tenet #3 (Privacy):** `brokerConnections` stores API credentials — must be encrypted at rest.
+4. **Tenet #7 (Simplicity):** Don't abstract until needed. Trading types stay TradePilot-specific until a second trading app exists.
+
+### What Changes for TradePilot (When Integration Starts)
+
+- `npm install @cybereco/types @cybereco/services` for shared data layer
+- Auth optionally switches to CyberEco Hub SSO (`x-hub-proxy` detection already exists)
+- Data migration: current Firestore structure → top-level collections with `userId` field
+- Python backend stays standalone (not affected by CyberEco integration)
+
+### What Does NOT Change
+
+- All 93 React components — unchanged
+- Python trading engine (TPS, TPT, Backtest) — unchanged
+- Alpaca broker integration — unchanged
+- Market data providers — unchanged
+- Deployment — unchanged
