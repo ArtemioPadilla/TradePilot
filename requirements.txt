@@ -20,7 +20,7 @@ tqdm>=4.50
 
 # Testing
 pytest>=7.0
-pytest-cov>=4.0
+pytest-cov>=7.1.0
 
 # PDF report generation
 reportlab>=4.0
