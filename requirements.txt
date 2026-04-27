@@ -16,7 +16,7 @@ requests>=2.26
 plotly>=5.0
 
 # Progress bars
-tqdm>=4.50
+tqdm>=4.67.3
 
 # Testing
 pytest>=7.0
