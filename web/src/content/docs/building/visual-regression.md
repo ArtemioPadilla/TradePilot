@@ -59,4 +59,4 @@ expect(page).toHaveScreenshot({ threshold: 0.05 }); // 5% pixel diff tolerance
 
 These are separate gates. Both must pass on a PR that touches UI.
 
-Full guide → [`CONTRIBUTING.md — Visual regression`](https://github.com/ArtemioPadilla/inceptor/blob/main/CONTRIBUTING.md#visual-regression)
+Full guide → [`CONTRIBUTING.md — Visual regression`](https://github.com/ArtemioPadilla/TradePilot/blob/main/CONTRIBUTING.md#visual-regression)

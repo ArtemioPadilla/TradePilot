@@ -15,7 +15,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { githubIssuesUrl } from '@/lib/api';
 
 // The repo whose GitHub Issues drive the live data on the dashboard.
-const REPO = 'ArtemioPadilla/inceptor';
+const REPO = 'ArtemioPadilla/TradePilot';
 
 interface GitHubIssue {
   id: number;

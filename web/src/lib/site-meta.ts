@@ -28,18 +28,18 @@
 export const SITE_ORIGIN = 'https://artemiop.com';
 export const SITE = {
   /** Product name as it should appear to agents and search engines. */
-  name: 'Inceptor',
+  name: 'TradePilot',
   /** One-line positioning (used as the default meta description). */
   description:
-    'Issue-driven web template: a governed, agent-orchestrated way of building — ' +
-    'issue → Claude Code → PR → merge → deploy — on Astro 5 + React 19 islands, ' +
-    'with quality and ethics gates enforced by the repo.',
+    'Algorithmic trading workbench: backtest strategies in your browser — ' +
+    'momentum, mean reversion, smart beta — with portfolio optimization, ' +
+    'a Backtest Lab, and community leaderboards. Astro 5 + React 19 islands.',
   /** owner/repo on GitHub. */
-  repoSlug: (import.meta.env.PUBLIC_REPO_SLUG as string | undefined) ?? 'ArtemioPadilla/inceptor',
+  repoSlug: (import.meta.env.PUBLIC_REPO_SLUG as string | undefined) ?? 'ArtemioPadilla/TradePilot',
   /** SPDX license id of the codebase. */
   license: 'MIT',
   /** Languages an agent should expect in the source. */
-  programmingLanguages: ['TypeScript', 'Astro', 'CSS'],
+  programmingLanguages: ['TypeScript', 'Astro', 'CSS', 'Python'],
 } as const;
 
 /** Absolute repo URL derived from the slug. */

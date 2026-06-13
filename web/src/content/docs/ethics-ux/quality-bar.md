@@ -4,7 +4,7 @@ description: Measurable thresholds gated in CI.
 ---
 
 Seven measurable UX criteria. Each will be gated in CI when its tooling lands
-(tracked in [ROADMAP.md](https://github.com/ArtemioPadilla/inceptor/blob/main/ROADMAP.md) Epic 12).
+(tracked in [ROADMAP.md](https://github.com/ArtemioPadilla/TradePilot/blob/main/ROADMAP.md) Epic 12).
 
 ## The 7 criteria
 
@@ -30,4 +30,4 @@ These are **separate gates** with a shared Playwright runner:
 As of June 2026, criteria 6 (keyboard nav) has a Playwright test in `tests/a11y/keyboard-nav.spec.ts`.
 Full `ux:check` wiring (axe-core, Lighthouse CI) is planned for Epic 12.
 
-See [`docs/PRINCIPLES.md §5`](https://github.com/ArtemioPadilla/inceptor/blob/main/docs/PRINCIPLES.md#5-uxui-quality-bar) for the full rationale.
+See [`docs/PRINCIPLES.md §5`](https://github.com/ArtemioPadilla/TradePilot/blob/main/docs/PRINCIPLES.md#5-uxui-quality-bar) for the full rationale.

@@ -45,4 +45,4 @@ If an island contains compound state (Dialog, Tabs, Dropdown), the entire compos
 must be one island — one `client:*` directive on one React file. See
 [The compound-component gotcha](/docs/building/compound-components/).
 
-Full guide → [`docs/COMPONENTS.md §3`](https://github.com/ArtemioPadilla/inceptor/blob/main/docs/COMPONENTS.md#3-hydration-directives)
+Full guide → [`docs/COMPONENTS.md §3`](https://github.com/ArtemioPadilla/TradePilot/blob/main/docs/COMPONENTS.md#3-hydration-directives)

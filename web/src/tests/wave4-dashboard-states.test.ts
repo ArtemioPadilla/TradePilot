@@ -75,7 +75,7 @@ describe('DashboardIsland — inbox-zero empty state', () => {
 // ── 3. View-source links on demo pages ───────────────────────────────────────
 
 describe('view-source links', () => {
-  const GITHUB_BLOB = 'https://github.com/ArtemioPadilla/inceptor/blob/main';
+  const GITHUB_BLOB = 'https://github.com/ArtemioPadilla/TradePilot/blob/main';
 
   it('dashboard.astro has a view-source link to itself', () => {
     const src = read('src/pages/demos/dashboard.astro');

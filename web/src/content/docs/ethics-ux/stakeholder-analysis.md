@@ -42,4 +42,4 @@ Output goes in `docs/decisions/` as an ADR variant using the [template](/docs/de
 `centinela` greps `docs/decisions/` for a file matching `*-stakeholder-*` before
 issuing APPROVED on a `risk:high` PR. No ADR → REJECTED with `NEEDS_HUMAN` token.
 
-Full procedure → [`docs/ETHICS.md — Stakeholder Analysis`](https://github.com/ArtemioPadilla/inceptor/blob/main/docs/ETHICS.md#stakeholder-analysis-deep-dive-for-riskhigh)
+Full procedure → [`docs/ETHICS.md — Stakeholder Analysis`](https://github.com/ArtemioPadilla/TradePilot/blob/main/docs/ETHICS.md#stakeholder-analysis-deep-dive-for-riskhigh)

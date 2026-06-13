@@ -41,4 +41,4 @@ to plan `type:feat` issues until the tag is replaced by `cooldown-cleared`. Only
 
 Decision recorded in [ADR 0001](/docs/decisions/0001-shape-up-over-scrum/).
 
-Full rationale → [`docs/PRINCIPLES.md §1`](https://github.com/ArtemioPadilla/inceptor/blob/main/docs/PRINCIPLES.md#1-way-of-working--shape-up--inceptor)
+Full rationale → [`docs/PRINCIPLES.md §1`](https://github.com/ArtemioPadilla/TradePilot/blob/main/docs/PRINCIPLES.md#1-way-of-working--shape-up--inceptor)

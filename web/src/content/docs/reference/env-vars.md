@@ -22,7 +22,7 @@ secrets in a `PUBLIC_` var.
 
 | Variable | Default | Purpose |
 |---|---|---|
-| `PUBLIC_REPO_SLUG` | `ArtemioPadilla/inceptor` | Where FeedbackFAB files issues (`<owner>/<repo>`) |
+| `PUBLIC_REPO_SLUG` | `ArtemioPadilla/TradePilot` | Where FeedbackFAB files issues (`<owner>/<repo>`) |
 
 ## Feature flags
 
@@ -77,4 +77,4 @@ For CI, set these as repository secrets (Settings → Secrets and variables → 
 - `ANTHROPIC_API_KEY` — Claude triage (if the orchestration workflow runs in CI)
 - Deployment credentials vary by host (see your provider's docs)
 
-Canonical source → [`.env.example`](https://github.com/ArtemioPadilla/inceptor/blob/main/.env.example)
+Canonical source → [`.env.example`](https://github.com/ArtemioPadilla/TradePilot/blob/main/.env.example)

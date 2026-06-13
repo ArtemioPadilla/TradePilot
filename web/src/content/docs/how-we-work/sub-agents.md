@@ -60,9 +60,9 @@ On REJECTED, the routing token drives what happens next:
 
 ## Agent spec files
 
-- [prometeo](https://github.com/ArtemioPadilla/inceptor/blob/main/.claude/agents/prometeo.md)
-- [forja](https://github.com/ArtemioPadilla/inceptor/blob/main/.claude/agents/forja.md)
-- [centinela](https://github.com/ArtemioPadilla/inceptor/blob/main/.claude/agents/centinela.md)
+- [prometeo](https://github.com/ArtemioPadilla/TradePilot/blob/main/.claude/agents/prometeo.md)
+- [forja](https://github.com/ArtemioPadilla/TradePilot/blob/main/.claude/agents/forja.md)
+- [centinela](https://github.com/ArtemioPadilla/TradePilot/blob/main/.claude/agents/centinela.md)
 
 Also see the [Inceptor overview](/docs/how-we-work/inceptor/) for the complete
 loop description with usage examples.

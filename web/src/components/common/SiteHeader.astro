@@ -16,7 +16,7 @@ const nav = [
 ];
 
 // Mark the active section so the current area is obvious. Compare on the
-// path *after* the base, so it works under /inceptor/ too.
+// path *after* the base, so it works under any subpath deploy too.
 const here = Astro.url.pathname.replace(/\/+$/, '') + '/';
 const isActive = (href: string) => here.includes(href);
 ---
@@ -26,13 +26,13 @@ const isActive = (href: string) => here.includes(href);
     <a
       href={withBase('/')}
       class="group flex items-center gap-2 font-display text-lg font-semibold tracking-tight text-foreground"
-      aria-label="Inceptor — home"
+      aria-label="TradePilot — home"
     >
       <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" class="text-primary transition-transform group-hover:rotate-90">
         <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2.5 3" opacity="0.55"></circle>
         <circle cx="12" cy="12" r="3.5" fill="currentColor"></circle>
       </svg>
-      <span class="hidden sm:inline">Inceptor</span>
+      <span class="hidden sm:inline">TradePilot</span>
     </a>
 
     <div class="ml-auto flex items-center gap-0.5 font-mono text-xs sm:gap-1 sm:text-sm">
@@ -51,7 +51,7 @@ const isActive = (href: string) => here.includes(href);
         ))
       }
       <a
-        href="https://github.com/ArtemioPadilla/inceptor"
+        href="https://github.com/ArtemioPadilla/TradePilot"
         target="_blank"
         rel="noopener noreferrer"
         class="hidden rounded-md px-2 py-1 text-muted-foreground transition-colors hover:text-primary sm:inline"

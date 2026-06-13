@@ -51,7 +51,7 @@ Planned work is organized by Epic. Completed items are checked.
 
 ## Epic 14 — June 2026 audit fixes (Waves 1–4)
 
-The [June 2026 audit](https://github.com/ArtemioPadilla/inceptor/blob/main/docs/AUDIT-2026-06.md)
+The [June 2026 audit](https://github.com/ArtemioPadilla/TradePilot/blob/main/docs/AUDIT-2026-06.md)
 identified 10 top findings. Waves 1–3 shipped same-day (#136–#148).
 
 - [x] Wave 1 — P0 production fixes: robots.txt domain, Pagefind base, 404 page, blog redirect base, chart animations
@@ -75,4 +75,4 @@ identified 10 top findings. Waves 1–3 shipped same-day (#136–#148).
 - Real brand artwork — needs a designer
 - `@base-ui-components/react` stable release — upstream-gated
 
-Full canonical roadmap → [`ROADMAP.md`](https://github.com/ArtemioPadilla/inceptor/blob/main/ROADMAP.md)
+Full canonical roadmap → [`ROADMAP.md`](https://github.com/ArtemioPadilla/TradePilot/blob/main/ROADMAP.md)

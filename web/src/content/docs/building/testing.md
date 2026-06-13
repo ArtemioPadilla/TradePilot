@@ -81,4 +81,4 @@ for the `tdd-tier:strict` / `tdd-tier:smoke` / `tdd-tier:exempt` rubric.
 **Bugs found in production: regression test first, fix second — non-negotiable
 regardless of tier.**
 
-Full guide → [`docs/COMPONENTS.md §7`](https://github.com/ArtemioPadilla/inceptor/blob/main/docs/COMPONENTS.md#7-tests)
+Full guide → [`docs/COMPONENTS.md §7`](https://github.com/ArtemioPadilla/TradePilot/blob/main/docs/COMPONENTS.md#7-tests)

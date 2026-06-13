@@ -61,4 +61,4 @@ Key Base UI differences vs Radix:
 3. **Add to `/gallery`** — update `src/content/gallery.ts` so the component appears in the gallery.
 4. **Add to `/showcase`** if it deserves a composed demo — create a `ShowcaseFoo.tsx` island.
 
-Full guide → [`docs/COMPONENTS.md §2`](https://github.com/ArtemioPadilla/inceptor/blob/main/docs/COMPONENTS.md#2-adding-a-shadcn-component)
+Full guide → [`docs/COMPONENTS.md §2`](https://github.com/ArtemioPadilla/TradePilot/blob/main/docs/COMPONENTS.md#2-adding-a-shadcn-component)

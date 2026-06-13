@@ -55,4 +55,4 @@ Mixing Radix and Base UI in the same component is forbidden. See [ADR 0002](/doc
 **Zod for cross-boundary types** — every network/storage/form type is a Zod schema.
 TypeScript interfaces for cross-boundary types are forbidden. See [Spec-DD](/docs/how-we-work/spec-dd/).
 
-Authoritative source → [`CLAUDE.md — Stack`](https://github.com/ArtemioPadilla/inceptor/blob/main/CLAUDE.md#stack-installed)
+Authoritative source → [`CLAUDE.md — Stack`](https://github.com/ArtemioPadilla/TradePilot/blob/main/CLAUDE.md#stack-installed)

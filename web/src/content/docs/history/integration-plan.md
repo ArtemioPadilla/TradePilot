@@ -28,4 +28,4 @@ are merged. Future work lives in [ROADMAP.md](/docs/history/roadmap/).
 - **ADR 0004** — Custom docs route over Starlight (reasoning: Starlight added a full runtime dependency; a content-collection-powered `[...slug].astro` gives us the same result with zero additional deps)
 - **ADR 0005** — Base UI as the standard component library (policy for 44-component catalog)
 
-Full canonical plan → [`INTEGRATION-PLAN.md`](https://github.com/ArtemioPadilla/inceptor/blob/main/INTEGRATION-PLAN.md)
+Full canonical plan → [`INTEGRATION-PLAN.md`](https://github.com/ArtemioPadilla/TradePilot/blob/main/INTEGRATION-PLAN.md)

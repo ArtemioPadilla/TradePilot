@@ -18,7 +18,7 @@ Read [the 60-second tour](/docs/start-here/inceptor-tour/) for the workflow walk
 ## When NOT to use Inceptor
 
 Some changes are noise as full PRs. Use the `chore/<week>` train branch (when
-[Epic 14](https://github.com/ArtemioPadilla/inceptor/blob/main/ROADMAP.md)
+[Epic 14](https://github.com/ArtemioPadilla/TradePilot/blob/main/ROADMAP.md)
 lands) for:
 
 - Typo fixes

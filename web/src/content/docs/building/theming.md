@@ -100,4 +100,4 @@ Without this, users with dark preference see a white flash on every page load.
 <div className="bg-gray-50 text-gray-900 border border-gray-200">
 ```
 
-Full guide → [`docs/COMPONENTS.md §5-6`](https://github.com/ArtemioPadilla/inceptor/blob/main/docs/COMPONENTS.md#5-theming-via-css-vars)
+Full guide → [`docs/COMPONENTS.md §5-6`](https://github.com/ArtemioPadilla/TradePilot/blob/main/docs/COMPONENTS.md#5-theming-via-css-vars)

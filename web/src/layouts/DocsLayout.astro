@@ -28,7 +28,7 @@ const next = idx >= 0 && idx < docsOrder.length - 1 ? docsOrder[idx + 1] : null;
 // The index doc uses an empty slug and lives at src/content/docs/index.mdx.
 const editFileExt = slug === '' ? 'mdx' : 'md';
 const editFilePath = slug === '' ? 'index' : slug;
-const editUrl = `https://github.com/ArtemioPadilla/inceptor/edit/main/src/content/docs/${editFilePath}.${editFileExt}`;
+const editUrl = `https://github.com/ArtemioPadilla/TradePilot/edit/main/src/content/docs/${editFilePath}.${editFileExt}`;
 // Breadcrumb structured data: Home → Docs → page (agents/search engines).
 const docsBase = new URL(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/docs/`, Astro.site ?? 'https://artemiop.com').toString();
 const jsonLd = [

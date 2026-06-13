@@ -11,7 +11,7 @@
  *   - Nav recap (Gallery / Demos / Docs / Blog / Contact)
  *   - GitHub link
  *   - MIT license note
- *   - "Built with Inceptor" link (viral loop / backlink)
+ *   - "Built with TradePilot" link
  *   - EN ⇄ ES language switcher
  */
 import { withBase } from '@/lib/href';
@@ -36,16 +36,16 @@ const year = new Date().getFullYear();
         <a
           href={withBase('/')}
           class="group flex items-center gap-2 font-display text-base font-semibold tracking-tight text-foreground transition-colors hover:text-primary"
-          aria-label="Inceptor — home"
+          aria-label="TradePilot — home"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" class="text-primary">
             <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2.5 3" opacity="0.55"></circle>
             <circle cx="12" cy="12" r="3.5" fill="currentColor"></circle>
           </svg>
-          Inceptor
+          TradePilot
         </a>
         <p class="max-w-[18rem] font-mono text-[0.7rem] leading-relaxed text-muted-foreground">
-          Governance that's mechanical, not aspirational.
+          Backtest strategies. Trade with confidence.
         </p>
       </div>
 
@@ -99,22 +99,20 @@ const year = new Date().getFullYear();
       </p>
       <div class="flex items-center gap-4 font-mono text-[0.68rem] text-muted-foreground">
         <a
-          href="https://github.com/ArtemioPadilla/inceptor"
+          href="https://github.com/ArtemioPadilla/TradePilot"
           target="_blank"
           rel="noopener noreferrer"
           class="transition-colors hover:text-primary"
         >
           GitHub ↗
         </a>
-        {/* "Built with Inceptor" — the template's organic distribution loop.
-            Every fork that keeps this footer creates a backlink. */}
         <a
-          href="https://github.com/ArtemioPadilla/inceptor"
+          href="https://github.com/ArtemioPadilla/TradePilot"
           target="_blank"
           rel="noopener noreferrer"
           class="transition-colors hover:text-primary"
         >
-          Built with <span class="text-primary">Inceptor</span> ↗
+          Built with <span class="text-primary">TradePilot</span> ↗
         </a>
         {/* Agent-first index (llmstxt.org) — humans rarely click it, but
             surfacing it advertises that the site is machine-readable. */}

@@ -46,4 +46,4 @@ TypeScript interfaces evaporate at runtime. Zod schemas are runtime validators �
 invalid data from the network is caught *before* it reaches application code, not
 after a cryptic `undefined is not a function` crash.
 
-Full rationale → [`docs/PRINCIPLES.md §3`](https://github.com/ArtemioPadilla/inceptor/blob/main/docs/PRINCIPLES.md#3-spec-dd--zod-as-the-source-of-truth)
+Full rationale → [`docs/PRINCIPLES.md §3`](https://github.com/ArtemioPadilla/TradePilot/blob/main/docs/PRINCIPLES.md#3-spec-dd--zod-as-the-source-of-truth)

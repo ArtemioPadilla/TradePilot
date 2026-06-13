@@ -67,4 +67,4 @@ classification promotes optional checklist items to required for the issue:
 
 - Fogg, B.J. (2003). *Persuasive Technology: Using Computers to Change What We Think and Do.* Morgan Kaufmann.
 - European Commission (2022). [Digital Services Act, Article 25.](https://eur-lex.europa.eu/eli/reg/2022/2065)
-- Full framework → [`docs/ETHICS.md`](https://github.com/ArtemioPadilla/inceptor/blob/main/docs/ETHICS.md)
+- Full framework → [`docs/ETHICS.md`](https://github.com/ArtemioPadilla/TradePilot/blob/main/docs/ETHICS.md)

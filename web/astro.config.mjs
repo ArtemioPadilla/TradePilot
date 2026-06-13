@@ -34,16 +34,6 @@ export default defineConfig({
       redirectToDefaultLocale: false,
     },
   },
-  // 301 redirects from the old top-level demo routes to their new /demos/*
-  // locations. Targets are base-prefixed via asset() — Astro does NOT add the
-  // base to redirect targets automatically, so without this they'd 404 on a
-  // subpath deploy. Old URLs survive; visual baselines re-anchor automatically.
-  redirects: {
-    '/dashboard': asset('demos/dashboard'),
-    '/data': asset('demos/data'),
-    '/data/large': asset('demos/data/large'),
-    '/showcase': asset('gallery'),
-  },
   integrations: [
     // MDX for the /docs/* content collection — lets pages embed React components
     mdx(),
@@ -66,11 +56,11 @@ export default defineConfig({
         'icons/logo-source.svg',
       ],
       manifest: {
-        name: 'inceptor',
-        short_name: 'Inceptor Template',
+        name: 'TradePilot',
+        short_name: 'TradePilot',
         description:
-          'Astro + React + shadcn + TanStack + Tremor Raw + Motion + PWA — Inceptor scaffold',
-        theme_color: '#10b981',
+          'Backtest trading strategies in your browser — portfolio optimization, Backtest Lab, leaderboards.',
+        theme_color: '#2563eb',
         background_color: '#0a0a0a',
         display: 'standalone',
         start_url: BASE,

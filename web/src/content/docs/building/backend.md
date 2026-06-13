@@ -9,13 +9,13 @@ the contact and newsletter forms POST somewhere, the dashboard reads GitHub
 prefilled issue *URL*. The self-hosted backend fills those gaps — **without
 giving up the static deploy**. It is entirely opt-in.
 
-See [ADR 0006](https://github.com/ArtemioPadilla/inceptor/blob/main/docs/decisions/0006-self-hosted-backend-archetypes.md)
+See [ADR 0006](https://github.com/ArtemioPadilla/TradePilot/blob/main/docs/decisions/0006-self-hosted-backend-archetypes.md)
 for the decision record.
 
 ## The one switch: `PUBLIC_API_BASE`
 
 Everything keys off a single public env var, resolved in
-[`src/lib/api.ts`](https://github.com/ArtemioPadilla/inceptor/blob/main/src/lib/api.ts):
+[`src/lib/api.ts`](https://github.com/ArtemioPadilla/TradePilot/blob/main/src/lib/api.ts):
 
 - **unset (default)** — static mode. Forms validate + log (demo mode); the
   GitHub islands hit `api.github.com` directly. The GitHub Pages build is
@@ -50,7 +50,7 @@ Both expose the identical API:
 
 Validation failures return `422 { error: "validation_failed", errors: [{ path, message }] }`
 from **both** servers. The committed
-[`server-node/openapi.golden.json`](https://github.com/ArtemioPadilla/inceptor/blob/main/server-node/openapi.golden.json)
+[`server-node/openapi.golden.json`](https://github.com/ArtemioPadilla/TradePilot/blob/main/server-node/openapi.golden.json)
 is the cross-runtime contract — both test suites assert their generated spec's
 surface against it, so the two implementations can't silently drift.
 

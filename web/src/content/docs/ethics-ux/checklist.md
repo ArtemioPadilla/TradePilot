@@ -92,4 +92,4 @@ Examples:
 A failing ethics gate returns `ETHICS_OR_UX_FAIL` (distinct from `BUILD_FAIL`) so
 the orchestrator routes back to `forja` with a different prompt.
 
-Full framework → [`docs/ETHICS.md`](https://github.com/ArtemioPadilla/inceptor/blob/main/docs/ETHICS.md)
+Full framework → [`docs/ETHICS.md`](https://github.com/ArtemioPadilla/TradePilot/blob/main/docs/ETHICS.md)

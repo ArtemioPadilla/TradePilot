@@ -53,4 +53,4 @@ behavior contract.
 **Bugs found in production: regression test first, fix second — non-negotiable
 regardless of tier.**
 
-Full rationale → [`docs/PRINCIPLES.md §2`](https://github.com/ArtemioPadilla/inceptor/blob/main/docs/PRINCIPLES.md#2-tdd--red--green--refactor)
+Full rationale → [`docs/PRINCIPLES.md §2`](https://github.com/ArtemioPadilla/TradePilot/blob/main/docs/PRINCIPLES.md#2-tdd--red--green--refactor)

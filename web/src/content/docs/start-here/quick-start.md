@@ -14,7 +14,7 @@ Run `npm run doctor` at any time to verify your environment.
 ## Clone & install
 
 ```sh
-gh repo create my-thing --template ArtemioPadilla/inceptor --public --clone
+gh repo create my-thing --template ArtemioPadilla/TradePilot --public --clone
 cd my-thing
 npm install
 ```

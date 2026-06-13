@@ -93,7 +93,7 @@ const jsonLd = [
 ---
 
 <BaseLayout
-  title="Inceptor — issue-driven web scaffold"
+  title="TradePilot — algorithmic trading workbench"
   description={SITE.description}
   lang="en"
   alternates={alternates}
@@ -113,48 +113,39 @@ const jsonLd = [
             <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60"></span>
             <span class="relative inline-flex h-2 w-2 rounded-full bg-primary"></span>
           </span>
-          <span class="font-mono">inceptor</span>
-          <span class="text-muted-foreground">· issue-driven web scaffold</span>
+          <span class="font-mono">TradePilot</span>
+          <span class="text-muted-foreground">· algorithmic trading workbench</span>
         </div>
 
         <h1
           class="rise mt-6 font-display text-5xl font-semibold leading-[0.98] tracking-tight text-foreground sm:text-6xl lg:text-7xl"
           style="view-transition-name: page-title; animation-delay:.08s"
         >
-          Start every build<br />
-          at <span class="italic text-primary">full speed.</span>
+          Backtest like<br />
+          a <span class="italic text-primary">pilot.</span>
         </h1>
 
-        {/* Methodology-first subcopy: the loop (issue → PR → merge) and
-            governance mechanical are the differentiators. Stack goes last,
-            demoted to a quiet one-liner. See docs/POSITIONING.md §1. */}
         <p class="rise mt-6 max-w-xl text-pretty text-base leading-relaxed text-muted-foreground sm:text-lg" style="animation-delay:.16s">
-          A governed, agent-orchestrated way of working: every feature travels
-          the same loop — <span class="text-foreground font-medium">issue → Claude triages → PR → merge</span>.
-          Quality and ethics are enforced by the repo, not by discipline.
+          TradePilot runs momentum, mean-reversion, and smart-beta strategies
+          entirely in your browser —
+          <span class="text-foreground font-medium">portfolio optimization, real metrics, zero backend.</span>
         </p>
-
-        {/* npm create command — the primary L0 door per POSITIONING.md §3.
-            Plain <code> block; no JS copy button needed for this read-only snippet. */}
-        <div class="rise mt-5" style="animation-delay:.20s">
-          <code class="inline-block rounded-lg border border-border bg-muted px-4 py-2.5 font-mono text-sm text-foreground select-all">
-            npm create inceptor-app
-          </code>
-        </div>
 
         <div class="rise mt-8 flex flex-wrap items-center gap-3" style="animation-delay:.24s">
           <a
-            href={withBase('/docs/start-here/quick-start/')}
+            href={withBase('/gallery/')}
             class="group inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
-            Quick start
+            Open the app
             <span class="transition-transform group-hover:translate-x-0.5">→</span>
           </a>
           <a
-            href={withBase('/gallery/')}
+            href="https://github.com/ArtemioPadilla/TradePilot"
+            target="_blank"
+            rel="noopener noreferrer"
             class="inline-flex items-center gap-2 rounded-xl border border-border bg-card/60 px-6 py-3 text-sm font-semibold text-foreground backdrop-blur transition-colors hover:border-primary/40 hover:bg-accent/50"
           >
-            Explore the gallery
+            View on GitHub ↗
           </a>
         </div>
 
@@ -165,17 +156,16 @@ const jsonLd = [
           <span class="text-border">·</span>
           <a href={withBase('/blog/')} class="transition-colors hover:text-primary">/blog</a>
           <span class="text-border">·</span>
-          <a href="https://github.com/ArtemioPadilla/inceptor" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-primary">github ↗</a>
+          <a href="https://github.com/ArtemioPadilla/TradePilot" target="_blank" rel="noopener noreferrer" class="transition-colors hover:text-primary">github ↗</a>
           <span class="text-border">·</span>
-          {/* Stack is table stakes — mentioned once, quietly, at the end. */}
-          <span class="text-muted-foreground/60">Astro 5 · React 19 · Tailwind v4 · Base UI</span>
+          <span class="text-muted-foreground/60">Astro 5 · React 19 · Tailwind v4 · Python</span>
         </div>
       </div>
 
       <!-- the loop graphic -->
       <div class="rise relative mx-auto hidden aspect-square w-full max-w-md place-items-center lg:grid" style="animation-delay:.2s">
         <div class="absolute inset-8 rounded-full glow-emerald opacity-70 blur-2xl"></div>
-        <svg viewBox="0 0 400 400" class="float-slow relative h-full w-full" role="img" aria-label="The Inceptor loop: issue, build, review, merge — repeating.">
+        <svg viewBox="0 0 400 400" class="float-slow relative h-full w-full" role="img" aria-label="The TradePilot loop: backtest, optimize, analyze, iterate — repeating.">
           <defs>
             <linearGradient id="ig" x1="0" y1="0" x2="1" y2="1">
               <stop offset="0%" stop-color="var(--color-primary-400)" />

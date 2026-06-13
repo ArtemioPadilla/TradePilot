@@ -57,7 +57,7 @@ src/
 | `server-node/` | Hono + Zod-OpenAPI backend archetype |
 | `server-flask/` | Flask backend archetype |
 
-Both share the same OpenAPI contract ([ADR 0006](https://github.com/ArtemioPadilla/inceptor/blob/main/docs/decisions/0006-backend-archetypes.md)).
+Both share the same OpenAPI contract ([ADR 0006](https://github.com/ArtemioPadilla/TradePilot/blob/main/docs/decisions/0006-backend-archetypes.md)).
 Neither is required — the scaffold is fully static without them.
 
 ## Path aliases
@@ -65,4 +65,4 @@ Neither is required — the scaffold is fully static without them.
 `@/*` → `./src/*` — configured in `tsconfig.json`. Required by the shadcn CLI.
 Use it in all imports: `import { cn } from '@/lib/utils'`.
 
-Authoritative source → [`CLAUDE.md — File organization`](https://github.com/ArtemioPadilla/inceptor/blob/main/CLAUDE.md#file-organization)
+Authoritative source → [`CLAUDE.md — File organization`](https://github.com/ArtemioPadilla/TradePilot/blob/main/CLAUDE.md#file-organization)

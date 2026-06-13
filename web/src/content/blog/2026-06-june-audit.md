@@ -106,4 +106,4 @@ The follow-up: behavior contracts (RTL, render tests) are now the default for
 `type:feat` issues at `tdd-tier:strict`. Source-text assertions stay as smoke
 tests, not as the only gate.
 
-Audit document → [`docs/AUDIT-2026-06.md`](https://github.com/ArtemioPadilla/inceptor/blob/main/docs/AUDIT-2026-06.md)
+Audit document → [`docs/AUDIT-2026-06.md`](https://github.com/ArtemioPadilla/TradePilot/blob/main/docs/AUDIT-2026-06.md)

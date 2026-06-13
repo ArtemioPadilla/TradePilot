@@ -33,7 +33,7 @@ describe('audit wave 2 — trust & polish', () => {
 
     it('contains a GitHub link', () => {
       const footer = read('src/components/common/SiteFooter.astro');
-      expect(footer).toContain('github.com/ArtemioPadilla/inceptor');
+      expect(footer).toContain('github.com/ArtemioPadilla/TradePilot');
     });
 
     it('contains an MIT license note', () => {
@@ -41,10 +41,10 @@ describe('audit wave 2 — trust & polish', () => {
       expect(footer.toLowerCase()).toContain('mit');
     });
 
-    it('contains a "Built with Inceptor" credit', () => {
+    it('contains a "Built with TradePilot" credit', () => {
       const footer = read('src/components/common/SiteFooter.astro');
       expect(footer).toContain('Built with');
-      expect(footer).toContain('Inceptor');
+      expect(footer).toContain('TradePilot');
     });
 
     it('contains EN and ES language switcher links', () => {
@@ -183,12 +183,10 @@ describe('audit wave 2 — trust & polish', () => {
   // Updated for ES parity: /es/ is now a full translation matching the EN home
   // structure (hero + stats + loop + kit), not a minimal pattern-demo page.
   describe('es/index.astro', () => {
-    it('has correct capital-I Inceptor branding in the title', () => {
+    it('has correct TradePilot branding in the title', () => {
       const page = read('src/pages/es/index.astro');
-      // Must contain 'Inceptor' (capital I) — the old lowercase "inceptor — ES"
-      // title was one of the audit findings (§4.6). The new full title is
-      // "Inceptor — scaffold de desarrollo guiado por issues".
-      expect(page).toContain('Inceptor —');
+      // Must contain 'TradePilot' — the product name as rebranded from Inceptor.
+      expect(page).toContain('TradePilot');
       expect(page).not.toContain('"inceptor — ES"');
     });
 

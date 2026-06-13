@@ -86,4 +86,4 @@ Stateless presentational components like `Button`, `Card`, `Badge`, `Input` in
 isolation — these can appear directly in `.astro` files without hydration if they
 need no interactivity.
 
-Full guide → [`docs/COMPONENTS.md §4`](https://github.com/ArtemioPadilla/inceptor/blob/main/docs/COMPONENTS.md#4-the-compound-component-gotcha) · also see [`CLAUDE.md`](https://github.com/ArtemioPadilla/inceptor/blob/main/CLAUDE.md#shadcnui--astro-the-compound-component-gotcha)
+Full guide → [`docs/COMPONENTS.md §4`](https://github.com/ArtemioPadilla/TradePilot/blob/main/docs/COMPONENTS.md#4-the-compound-component-gotcha) · also see [`CLAUDE.md`](https://github.com/ArtemioPadilla/TradePilot/blob/main/CLAUDE.md#shadcnui--astro-the-compound-component-gotcha)

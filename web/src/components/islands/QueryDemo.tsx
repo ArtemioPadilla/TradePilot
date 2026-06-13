@@ -5,7 +5,7 @@ import QueryProvider from './QueryProvider';
 import ErrorBoundary from './ErrorBoundary';
 
 /** Canonical repo slug. Reads PUBLIC_REPO_SLUG when set (fork-friendly). */
-const REPO = (import.meta.env.PUBLIC_REPO_SLUG as string | undefined) ?? 'ArtemioPadilla/inceptor';
+const REPO = (import.meta.env.PUBLIC_REPO_SLUG as string | undefined) ?? 'ArtemioPadilla/TradePilot';
 
 interface RepoInfo {
   description: string | null;
