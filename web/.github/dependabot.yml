@@ -1,0 +1,44 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    ignore:
+      # Astro 6 is peer-capped out by @vite-pwa/astro@1.2.0 (supports astro
+      # ^1–^5 only). Ignore the astro/@astrojs/* major bumps until the PWA plugin
+      # ships Astro 6 support — otherwise dependabot re-proposes a CI-failing
+      # group PR every release (see closed #74, #80, #87, ADR 0004).
+      # Wildcard entry covers all current and future @astrojs/* packages in one rule.
+      - dependency-name: "astro"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@astrojs/*"
+        update-types: ["version-update:semver-major"]
+    groups:
+      astro:
+        patterns:
+          - "astro"
+          - "@astrojs/*"
+      tanstack:
+        patterns:
+          - "@tanstack/*"
+      tooling:
+        patterns:
+          - "@playwright/*"
+          - "@testing-library/*"
+          - "vitest"
+          - "typescript"
+          - "prettier"
+    commit-message:
+      prefix: chore
+      include: scope
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    commit-message:
+      prefix: ci
