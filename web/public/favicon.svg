@@ -1,4 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <rect width="32" height="32" rx="8" fill="#10b981"/>
-  <path d="M8 16h16M16 8v16" stroke="white" stroke-width="3" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none" role="img" aria-label="TradePilot">
+  <rect width="128" height="128" rx="28" fill="#2563eb"/>
+  <path d="M32 70 L64 40 L96 70 L82 70 L64 53 L46 70 Z" fill="#ffffff"/>
+  <path d="M32 92 L64 62 L96 92 L82 92 L64 75 L46 92 Z" fill="#ffffff" opacity="0.55"/>
 </svg>
