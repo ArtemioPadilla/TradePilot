@@ -1,16 +1,18 @@
-# inceptor — Claude Code Context
+# TradePilot Web — Claude Code Context
 
 ## Repository purpose
 
-A web starter template built around **Inceptor**. Every
-feature ships as: GitHub issue → Claude triages → PR → merge → deploy. The
-FeedbackFAB lets real users file issues with diagnostics pre-filled.
+The TradePilot web app: a browser-based backtesting workbench (strategy
+editor, Backtest Lab, dashboard, community) built on the Inceptor template.
+Every feature ships as: GitHub issue → Claude triages → PR → merge → deploy.
+The FeedbackFAB lets real users file issues with diagnostics pre-filled.
 
-## Active integration
+## Active plan
 
-Integration complete; `INTEGRATION-PLAN.md` is the historical record of every
-phase (0–7) that brought this repo from a bare Astro 4 + Tailwind 3 starter to
-the full UI stack now in place.
+The live plan is `docs/superpowers/specs/2026-06-11-web-rebuild-inceptor-design.md`
+(repo root) — phases 0–6 of the rebuild. Phase 0 (Foundation) instantiated this
+app from the Inceptor template; later phases add Supabase data/auth, the
+trading engine port, the Backtest Lab, dashboard, community, and education.
 
 ## Stack (installed)
 
@@ -90,7 +92,7 @@ In a normal conversation, Claude triages an issue and dispatches the sub-agents
 
 ### Sub-agents (invoked via the Task tool)
 
-- **prometeo** — reads `INTEGRATION-PLAN.md` and decomposes a phase, milestone,
+- **prometeo** — reads the web-rebuild spec and decomposes a phase, milestone,
   or issue into an ordered, dependency-aware execution plan. Does not write code.
 - **forja** — implements a single issue: writes code, runs `npx` commands, makes
   atomic commits on a feature branch. Does not validate or open PRs.
@@ -109,7 +111,7 @@ The main session drives the loop, one issue at a time:
 4. On APPROVED, the session pushes the branch and opens a PR that closes the issue.
 
 Repeat until the scope is shipped. A typical kickoff is just a plain request, for
-example: "Land issue #N from INTEGRATION-PLAN.md — PR open against `main`,
+example: "Land issue #N from the web-rebuild spec — PR open against `main`,
 centinela APPROVED, branch named per the plan."
 
 ## Critical warnings — read before touching code
@@ -296,7 +298,7 @@ carrying explicit `TODO(agent)` markers — resolve them before shipping.
   ethics checklist, Stakeholder Analysis for `risk:high` PRs
 - **Decisions log**: `docs/decisions/` — every irreversible architectural
   decision is an ADR
-- Full plan: `INTEGRATION-PLAN.md`
+- Full plan: `docs/superpowers/specs/2026-06-11-web-rebuild-inceptor-design.md` (repo root)
 - Setup: `SETUP.md`
 - Roadmap: `ROADMAP.md`
 - Component guide: `docs/COMPONENTS.md`

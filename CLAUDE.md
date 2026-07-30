@@ -94,7 +94,9 @@ Located in `/strategies/` (separate from main package):
 
 ## Web Application
 
-TradePilot also includes a web application built with Astro + React for portfolio management.
+TradePilot also includes a web application (browser backtesting workbench) in
+`web/`. Live plan: `docs/superpowers/specs/2026-06-11-web-rebuild-inceptor-design.md`;
+web-specific conventions: `web/CLAUDE.md`.
 
 ### Web Commands
 
@@ -107,10 +109,16 @@ npm install
 # Start development server
 npm run dev
 
-# Run E2E tests (Playwright)
-npx playwright test --project=chromium
+# Typecheck + tests + build (the CI umbrella)
+npm run check
 
-# Run unit tests (Vitest)
+# Visual regression tests (Playwright)
+npm run test:visual
+
+# Accessibility checks (axe-core)
+npm run a11y
+
+# Unit tests (Vitest)
 npm run test
 
 # Build for production
@@ -119,11 +127,10 @@ npm run build
 
 ### Web Architecture
 
-- **Framework**: Astro with React islands
-- **Auth**: Firebase Authentication
-- **Database**: Firestore
-- **Styling**: CSS with theme variables
-- **Testing**: Playwright (E2E), Vitest (unit)
+- **Framework**: Astro 5 + React 19 islands (Inceptor template)
+- **Styling**: Tailwind v4, Base UI primitives, TanStack Table/Query
+- **Auth/DB**: Supabase (Phase 1 — not yet wired)
+- **Testing**: Vitest (unit) + Playwright (visual + a11y)
 
 ## Testing Requirements (CRITICAL)
 
