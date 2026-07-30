@@ -107,7 +107,7 @@ export default function ShowcaseDisclosure() {
         <section className="space-y-2">
           <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Aspect ratio (16:9)</p>
           <AspectRatio ratio={16 / 9} className="rounded-lg border border-border">
-            <div className="grid h-full w-full place-items-center bg-primary/10 text-sm text-primary">
+            <div className="grid h-full w-full place-items-center bg-primary/10 text-sm text-primary-700 dark:text-primary">
               16 : 9
             </div>
           </AspectRatio>

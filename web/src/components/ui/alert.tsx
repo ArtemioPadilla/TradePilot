@@ -12,7 +12,9 @@ const alertVariants = cva(
       variant: {
         default: 'bg-background text-foreground border-border',
         destructive: 'border-destructive/50 text-destructive [&>svg]:text-destructive',
-        success: 'border-primary/40 text-primary [&>svg]:text-primary',
+        // primary-700 in light mode: text-primary (#2563eb) at the description's
+        // 90% opacity lands under the 4.5:1 AA contrast floor on tinted panels.
+        success: 'border-primary/40 text-primary-700 dark:text-primary',
       },
     },
     defaultVariants: { variant: 'default' },
