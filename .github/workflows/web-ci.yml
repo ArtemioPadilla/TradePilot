@@ -97,3 +97,25 @@ jobs:
       - name: Run actionlint
         run: |
           ./actionlint -color .github/workflows/web-*.yml .github/workflows/supabase.yml
+
+      - name: Scan for unpinned third-party action refs (mutable @branch refs)
+        # Flags third-party `uses:` refs not pinned to a 40-hex commit SHA —
+        # mutable tags/branches can be silently repointed. First-party
+        # `actions/*` and `github/*` are trusted; `./` refs are repo-owned.
+        # Scoped to the workflows this CI owns (same set actionlint checks);
+        # the pre-existing security.yml/codeql.yml/docs.yml are out of scope.
+        # (The template shipped this scan with a PCRE lookahead that GNU
+        # grep -E can't parse, so it never matched; this is the working form.)
+        run: |
+          UNPINNED=$(grep -rhE "^[[:space:]]*-?[[:space:]]*uses:[[:space:]]+" \
+              .github/workflows/web-*.yml .github/workflows/supabase.yml \
+            | sed -E 's/#.*$//' \
+            | grep -vE "uses:[[:space:]]+(actions/|github/|\./)" \
+            | grep -vE "@[0-9a-f]{40}[[:space:]]*$" \
+            || true)
+          if [ -n "$UNPINNED" ]; then
+            echo "ERROR: unpinned third-party action refs found:"
+            echo "$UNPINNED"
+            exit 1
+          fi
+          echo "OK: all third-party action refs are SHA-pinned."

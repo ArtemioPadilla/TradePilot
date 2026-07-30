@@ -1,5 +1,7 @@
 /**
- * Validates the CI hardening criteria from issue #168.
+ * Validates the CI hardening criteria from issue #168 against the LIVE
+ * workflow — the monorepo's root .github/workflows/web-ci.yml. (The template's
+ * copy under web/.github/ was dead: GitHub only executes root workflows.)
  *
  * Tests read workflow files as text — no runtime GitHub Actions dependency.
  */
@@ -7,10 +9,10 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, it, expect } from 'vitest';
 
-const CI_PATH = resolve(process.cwd(), '.github/workflows/ci.yml');
+const CI_PATH = resolve(process.cwd(), '../.github/workflows/web-ci.yml');
 const ci = readFileSync(CI_PATH, 'utf-8');
 
-describe('ci.yml — CI hardening (#168)', () => {
+describe('web-ci.yml — CI hardening (#168)', () => {
   // -------------------------------------------------------------------------
   // actionlint job
   // -------------------------------------------------------------------------
@@ -50,16 +52,15 @@ describe('ci.yml — CI hardening (#168)', () => {
   });
 
   // -------------------------------------------------------------------------
-  // Lighthouse / axe deferral is documented (not silently missing)
+  // Monorepo scoping — web CI must run from web/ and skip Python-only commits
   // -------------------------------------------------------------------------
-  it('explains why Lighthouse budgets are deferred to staging URL', () => {
-    expect(ci).toMatch(/lighthouse/i);
-    expect(ci).toMatch(/flaky|staging|preview/i);
+  it('scopes the build job to the web/ working directory', () => {
+    expect(ci).toContain('working-directory: web');
+    expect(ci).toContain('cache-dependency-path: web/package-lock.json');
   });
 
-  it('documents that axe a11y runs in visual.yml (no duplicate)', () => {
-    expect(ci).toMatch(/axe/i);
-    expect(ci).toContain('visual.yml');
+  it('path-filters so Python-only commits skip web CI', () => {
+    expect(ci).toContain("paths: ['web/**', '.github/workflows/web-*.yml']");
   });
 
   // -------------------------------------------------------------------------
@@ -67,10 +68,5 @@ describe('ci.yml — CI hardening (#168)', () => {
   // -------------------------------------------------------------------------
   it('still contains the build job', () => {
     expect(ci).toContain('name: Build & Check');
-  });
-
-  it('still contains server-node and server-flask jobs', () => {
-    expect(ci).toContain('server-node');
-    expect(ci).toContain('server-flask');
   });
 });

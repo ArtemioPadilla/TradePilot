@@ -19,25 +19,25 @@ const badges = [
   {
     label: 'CI',
     alt: 'CI workflow status',
-    src: `${GH_ACTIONS}/ci.yml/badge.svg`,
-    href: `${GH_ACTIONS}/ci.yml`,
+    src: `${GH_ACTIONS}/web-ci.yml/badge.svg`,
+    href: `${GH_ACTIONS}/web-ci.yml`,
   },
   {
     label: 'Deploy',
     alt: 'Deploy workflow status',
-    src: `${GH_ACTIONS}/deploy.yml/badge.svg`,
-    href: `${GH_ACTIONS}/deploy.yml`,
+    src: `${GH_ACTIONS}/web-deploy.yml/badge.svg`,
+    href: `${GH_ACTIONS}/web-deploy.yml`,
   },
   {
     label: 'License',
     alt: 'License: MIT',
-    src: 'https://img.shields.io/badge/license-MIT-emerald?style=flat-square',
+    src: 'https://img.shields.io/badge/license-MIT-blue?style=flat-square',
     href: `https://github.com/${REPO_SLUG}/blob/main/LICENSE`,
   },
   {
     label: 'Workflow',
     alt: 'GitHub Actions workflow badge',
-    src: `https://img.shields.io/github/actions/workflow/status/${REPO_SLUG}/ci.yml?style=flat-square&label=CI%20checks`,
+    src: `https://img.shields.io/github/actions/workflow/status/${REPO_SLUG}/web-ci.yml?style=flat-square&label=CI%20checks`,
     href: GH_ACTIONS_RUNS,
   },
 ] as const;
