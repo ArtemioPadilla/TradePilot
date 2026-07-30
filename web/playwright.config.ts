@@ -1,145 +1,48 @@
 import { defineConfig, devices } from '@playwright/test';
 
-/**
- * TradePilot Playwright E2E Test Configuration
- *
- * Project Structure:
- * - authenticated: Tests requiring regular user authentication
- * - admin: Tests requiring admin authentication
- * - chromium: Unauthenticated tests (auth pages, landing, etc.)
- * - lighthouse: Performance audits
- * - Mobile Chrome/Safari: Mobile responsiveness tests
- *
- * Note: Firebase stores auth in IndexedDB which isn't captured by storageState.
- * Tests use the ensureAuthenticated() helper from test-utils.ts to login when needed.
- *
- * Environment variables required for authenticated tests:
- * - TEST_USER_EMAIL: Regular user email
- * - TEST_USER_PASSWORD: Regular user password
- * - TEST_ADMIN_EMAIL: Admin user email
- * - TEST_ADMIN_PASSWORD: Admin user password
- */
+// Allow overriding the preview port so developers with another Astro project
+// already running on 4321 don't get a silent hang. Example:
+//   PREVIEW_PORT=4399 npx playwright test
+// See SETUP.md for docs on the port-busy scenario.
+const PORT = Number(process.env.PREVIEW_PORT ?? 4321);
 
 export default defineConfig({
-  testDir: './tests/e2e',
+  testDir: './tests/visual',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : 4,
-  reporter: [
-    ['html', { open: 'never' }],
-    ['json', { outputFile: 'test-results/results.json' }],
-  ],
-
+  workers: process.env.CI ? 1 : undefined,
+  reporter: process.env.CI ? 'github' : 'list',
   use: {
-    baseURL: 'http://localhost:4321',
+    baseURL: `http://localhost:${PORT}`,
     trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
   },
-
+  // Screenshots live under tests/__screenshots__/{projectName}/{arg}{ext} so
+  // light and dark baselines are separated by subdirectory and easy to find.
+  snapshotPathTemplate: 'tests/__screenshots__/{projectName}/{arg}{ext}',
+  expect: {
+    toHaveScreenshot: {
+      // Tight default — individual tests override when needed (e.g. charts).
+      maxDiffPixelRatio: 0.01,
+      animations: 'disabled',
+    },
+  },
   projects: [
-    // === AUTHENTICATED TESTS (Regular User) ===
     {
-      name: 'authenticated',
-      testMatch: [
-        '**/dashboard.spec.ts',
-        '**/accounts.spec.ts',
-        '**/trading.spec.ts',
-        '**/alerts*.spec.ts',
-        '**/settings*.spec.ts',
-        '**/user-journeys.spec.ts',
-        '**/holdings.spec.ts',
-        '**/strategies*.spec.ts',
-        '**/backtest*.spec.ts',
-        '**/goals.spec.ts',
-        '**/tools.spec.ts',
-        '**/csv-import.spec.ts',
-        '**/data-table.spec.ts',
-        '**/portfolio-calculations.spec.ts',
-        '**/dashboard-components.spec.ts',
-        '**/trading-components.spec.ts',
-        '**/common-components.spec.ts',
-        '**/leaderboard.spec.ts',
-        '**/form-journeys.spec.ts',
-        '**/placeholder-pages.spec.ts',
-        '**/pwa.spec.ts',
-        '**/offline-mode.spec.ts',
-        '**/markets.spec.ts',
-        '**/ai-builder.spec.ts',
-      ],
-      use: {
-        ...devices['Desktop Chrome'],
-      },
-    },
-
-    // === USER JOURNEY TESTS ===
-    {
-      name: 'journeys',
-      testMatch: '**/journeys/**/*.spec.ts',
-      use: {
-        ...devices['Desktop Chrome'],
-      },
-    },
-
-    // === USER JOURNEY TESTS (HEADED - UI Visible) ===
-    {
-      name: 'journeys-headed',
-      testMatch: '**/journeys/**/*.spec.ts',
-      use: {
-        ...devices['Desktop Chrome'],
-        headless: false,
-        launchOptions: {
-          slowMo: 100,
-        },
-      },
-    },
-
-    // === ADMIN TESTS ===
-    {
-      name: 'admin',
-      testMatch: '**/admin.spec.ts',
-      use: {
-        ...devices['Desktop Chrome'],
-      },
-    },
-
-    // === UNAUTHENTICATED TESTS ===
-    {
-      name: 'chromium',
-      testMatch: ['**/auth.spec.ts', '**/auth-flows.spec.ts', '**/landing.spec.ts'],
-      use: { ...devices['Desktop Chrome'] },
-    },
-
-    // === LIGHTHOUSE PERFORMANCE AUDIT ===
-    {
-      name: 'lighthouse',
-      testMatch: '**/*.audit.spec.ts',
-      use: {
-        ...devices['Desktop Chrome'],
-        launchOptions: {
-          args: ['--remote-debugging-port=9222'],
-        },
-      },
-    },
-
-    // === MOBILE TESTS (Unauthenticated) ===
-    {
-      name: 'Mobile Chrome',
-      testMatch: ['**/landing.spec.ts'],
-      use: { ...devices['Pixel 5'] },
+      name: 'chromium-light',
+      use: { ...devices['Desktop Chrome'], colorScheme: 'light' },
     },
     {
-      name: 'Mobile Safari',
-      testMatch: ['**/landing.spec.ts'],
-      use: { ...devices['iPhone 12'] },
+      name: 'chromium-dark',
+      use: { ...devices['Desktop Chrome'], colorScheme: 'dark' },
     },
   ],
-
   webServer: {
-    command: 'npm run build && npm run preview',
-    url: 'http://localhost:4321',
+    // Playwright requires a built artifact; run `npm run build` before
+    // `npm run test:visual` or `npm run test:visual:update`.
+    command: `npm run preview -- --port ${PORT}`,
+    url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env.CI,
-    timeout: 180000,
+    timeout: 120_000,
   },
 });

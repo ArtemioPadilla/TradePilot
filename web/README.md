@@ -1,230 +1,79 @@
-# TradePilot Web Application
+# Inceptor
 
-> Modern portfolio management and trading platform built with Astro + React.
+> An Astro 5 + React 19 starter where every feature ships through a GitHub issue: **issue → Claude Code → PR → merge → deploy.** Batteries-included UI, zero JS by default.
 
-## Overview
+**[Live demo → artemiop.com/inceptor](https://artemiop.com/inceptor/)**
 
-TradePilot Web is the frontend application for the TradePilot trading platform. It provides:
+[![Build](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/ArtemioPadilla/inceptor/actions)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
+[![Components](https://img.shields.io/badge/components-~44-emerald)](./docs/component-catalog.md)
+[![Deps beyond stack](https://img.shields.io/badge/deps%20beyond%20stack-0-success)](./docs/component-catalog.md)
 
-- **Portfolio Dashboard** - Real-time portfolio tracking and analytics
-- **Trading Interface** - Execute trades via Alpaca Markets
-- **Strategy Builder** - Create and backtest trading strategies
-- **Market Data** - Real-time prices with intelligent caching
-- **Social Features** - Share strategies and follow traders
+Inceptor is a production-grade web template built around **Issue-Driven Development**. It ships an islands-architecture Astro site with a full UI kit, a custom docs site, a component gallery, live demos, a blog, and PWA/offline support — and a `FeedbackFAB` that lets real users file pre-filled GitHub issues straight from the running app.
 
-## Quick Start
+## What you get
+
+### Stack
+
+| Package | Role |
+|---|---|
+| **Astro 5** | Islands architecture, ships zero JS by default |
+| **React 19** (`@astrojs/react`) | Only for interactive islands |
+| **Tailwind v4** (`@tailwindcss/vite`) | Styling — no `@astrojs/tailwind` |
+| **Base UI** (`@base-ui-components/react`) | shadcn-compatible primitives (not Radix) |
+| **TanStack Table + Query + Virtual** | DataTable, per-island data, virtualization |
+| **Tremor Raw** (copy-paste) | KPIs, trackers, charts — you own the source |
+| **Motion** (`motion/react`) | Lazy React animations |
+| **PWA** (`@vite-pwa/astro` + Workbox) | Service worker + offline cache |
+
+Everything else (Recharts, Nano Stores, react-hook-form + Zod, lucide, vitest) lives in [`CLAUDE.md`](./CLAUDE.md). No dependencies beyond this curated stack — dependency-free components add zero extra weight.
+
+### ~44 components across 13 gallery categories
+
+Primitives, form controls, advanced inputs, navigation, compound components (Dialog/Tabs/Toast/Form), overlays, disclosure, feedback, DataTable, KPIs, charts, and data-viz extras. Full inventory in [`docs/component-catalog.md`](./docs/component-catalog.md).
+
+### Optional self-hosted backend
+
+Two interchangeable archetypes — **`server-node/`** (Hono, reuses the frontend's Zod schemas) and **`server-flask/`** (Flask + Pydantic) — expose the same `/api/*` contract: contact/newsletter handlers, a token-backed GitHub proxy (lifts the 60 req/h cap), feedback→issue creation, and OpenAPI/Swagger. Entirely opt-in via `PUBLIC_API_BASE`; unset, the site stays fully static. See **[the backend guide](https://artemiop.com/inceptor/docs/building/backend/)** and [ADR 0006](./docs/decisions/0006-self-hosted-backend-archetypes.md).
+
+### Explore it live
+
+- **[Gallery](https://artemiop.com/inceptor/gallery/)** — every component rendered live
+- **[Demos](https://artemiop.com/inceptor/demos/)** — dashboard + data-table in context, plus the [backend API contract](https://artemiop.com/inceptor/demos/api/)
+- **[Docs](https://artemiop.com/inceptor/docs/)** — custom docs site with search
+- **[Blog](https://artemiop.com/inceptor/blog/)** — content-collection example
+
+## Quick start
 
 ```bash
-# Install dependencies
+git clone https://github.com/ArtemioPadilla/inceptor.git
+cd inceptor
 npm install
-
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Run E2E tests
-npx playwright test --project=chromium
+npm run dev          # http://localhost:4321
 ```
 
-## Architecture
+Useful scripts: `npm run build`, `npm run preview`, `npm run check` (typecheck + tests + build), `npm run test`.
 
-### Tech Stack
+## Deploy
 
-| Layer | Technology |
-|-------|------------|
-| Framework | Astro 4.x with React islands |
-| State | Nanostores |
-| Auth | Firebase Authentication |
-| Database | Firestore |
-| Trading | Alpaca Markets API |
-| Styling | CSS Modules with theme variables |
-| Testing | Playwright (E2E), Vitest (unit) |
+Inceptor ships static HTML + a service worker, so any static host works. The default is **GitHub Pages** (repo Settings → Pages → Source: "GitHub Actions"); pushes to `main` deploy automatically. Cloudflare Pages, Netlify, and Vercel guides are in **[`docs/deploy/`](./docs/deploy/)**.
 
-### Project Structure
+## How development works
+
+Every feature starts as a GitHub issue. In a Claude Code session, Claude triages it and drives three project sub-agents — `prometeo` plans, `forja` implements, `centinela` validates — landing a PR against `main` that auto-deploys on merge. The in-app `FeedbackFAB` closes the loop: real users file issues with stack trace, URL, and diagnostics pre-filled.
 
 ```
-web/
-├── src/
-│   ├── components/       # React components
-│   │   ├── common/       # Shared UI components
-│   │   ├── dashboard/    # Dashboard widgets
-│   │   ├── market/       # Market data components
-│   │   ├── trading/      # Trading interface
-│   │   └── strategies/   # Strategy builder
-│   │
-│   ├── contexts/         # React contexts
-│   │   └── MarketDataContext.tsx
-│   │
-│   ├── hooks/            # Custom React hooks
-│   │   └── useMarketData.ts
-│   │
-│   ├── lib/              # Utilities and services
-│   │   ├── services/     # Business logic services
-│   │   │   ├── market-data/    # Real-time data service
-│   │   │   └── data-providers/ # Data source integrations
-│   │   ├── firebase.ts   # Firebase initialization
-│   │   └── validation.ts # Form validation
-│   │
-│   ├── pages/            # Astro pages
-│   ├── stores/           # Nanostores state
-│   ├── styles/           # Global styles
-│   └── types/            # TypeScript types
-│
-├── docs/                 # Documentation
-│   └── architecture/     # Architecture docs
-│
-├── tests/                # Test files
-│   ├── e2e/              # Playwright E2E tests
-│   └── unit/             # Vitest unit tests
-│
-└── public/               # Static assets
-```
-
-## Key Features
-
-### Market Data
-
-Real-time price data with intelligent caching:
-
-```typescript
-import { useMarketData } from '@/hooks/useMarketData';
-
-function WatchList() {
-  const { prices, loading, isConnected } = useMarketData({
-    symbols: ['AAPL', 'GOOGL', 'MSFT'],
-    enableWebSocket: true,
-  });
-
-  return (
-    <div>
-      {Array.from(prices.values()).map(quote => (
-        <PriceDisplay key={quote.symbol} quote={quote} />
-      ))}
-    </div>
-  );
-}
-```
-
-See [Data Architecture](./docs/architecture/DATA_ARCHITECTURE.md) for details.
-
-### Access Control
-
-Privacy-first permission model with GDPR compliance:
-
-```typescript
-import { canViewData, VisibilityLevel } from '@/types/permissions';
-
-// Check access before showing data
-const result = canViewData({
-  viewerId: currentUser.id,
-  targetUserId: portfolioOwner.id,
-  dataType: 'holdings',
-}, ownerPrivacySettings);
-
-if (result.canView) {
-  // Show data with appropriate redaction
-}
-```
-
-See [Permissions](./docs/architecture/PERMISSIONS.md) for details.
-
-### Trading
-
-Execute trades via Alpaca Markets:
-
-```typescript
-import { submitOrder } from '@/lib/services/order-execution';
-
-await submitOrder(userId, {
-  symbol: 'AAPL',
-  qty: 10,
-  side: 'buy',
-  type: 'market',
-  time_in_force: 'day',
-});
-```
-
-## Environment Variables
-
-```bash
-# Firebase
-PUBLIC_FIREBASE_API_KEY=
-PUBLIC_FIREBASE_AUTH_DOMAIN=
-PUBLIC_FIREBASE_PROJECT_ID=
-PUBLIC_FIREBASE_STORAGE_BUCKET=
-PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
-PUBLIC_FIREBASE_APP_ID=
-
-# Optional
-PUBLIC_SENTRY_DSN=
-```
-
-## Commands
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server at localhost:4321 |
-| `npm run build` | Build for production |
-| `npm run preview` | Preview production build |
-| `npm run test` | Run unit tests |
-| `npm run test:e2e` | Run E2E tests (Playwright) |
-| `npm run lint` | Lint code |
-| `npm run format` | Format code |
-
-## Testing
-
-### E2E Tests
-
-```bash
-# Run all tests
-npx playwright test --project=chromium
-
-# Run specific test file
-npx playwright test tests/e2e/trading.spec.ts
-
-# Run with UI
-npx playwright test --ui
-
-# Debug mode
-npx playwright test --debug
-```
-
-### Unit Tests
-
-```bash
-# Run all tests
-npm run test
-
-# Watch mode
-npm run test:watch
-
-# Coverage
-npm run test:coverage
+User finds bug → FeedbackFAB → GitHub Issue → Claude Code → PR → Merge → Deploy
 ```
 
 ## Documentation
 
-- [Data Architecture](./docs/architecture/DATA_ARCHITECTURE.md) - Market data and caching
-- [Permissions](./docs/architecture/PERMISSIONS.md) - Access control and privacy
-
-## CyberEco Compatibility
-
-This application is designed for future integration with the [CyberEco Platform](https://github.com/cyber-eco/cybereco-monorepo):
-
-- **Privacy Controls** - GDPR-compliant with CyberEco's consent model
-- **Access Control** - Compatible visibility levels and sharing
-- **Hub Gateway** - Ready for SSO via CyberEco Hub
-- **Data Portability** - JSON export for data sovereignty
-
-## Contributing
-
-1. Create a feature branch
-2. Make changes with tests
-3. Run `npm run lint && npm run test`
-4. Submit a pull request
+- [Component catalog](./docs/component-catalog.md) — full inventory + coverage scorecard
+- [Roadmap](./ROADMAP.md) — post-integration follow-ups grouped into epics
+- [Claude Code context](./CLAUDE.md) — repo conventions, stack details, IDD workflow
+- [Contribution & component guide](./docs/COMPONENTS.md) — how to add a component
+- [docs/](./docs/) — principles, ethics, ADRs, component guide, deploy targets
 
 ## License
 
-Proprietary - All rights reserved
+[MIT](./LICENSE)

@@ -50,7 +50,14 @@
       "Bash(python3 -m py_compile:*)",
       "Bash(TEST_USER_EMAIL=\"test@test.com\" TEST_USER_PASSWORD=\"test123!\" npx playwright test:*)",
       "Bash(gh api:*)",
-      "mcp__playwright__browser_network_requests"
+      "mcp__playwright__browser_network_requests",
+      "Read(//Users/artemiopadilla/Documents/repos/GitHub/personal/issue-driven-web-template/**)",
+      "Bash(ls src *)",
+      "Bash(ls .claude/agents)",
+      "Bash(ls .github/workflows)",
+      "Bash(python3 -c \"import json,sys; p=json.load\\(sys.stdin\\); print\\(json.dumps\\(p.get\\('dependencies',{}\\),indent=1\\)\\); print\\(json.dumps\\(list\\(p.get\\('scripts',{}\\).keys\\(\\)\\)\\)\\)\")",
+      "Bash(python3 -c \"import json,sys; print\\(json.dumps\\(json.load\\(sys.stdin\\).get\\('scripts',{}\\),indent=1\\)\\)\")",
+      "Bash(python3 -c \"import json,sys; s=json.load\\(sys.stdin\\)['scripts']; [print\\(k,'=',v\\) for k,v in s.items\\(\\) if k in \\('init','check','test','build','lighthouse','test:visual','a11y','ship','doctor','monday'\\)]\")"
     ]
   }
 }

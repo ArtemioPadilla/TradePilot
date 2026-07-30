@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#050505"/>
+      <stop offset="1" stop-color="#0f172a"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.85" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#2563eb" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#2563eb" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <image href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjggMTI4IiBmaWxsPSJub25lIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9IlRyYWRlUGlsb3QiPgogIDxyZWN0IHdpZHRoPSIxMjgiIGhlaWdodD0iMTI4IiByeD0iMjgiIGZpbGw9IiMyNTYzZWIiLz4KICA8cGF0aCBkPSJNMzIgNzAgTDY0IDQwIEw5NiA3MCBMODIgNzAgTDY0IDUzIEw0NiA3MCBaIiBmaWxsPSIjZmZmZmZmIi8+CiAgPHBhdGggZD0iTTMyIDkyIEw2NCA2MiBMOTYgOTIgTDgyIDkyIEw2NCA3NSBMNDYgOTIgWiIgZmlsbD0iI2ZmZmZmZiIgb3BhY2l0eT0iMC41NSIvPgo8L3N2Zz4K" x="800" y="120" width="320" height="320"/>
+
+  <g transform="translate(60, 70)">
+    <rect rx="999" width="220" height="36" fill="#2563eb" fill-opacity="0.12"
+          stroke="#2563eb" stroke-opacity="0.4" stroke-width="1"/>
+    <circle cx="20" cy="18" r="5" fill="#60a5fa"/>
+    <text x="35" y="23" font-family="ui-sans-serif, system-ui, sans-serif"
+          font-size="14" fill="#bfdbfe" font-weight="600">
+      TradePilot
+    </text>
+  </g>
+
+  <text x="60" y="240" font-family="ui-sans-serif, system-ui, sans-serif"
+        font-size="56" font-weight="800" fill="#f5f5f5" letter-spacing="-1">
+    Backtest like
+  </text>
+  <text x="60" y="310" font-family="ui-sans-serif, system-ui, sans-serif"
+        font-size="56" font-weight="800" fill="#2563eb" letter-spacing="-1">
+    a pilot.
+  </text>
+
+  <text x="60" y="380" font-family="ui-sans-serif, system-ui, sans-serif"
+        font-size="22" fill="#a3a3a3" font-weight="500">
+    Backtest trading strategies in your browser — zero backend.
+  </text>
+
+  <g transform="translate(60, 440)">
+    <text font-family="ui-monospace, monospace" font-size="18" fill="#d4d4d8">
+      <tspan x="0" y="0">Python · Alpaca · yfinance · Astro · React · Supabase</tspan>
+    </text>
+  </g>
+
+  <text x="60" y="580" font-family="ui-monospace, monospace"
+        font-size="14" fill="#737373">
+    github.com/ArtemioPadilla/TradePilot
+  </text>
+</svg>

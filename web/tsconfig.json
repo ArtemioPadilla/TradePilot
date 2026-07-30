@@ -1,24 +1,24 @@
 {
-  "extends": "astro/tsconfigs/strict",
-  "include": [
-    ".astro/types.d.ts",
-    "**/*"
-  ],
-  "exclude": [
-    "dist"
-  ],
   "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    // Allows `import … from './foo.ts'` paths — required by the gen:catalog
+    // script and its drift test, both of which use Node's --experimental-strip-types
+    // runtime. Safe here because this project never emits JS (tsc --noEmit only).
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "skipLibCheck": true,
     "jsx": "react-jsx",
-    "jsxImportSource": "react",
     "baseUrl": ".",
+    // For TypeScript 6. A fork on TS 5.x must remove this line (5.x only
+    // accepts "5.0") — `create-inceptor-app` handles it per archetype.
+    "ignoreDeprecations": "6.0",
     "paths": {
-      "@/*": ["src/*"],
-      "@components/*": ["src/components/*"],
-      "@layouts/*": ["src/layouts/*"],
-      "@lib/*": ["src/lib/*"],
-      "@stores/*": ["src/stores/*"],
-      "@styles/*": ["src/styles/*"],
-      "@assets/*": ["src/assets/*"]
+      "@/*": ["./src/*"]
     }
-  }
+  },
+  "include": ["src/**/*"]
 }
