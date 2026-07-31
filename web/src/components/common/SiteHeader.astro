@@ -7,6 +7,7 @@
 import ThemeToggle from './ThemeToggle.astro';
 import { withBase } from '@/lib/href';
 import GlobalSearch from '@/components/islands/GlobalSearch';
+import AuthNav from '@/components/islands/AuthNav';
 
 const nav = [
   { href: '/gallery/', label: 'Gallery' },
@@ -79,6 +80,8 @@ const isActive = (href: string) => here.includes(href);
           blocking first paint. Renders a magnifier trigger button + the ⌘K
           dialog in one island (compound-component constraint). */}
       <GlobalSearch client:idle />
+      {/* Session controls — idle: not needed for first paint. */}
+      <AuthNav client:idle />
       <span class="ml-1"><ThemeToggle /></span>
     </div>
   </nav>
