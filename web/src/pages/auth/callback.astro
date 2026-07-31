@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AuthCallback from '../../components/islands/AuthCallback';
+---
+
+<BaseLayout
+  title="Signing in…"
+  description="Completing sign-in."
+  lang="en"
+>
+  <main id="main-content" class="mx-auto max-w-3xl px-4 py-16">
+    <AuthCallback client:load />
+  </main>
+</BaseLayout>

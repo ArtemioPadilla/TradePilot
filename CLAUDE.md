@@ -129,7 +129,7 @@ npm run build
 
 - **Framework**: Astro 5 + React 19 islands (Inceptor template)
 - **Styling**: Tailwind v4, Base UI primitives, TanStack Table/Query
-- **Auth/DB**: Supabase (Phase 1 — not yet wired)
+- **Auth/DB**: Supabase — PKCE auth (email + Google), RLS schema, adapter layer in `web/src/lib/data/`
 - **Testing**: Vitest (unit) + Playwright (visual + a11y)
 
 ## Testing Requirements (CRITICAL)

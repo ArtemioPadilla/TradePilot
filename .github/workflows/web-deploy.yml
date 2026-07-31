@@ -36,6 +36,9 @@ jobs:
           # override with an ASTRO_BASE repo secret (e.g. set it to `/` if you
           # later move to a root/custom-domain user-pages deploy).
           ASTRO_BASE: ${{ secrets.ASTRO_BASE || '/TradePilot' }}
+          # Public by design (publishable key + RLS) — Actions variables, not secrets.
+          PUBLIC_SUPABASE_URL: ${{ vars.PUBLIC_SUPABASE_URL }}
+          PUBLIC_SUPABASE_ANON_KEY: ${{ vars.PUBLIC_SUPABASE_ANON_KEY }}
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:

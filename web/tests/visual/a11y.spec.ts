@@ -13,7 +13,7 @@ import AxeBuilder from '@axe-core/playwright';
  * meant to teach principled UX (see docs/ETHICS.md item #7).
  */
 
-const routes = ['/', '/gallery/', '/demos/dashboard/', '/docs/'];
+const routes = ['/', '/gallery/', '/demos/dashboard/', '/docs/', '/auth/'];
 
 for (const route of routes) {
   test(`a11y — ${route}`, async ({ page }) => {
