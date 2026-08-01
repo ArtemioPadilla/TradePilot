@@ -28,6 +28,9 @@ const ROUTES = [
   '/leaderboard/',
   '/community/',
   '/runs/',
+  '/learn/',
+  '/tools/',
+  '/catalog/',
 ] as const;
 
 for (const route of ROUTES) {
