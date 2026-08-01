@@ -51,25 +51,27 @@ function ProfileCard() {
         </CardDescription>
       </CardHeader>
       <CardContent className="text-sm text-muted-foreground">
-        <p>
-          You are signed in. Strategies, backtests, and the Lab arrive in the next phases — track
-          progress on{' '}
-          <a
-            href="https://github.com/ArtemioPadilla/TradePilot/issues"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-semibold text-primary underline underline-offset-2"
-          >
-            GitHub
-          </a>
-          .
-        </p>
-        <p className="mt-2">
-          <a href={withBase('/demos/')} className="text-primary underline underline-offset-2">
-            Explore the component demos
-          </a>{' '}
-          while the trading surfaces land.
-        </p>
+        <p>You are signed in. Jump into the trading tools:</p>
+        <ul className="mt-3 space-y-1.5">
+          <li>
+            <a
+              href={withBase('/app/strategies/')}
+              className="font-semibold text-primary underline underline-offset-2"
+            >
+              Strategies
+            </a>{' '}
+            — create momentum, mean-reversion, smart-beta, or custom-code strategies.
+          </li>
+          <li>
+            <a
+              href={withBase('/app/backtest/')}
+              className="font-semibold text-primary underline underline-offset-2"
+            >
+              Backtest
+            </a>{' '}
+            — run a real simulation in your browser and save the results.
+          </li>
+        </ul>
       </CardContent>
     </Card>
   );

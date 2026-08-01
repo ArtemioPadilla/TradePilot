@@ -44,6 +44,7 @@
     "@astrojs/react": "^5.0.7",
     "@base-ui-components/react": "^1.0.0-rc.0",
     "@hookform/resolvers": "^5.4.0",
+    "@monaco-editor/react": "^4.7.0",
     "@nanostores/react": "^1.1.0",
     "@supabase/supabase-js": "^2.111.0",
     "@tailwindcss/vite": "^4.3.0",

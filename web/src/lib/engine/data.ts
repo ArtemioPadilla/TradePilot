@@ -77,10 +77,10 @@ export async function fetchHistoricalPrices(
   const prices: number[] = [];
 
   for (let i = 0; i < timestamps.length; i++) {
-    if (closes[i] != null && !isNaN(closes[i])) {
-      const d = new Date(timestamps[i] * 1000);
-      dates.push(d.toISOString().split('T')[0]);
-      prices.push(closes[i]);
+    if (closes[i] != null && !isNaN(closes[i]!)) {
+      const d = new Date(timestamps[i]! * 1000);
+      dates.push(d.toISOString().split('T')[0]!);
+      prices.push(closes[i]!);
     }
   }
 
@@ -103,7 +103,7 @@ export async function fetchLivePrice(symbol: string): Promise<number> {
   const closes: number[] = json?.chart?.result?.[0]?.indicators?.quote?.[0]?.close ?? [];
 
   for (let i = closes.length - 1; i >= 0; i--) {
-    if (closes[i] != null && !isNaN(closes[i])) return closes[i];
+    if (closes[i] != null && !isNaN(closes[i]!)) return closes[i]!;
   }
 
   throw new Error(`No live price available for ${symbol}`);
@@ -125,9 +125,9 @@ export async function fetchMultiplePrices(
 
   const map = new Map<string, PriceData>();
   for (let i = 0; i < symbols.length; i++) {
-    const r = results[i];
+    const r = results[i]!;
     if (r.status === 'fulfilled') {
-      map.set(symbols[i], r.value);
+      map.set(symbols[i]!, r.value);
     }
   }
 

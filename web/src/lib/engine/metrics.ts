@@ -79,17 +79,17 @@ export function normalPPF(p: number): number {
 
   if (p < pLow) {
     q = Math.sqrt(-2 * Math.log(p));
-    return (((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) /
-           ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+    return (((((c[0]!*q+c[1]!)*q+c[2]!)*q+c[3]!)*q+c[4]!)*q+c[5]!) /
+           ((((d[0]!*q+d[1]!)*q+d[2]!)*q+d[3]!)*q+1);
   } else if (p <= pHigh) {
     q = p - 0.5;
     r = q * q;
-    return (((((a[0]*r+a[1])*r+a[2])*r+a[3])*r+a[4])*r+a[5])*q /
-           (((((b[0]*r+b[1])*r+b[2])*r+b[3])*r+b[4])*r+1);
+    return (((((a[0]!*r+a[1]!)*r+a[2]!)*r+a[3]!)*r+a[4]!)*r+a[5]!)*q /
+           (((((b[0]!*r+b[1]!)*r+b[2]!)*r+b[3]!)*r+b[4]!)*r+1);
   } else {
     q = Math.sqrt(-2 * Math.log(1 - p));
-    return -(((((c[0]*q+c[1])*q+c[2])*q+c[3])*q+c[4])*q+c[5]) /
-            ((((d[0]*q+d[1])*q+d[2])*q+d[3])*q+1);
+    return -(((((c[0]!*q+c[1]!)*q+c[2]!)*q+c[3]!)*q+c[4]!)*q+c[5]!) /
+            ((((d[0]!*q+d[1]!)*q+d[2]!)*q+d[3]!)*q+1);
   }
 }
 
@@ -104,7 +104,7 @@ export function normalPPF(p: number): number {
 export function getReturns(prices: number[]): number[] {
   const r: number[] = [];
   for (let i = 1; i < prices.length; i++) {
-    r.push((prices[i] - prices[i - 1]) / prices[i - 1]);
+    r.push((prices[i]! - prices[i - 1]!) / prices[i - 1]!);
   }
   return r;
 }
@@ -118,8 +118,8 @@ export function getReturnsMatrix(prices: number[][]): number[][] {
   const result: number[][] = [];
   for (let t = 1; t < prices.length; t++) {
     const row: number[] = [];
-    for (let j = 0; j < prices[0].length; j++) {
-      row.push((prices[t][j] - prices[t - 1][j]) / prices[t - 1][j]);
+    for (let j = 0; j < prices[0]!.length; j++) {
+      row.push((prices[t]![j]! - prices[t - 1]![j]!) / prices[t - 1]![j]!);
     }
     result.push(row);
   }
@@ -228,7 +228,7 @@ export function maxDrawdown(prices: number[]): number {
  */
 export function momentum(prices: number[], t: number): number {
   if (prices.length < t) throw new Error('Not enough data to calculate momentum.');
-  return prices[prices.length - 1] - prices[prices.length - t];
+  return prices[prices.length - 1]! - prices[prices.length - t]!;
 }
 
 // ---------------------------------------------------------------------------
@@ -242,8 +242,8 @@ function percentile(sorted: number[], level: number): number {
   const idx = (level / 100) * (sorted.length - 1);
   const lo = Math.floor(idx);
   const hi = Math.ceil(idx);
-  if (lo === hi) return sorted[lo];
-  return sorted[lo] + (sorted[hi] - sorted[lo]) * (idx - lo);
+  if (lo === hi) return sorted[lo]!;
+  return sorted[lo]! + (sorted[hi]! - sorted[lo]!) * (idx - lo);
 }
 
 /**
@@ -359,7 +359,7 @@ export function getCompoundedReturn(returns: number[]): number {
 export function portfolioReturn(weights: number[], returns: number[]): number {
   let sum = 0;
   for (let i = 0; i < weights.length; i++) {
-    sum += weights[i] * returns[i];
+    sum += weights[i]! * returns[i]!;
   }
   return sum;
 }
@@ -372,7 +372,7 @@ export function portfolioVol(weights: number[], covMatrix: number[][]): number {
   let vol2 = 0;
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n; j++) {
-      vol2 += weights[i] * weights[j] * covMatrix[i][j];
+      vol2 += weights[i]! * weights[j]! * covMatrix[i]![j]!;
     }
   }
   return Math.sqrt(Math.max(vol2, 0));
@@ -396,16 +396,16 @@ export function alpha(portReturn: number, riskFreeRate: number): number {
 export function covarianceMatrix(returns: number[][]): number[][] {
   const T = returns.length;
   if (T < 2) return [];
-  const nAssets = returns[0].length;
+  const nAssets = returns[0]!.length;
 
   // means
   const means: number[] = new Array(nAssets).fill(0);
   for (let t = 0; t < T; t++) {
     for (let j = 0; j < nAssets; j++) {
-      means[j] += returns[t][j];
+      means[j]! += returns[t]![j]!;
     }
   }
-  for (let j = 0; j < nAssets; j++) means[j] /= T;
+  for (let j = 0; j < nAssets; j++) means[j]! /= T;
 
   // covariance
   const cov: number[][] = Array.from({ length: nAssets }, () => new Array(nAssets).fill(0));
@@ -413,10 +413,10 @@ export function covarianceMatrix(returns: number[][]): number[][] {
     for (let j = i; j < nAssets; j++) {
       let s = 0;
       for (let t = 0; t < T; t++) {
-        s += (returns[t][i] - means[i]) * (returns[t][j] - means[j]);
+        s += (returns[t]![i]! - means[i]!) * (returns[t]![j]! - means[j]!);
       }
-      cov[i][j] = s / (T - 1);
-      cov[j][i] = cov[i][j];
+      cov[i]![j] = s / (T - 1);
+      cov[j]![i] = cov[i]![j]!;
     }
   }
   return cov;

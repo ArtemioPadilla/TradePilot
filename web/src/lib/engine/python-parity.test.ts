@@ -45,7 +45,7 @@ const r2 = getReturns(prices2);
 describe('Python ↔ TS metric parity (rtol 1e-6)', () => {
   it('getReturns', () => {
     expect(r.length).toBe(expected.returnsLen);
-    expected.returnsFirst5.forEach((v, i) => expectClose(r[i], v));
+    expected.returnsFirst5.forEach((v, i) => expectClose(r[i]!, v));
   });
 
   it('annualizeReturns', () => expectClose(annualizeReturns(r, 252), expected.annualizedReturn));
@@ -66,18 +66,18 @@ describe('Python ↔ TS metric parity (rtol 1e-6)', () => {
   it('alpha', () => expectClose(alpha(0.12, 0.04), expected.alpha));
 
   it('covarianceMatrix', () => {
-    const returnsMatrix = r.map((v, i) => [v, r2[i]]);
+    const returnsMatrix = r.map((v, i) => [v, r2[i]!]);
     const cov = covarianceMatrix(returnsMatrix);
-    expectClose(cov[0][0], expected.covariance[0][0]);
-    expectClose(cov[0][1], expected.covariance[0][1]);
-    expectClose(cov[1][1], expected.covariance[1][1]);
+    expectClose(cov[0]![0]!, expected.covariance[0]![0]!);
+    expectClose(cov[0]![1]!, expected.covariance[0]![1]!);
+    expectClose(cov[1]![1]!, expected.covariance[1]![1]!);
   });
 
   it('portfolioReturn + portfolioVol', () => {
     const w = [0.6, 0.4];
     const annualized = [annualizeReturns(r, 252), annualizeReturns(r2, 252)];
     expectClose(portfolioReturn(w, annualized), expected.portfolioReturn);
-    const returnsMatrix = r.map((v, i) => [v, r2[i]]);
+    const returnsMatrix = r.map((v, i) => [v, r2[i]!]);
     expectClose(portfolioVol(w, covarianceMatrix(returnsMatrix)), expected.portfolioVol);
   });
 });

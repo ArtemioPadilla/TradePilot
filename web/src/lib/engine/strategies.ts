@@ -20,7 +20,7 @@ export function momentumStrategy(prices: Map<string, number[]>, t = 10): string[
 
   for (const [symbol, p] of prices) {
     if (p.length < t) continue;
-    const score = p[p.length - 1] - p[p.length - t];
+    const score = p[p.length - 1]! - p[p.length - t]!;
     scores.push({ symbol, score });
   }
 
@@ -44,7 +44,7 @@ export function meanReversionStrategy(prices: Map<string, number[]>, t = 20): st
     if (p.length < t) continue;
     const window = p.slice(-t);
     const sma = window.reduce((a, b) => a + b, 0) / t;
-    const deviation = p[p.length - 1] - sma;
+    const deviation = p[p.length - 1]! - sma;
     scores.push({ symbol, score: deviation });
   }
 

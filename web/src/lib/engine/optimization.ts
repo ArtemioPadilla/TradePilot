@@ -25,26 +25,26 @@ import type { EfficientFrontierResult } from './types';
 function projectWeights(w: number[], minW: number, maxW: number): number[] {
   const n = w.length;
   const out = new Float64Array(n);
-  for (let i = 0; i < n; i++) out[i] = w[i];
+  for (let i = 0; i < n; i++) out[i] = w[i]!;
 
   for (let iter = 0; iter < 50; iter++) {
     // Clip
     for (let i = 0; i < n; i++) {
-      out[i] = Math.max(minW, Math.min(maxW, out[i]));
+      out[i] = Math.max(minW, Math.min(maxW, out[i]!));
     }
     // Normalize
     let sum = 0;
-    for (let i = 0; i < n; i++) sum += out[i];
+    for (let i = 0; i < n; i++) sum += out[i]!;
     if (sum === 0) {
       for (let i = 0; i < n; i++) out[i] = 1 / n;
       break;
     }
-    for (let i = 0; i < n; i++) out[i] /= sum;
+    for (let i = 0; i < n; i++) out[i]! /= sum;
 
     // Check feasibility
     let feasible = true;
     for (let i = 0; i < n; i++) {
-      if (out[i] < minW - 1e-10 || out[i] > maxW + 1e-10) {
+      if (out[i]! < minW - 1e-10 || out[i]! > maxW + 1e-10) {
         feasible = false;
         break;
       }
@@ -68,7 +68,7 @@ function numericalGradient(
   const f0 = f(w);
   for (let i = 0; i < n; i++) {
     const wPlus = [...w];
-    wPlus[i] += eps;
+    wPlus[i]! += eps;
     grad[i] = (f(wPlus) - f0) / eps;
   }
   return grad;
@@ -97,7 +97,7 @@ function minimizeConstrained(
     const grad = numericalGradient(objective, w);
 
     // Step
-    const wNew = w.map((wi, i) => wi - lr * grad[i]);
+    const wNew = w.map((wi, i) => wi - lr * grad[i]!);
 
     // Project
     const wProj = projectWeights(wNew, minW, maxW);
