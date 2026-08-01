@@ -71,6 +71,15 @@ function ProfileCard() {
             </a>{' '}
             — run a real simulation in your browser and save the results.
           </li>
+          <li>
+            <a
+              href={withBase('/app/lab/')}
+              className="font-semibold text-primary underline underline-offset-2"
+            >
+              Backtest Lab
+            </a>{' '}
+            — compare variants, sweep parameter grids, and walk-forward test.
+          </li>
         </ul>
       </CardContent>
     </Card>

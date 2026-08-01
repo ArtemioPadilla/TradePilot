@@ -21,6 +21,7 @@ const ROUTES = [
   '/auth/',
   '/app/strategies/',
   '/app/backtest/',
+  '/app/lab/',
 ] as const;
 
 for (const route of ROUTES) {
