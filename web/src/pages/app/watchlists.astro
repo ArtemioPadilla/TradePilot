@@ -1,0 +1,21 @@
+---
+// DESTINATION: web/src/pages/app/watchlists.astro
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import WatchlistsPage from '../../components/islands/WatchlistsPage';
+---
+
+<BaseLayout
+  title="Watchlists"
+  description="Track the symbols you care about with cached live quotes and 30-day sparklines."
+  lang="en"
+>
+  <main id="main-content" class="mx-auto max-w-5xl px-4 py-12">
+    <header class="mb-8">
+      <h1 class="font-display text-3xl font-semibold tracking-tight text-foreground">Watchlists</h1>
+      <p class="mt-2 text-muted-foreground">
+        Named lists of tickers with live quotes and 30-day trends, cached in your browser.
+      </p>
+    </header>
+    <WatchlistsPage client:load />
+  </main>
+</BaseLayout>
