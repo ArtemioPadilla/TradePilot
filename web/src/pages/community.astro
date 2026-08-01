@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import StrategyBrowserPage from '../components/islands/StrategyBrowserPage';
+---
+
+<BaseLayout
+  title="Community strategies"
+  description="Browse public trading strategies shared by the TradePilot community."
+  lang="en"
+>
+  <main id="main-content" class="mx-auto max-w-6xl px-4 py-12">
+    <header class="mb-8">
+      <h1 class="font-display text-3xl font-semibold tracking-tight text-foreground">
+        Community strategies
+      </h1>
+      <p class="mt-2 text-muted-foreground">
+        Public strategies from other traders. Make yours public from the Strategies page.
+      </p>
+    </header>
+    <StrategyBrowserPage client:load />
+  </main>
+</BaseLayout>

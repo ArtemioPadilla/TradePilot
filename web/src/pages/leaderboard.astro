@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LeaderboardPage from '../components/islands/LeaderboardPage';
+---
+
+<BaseLayout
+  title="Leaderboard"
+  description="Top published backtest runs from the TradePilot community, ranked by Sharpe ratio."
+  lang="en"
+>
+  <main id="main-content" class="mx-auto max-w-5xl px-4 py-12">
+    <header class="mb-8">
+      <h1 class="font-display text-3xl font-semibold tracking-tight text-foreground">Leaderboard</h1>
+      <p class="mt-2 text-muted-foreground">
+        Public backtest runs, ranked by Sharpe. Publish yours from the Backtest page or the Lab.
+      </p>
+    </header>
+    <LeaderboardPage client:load />
+  </main>
+</BaseLayout>
