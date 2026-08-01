@@ -1,0 +1,180 @@
+---
+/**
+ * DESTINATION: web/src/pages/learn.astro
+ *
+ * /learn — PUBLIC education page (no AuthGuard). Mostly static prose:
+ * what backtesting is, the three built-in strategy families, and the
+ * overfitting/walk-forward warning, plus a static FAQ (ported from the old
+ * app's LearnPage FAQ entries, re-worded for the rebuilt product).
+ *
+ * The only JS on the page is the <LearnContent /> island, which computes
+ * every metric card's worked example live with the real engine functions.
+ */
+import { withBase } from '@/lib/href';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import LearnContent from '@/components/islands/LearnContent';
+
+const faqs = [
+  {
+    q: 'What is TradePilot and how does it work?',
+    a: 'TradePilot is an algorithmic trading workbench that unifies backtesting and strategy research. You define a strategy (asset selection + weight optimization), test it against historical data in the browser-based Backtest Lab, and iterate — every metric is computed by the same engine, whether in a quick demo or a full walk-forward run.',
+  },
+  {
+    q: 'What does the Sharpe ratio tell me?',
+    a: 'The Sharpe ratio measures risk-adjusted return: how much excess return you earn per unit of volatility. Above 1.0 is generally considered good, above 2.0 very good, and above 3.0 excellent. It lets you compare strategies with different risk profiles on one scale.',
+  },
+  {
+    q: 'Can I lose more money than I invest?',
+    a: 'With standard equity trading (no leverage or margin), your maximum loss is limited to your invested capital. Leveraged positions or short selling can amplify losses beyond the initial investment. TradePilot defaults to long-only, unleveraged strategies.',
+  },
+  {
+    q: 'How often should a strategy rebalance?',
+    a: 'Rebalancing frequency is configurable. Common choices are weekly, bi-weekly, or monthly. More frequent rebalancing captures signals faster but incurs higher transaction costs — sweep the interval in the Backtest Lab to see the trade-off on your own strategy.',
+  },
+  {
+    q: 'Why do backtest results differ from live performance?',
+    a: 'Several factors cause divergence: slippage (the gap between expected and actual execution price), transaction costs, market impact of your orders, look-ahead bias in data, and changing market regimes. Treat backtest results as optimistic estimates and account for these factors.',
+  },
+  {
+    q: 'What is walk-forward analysis?',
+    a: 'Instead of judging a strategy on one continuous window, walk-forward analysis splits history into rolling segments, repeatedly "training" parameters on one segment and evaluating on the next unseen one. A strategy that only shines on the full window — and falls apart out-of-sample — was probably overfit.',
+  },
+];
+---
+
+<BaseLayout
+  title="Learn — backtesting, strategies & metrics | TradePilot"
+  description="What backtesting is, how momentum, mean-reversion and smart-beta strategies differ, and every key metric — Sharpe, Sortino, drawdown, VaR — explained with live worked examples."
+  lang="en"
+>
+  <main id="main-content" class="mx-auto max-w-6xl px-4 py-12">
+    <header class="mb-12 max-w-3xl">
+      <p class="font-mono text-xs uppercase tracking-[0.2em] text-primary">Learn</p>
+      <h1 class="mt-3 font-display text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+        Backtesting, strategies &amp; metrics — from zero
+      </h1>
+      <p class="mt-4 text-muted-foreground">
+        Everything on this page is public, and every worked example is computed live by the same
+        engine that powers the <a href={withBase('/app/lab/')} class="text-primary underline underline-offset-2 hover:text-primary/80">Backtest Lab</a>.
+      </p>
+    </header>
+
+    <!-- ─── What is backtesting ─────────────────────────────────────────── -->
+    <section class="mb-12 max-w-3xl space-y-4" aria-labelledby="backtesting-heading">
+      <h2 id="backtesting-heading" class="font-display text-2xl font-semibold text-foreground">
+        What is backtesting?
+      </h2>
+      <p class="text-muted-foreground leading-relaxed">
+        Backtesting is a dress rehearsal for a trading strategy: you replay history and let your
+        rules decide — with only the data available at each moment — what to buy, when to
+        rebalance, and how to weight each position. The simulator walks forward through the price
+        record, applies your ranking rule, allocates weights, and tracks the resulting portfolio
+        value day by day.
+      </p>
+      <p class="text-muted-foreground leading-relaxed">
+        The output is an equity curve plus the metrics to judge it: annualized return tells you the
+        reward, volatility and drawdown tell you the pain, and risk-adjusted ratios like Sharpe and
+        Sortino tell you whether the reward justified the pain. A backtest can never prove a
+        strategy will work — but it can quickly prove that one won't.
+      </p>
+    </section>
+
+    <!-- ─── Strategy families ───────────────────────────────────────────── -->
+    <section class="mb-12 space-y-4" aria-labelledby="families-heading">
+      <h2 id="families-heading" class="font-display text-2xl font-semibold text-foreground">
+        The three strategy families
+      </h2>
+      <div class="grid gap-4 md:grid-cols-3">
+        <div class="rounded-lg border border-border bg-card p-5">
+          <h3 class="font-semibold text-foreground">Momentum</h3>
+          <p class="mt-2 text-sm text-muted-foreground leading-relaxed">
+            Buys recent winners, betting that assets with the strongest price momentum keep
+            outperforming. Thrives in trending markets; suffers when trends snap back.
+          </p>
+          <code class="mt-3 block rounded bg-muted px-2 py-1 font-mono text-xs">Momentum(i) = P(today) − P(today − t)</code>
+        </div>
+        <div class="rounded-lg border border-border bg-card p-5">
+          <h3 class="font-semibold text-foreground">Mean reversion</h3>
+          <p class="mt-2 text-sm text-muted-foreground leading-relaxed">
+            Buys oversold assets trading below their moving average, betting they snap back toward
+            the mean. Shines in range-bound markets; risks catching falling knives in strong trends.
+          </p>
+          <code class="mt-3 block rounded bg-muted px-2 py-1 font-mono text-xs">Deviation(i) = P(today) − SMA(t)</code>
+        </div>
+        <div class="rounded-lg border border-border bg-card p-5">
+          <h3 class="font-semibold text-foreground">Smart beta</h3>
+          <p class="mt-2 text-sm text-muted-foreground leading-relaxed">
+            Ranks assets by risk-adjusted return — mean return per unit of volatility, a per-asset
+            Sharpe ratio. Favors consistent performers over volatile high-flyers.
+          </p>
+          <code class="mt-3 block rounded bg-muted px-2 py-1 font-mono text-xs">SmartBeta(i) = mean(Rᵢ) / std(Rᵢ)</code>
+        </div>
+      </div>
+      <p class="text-sm text-muted-foreground">
+        Want the full breakdown — parameters, pros/cons, and a live ranking demo of each?
+        <a href={withBase('/catalog/')} class="font-medium text-primary underline underline-offset-2 hover:text-primary/80">Explore the strategy catalog →</a>
+      </p>
+    </section>
+
+    <!-- ─── Metrics, computed live (island) ─────────────────────────────── -->
+    <section class="mb-12" aria-labelledby="metrics-heading">
+      <h2 id="metrics-heading" class="mb-2 font-display text-2xl font-semibold text-foreground">
+        The metrics, explained with live numbers
+      </h2>
+      <p class="mb-6 max-w-3xl text-muted-foreground">
+        Each card shows the formula in plain text and a worked example computed in your browser by
+        the engine itself.
+      </p>
+      <LearnContent client:visible />
+    </section>
+
+    <!-- ─── Overfitting & walk-forward ──────────────────────────────────── -->
+    <section class="mb-12 max-w-3xl space-y-4" aria-labelledby="overfitting-heading">
+      <h2 id="overfitting-heading" class="font-display text-2xl font-semibold text-foreground">
+        Overfitting — the backtester's trap
+      </h2>
+      <p class="text-muted-foreground leading-relaxed">
+        Tune a strategy's parameters long enough against one stretch of history and you will find a
+        combination that looks spectacular — because it memorized that history's accidents, not
+        because it found a durable edge. Warning signs: performance that collapses when you nudge a
+        parameter, a Sharpe ratio that looks too good to be true, and results driven by a handful
+        of lucky trades.
+      </p>
+      <p class="text-muted-foreground leading-relaxed">
+        The antidote is <strong class="text-foreground">walk-forward analysis</strong>: split
+        history into rolling windows, pick parameters on the in-sample segment, then score them
+        only on the unseen out-of-sample segment that follows — repeated across the whole record.
+        Consistent out-of-sample results are the closest a backtest gets to honesty. The
+        <a href={withBase('/app/lab/')} class="text-primary underline underline-offset-2 hover:text-primary/80">Backtest Lab</a>
+        runs walk-forward splits and parameter sweeps for exactly this reason. Watch for
+        <strong class="text-foreground">look-ahead bias</strong> (using information not yet
+        available at decision time) and <strong class="text-foreground">survivorship bias</strong>
+        (testing only on assets that still exist today) too.
+      </p>
+    </section>
+
+    <!-- ─── FAQ (static, ported from the old app) ───────────────────────── -->
+    <section class="max-w-3xl" aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="mb-4 font-display text-2xl font-semibold text-foreground">
+        Frequently asked questions
+      </h2>
+      <div class="divide-y divide-border rounded-lg border border-border">
+        {faqs.map((faq) => (
+          <details class="group px-5 py-4">
+            <summary class="cursor-pointer list-none font-medium text-foreground marker:hidden [&::-webkit-details-marker]:hidden">
+              <span class="flex items-center justify-between gap-4">
+                {faq.q}
+                <span aria-hidden="true" class="text-muted-foreground transition-transform group-open:rotate-90">›</span>
+              </span>
+            </summary>
+            <p class="mt-3 text-sm leading-relaxed text-muted-foreground">{faq.a}</p>
+          </details>
+        ))}
+      </div>
+      <p class="mt-6 text-sm text-muted-foreground">
+        Ready to try it? <a href={withBase('/tools/')} class="font-medium text-primary underline underline-offset-2 hover:text-primary/80">Play with the calculators</a>
+        or <a href={withBase('/app/lab/')} class="font-medium text-primary underline underline-offset-2 hover:text-primary/80">open the Backtest Lab</a>.
+      </p>
+    </section>
+  </main>
+</BaseLayout>
