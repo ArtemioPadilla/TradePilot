@@ -22,10 +22,20 @@ const ROUTES = [
   '/app/strategies/',
   '/app/backtest/',
   '/app/lab/',
+  '/app/watchlists/',
+  '/app/alerts/',
+  '/app/accounts/',
 ] as const;
 
 for (const route of ROUTES) {
   test(`smoke — ${route} — no console errors`, async ({ page }) => {
+    // The dashboard demo fetches api.github.com live; CI runners share an
+    // unauthenticated rate limit and intermittently get 403s, which the
+    // console guard (rightly) flags. Stub the API so smoke is deterministic —
+    // same approach as dashboard.spec.ts (#175).
+    await page.route('https://api.github.com/**', (r) =>
+      r.fulfill({ status: 200, contentType: 'application/json', body: '[]' }),
+    );
     await page.goto(route);
     await page.waitForLoadState('networkidle');
 

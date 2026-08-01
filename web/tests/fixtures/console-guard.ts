@@ -23,6 +23,11 @@ const ALLOWLIST: RegExp[] = [
   // index hasn't been built yet (e.g. in smoke tests that skip `npm run build`).
   /pagefind.*404/i,
   /Failed to load resource.*pagefind/i,
+  // Base UI logs "Transition was skipped" via console.error when a CSS
+  // transition can't run to completion — happens nondeterministically in
+  // headless CI under load (frames dropped), never user-facing. Seen on
+  // pages mounting Select/Tabs (PR #36). Upstream: base-ui transitions.
+  /Transition was skipped/,
 ];
 
 /** Returns true when the message matches a known-harmless allowlist pattern. */
