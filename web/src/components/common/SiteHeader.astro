@@ -9,9 +9,12 @@ import { withBase } from '@/lib/href';
 import GlobalSearch from '@/components/islands/GlobalSearch';
 import AuthNav from '@/components/islands/AuthNav';
 
+// phoneHidden: six items overflow a 390px viewport (Linux font metrics are
+// wider than macOS — CI caught 98px of horizontal scroll). Community links
+// collapse to md+ in the header; phones reach them from the landing hero.
 const nav = [
-  { href: '/leaderboard/', label: 'Leaderboard' },
-  { href: '/community/', label: 'Community' },
+  { href: '/leaderboard/', label: 'Leaderboard', phoneHidden: true },
+  { href: '/community/', label: 'Community', phoneHidden: true },
   { href: '/gallery/', label: 'Gallery' },
   { href: '/demos/', label: 'Demos' },
   { href: '/docs/', label: 'Docs' },
@@ -47,6 +50,7 @@ const isActive = (href: string) => here.includes(href);
             class:list={[
               'rounded-md px-1.5 py-1 transition-colors hover:text-primary sm:px-2',
               isActive(n.href) ? 'text-primary underline decoration-2 underline-offset-[0.6em]' : 'text-muted-foreground',
+              n.phoneHidden ? 'hidden md:inline-block' : '',
             ]}
           >
             {n.label}
